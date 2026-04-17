@@ -4,6 +4,10 @@
     {
       "src": "server.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "public/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -12,8 +16,60 @@
       "dest": "server.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "server.js"
+      "src": "/login",
+      "dest": "/public/pages/login.html"
+    },
+    {
+      "src": "/signup",
+      "dest": "/public/pages/signup.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/public/pages/student-dashboard.html"
+    },
+    {
+      "src": "/tutor",
+      "dest": "/public/pages/ai-tutor.html"
+    },
+    {
+      "src": "/my-homework",
+      "dest": "/public/pages/homework.html"
+    },
+    {
+      "src": "/exam-prep",
+      "dest": "/public/pages/exam-prep.html"
+    },
+    {
+      "src": "/voice-lab",
+      "dest": "/public/pages/voice-lab.html"
+    },
+    {
+      "src": "/pricing",
+      "dest": "/public/pages/pricing.html"
+    },
+    {
+      "src": "/writing-test",
+      "dest": "/public/pages/writing-test.html"
+    },
+    {
+      "src": "/weakness",
+      "dest": "/public/pages/weakness-dashboard.html"
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "/public/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/public/js/$1"
+    },
+    {
+      "src": "/(.*\\.(html|css|js|png|jpg|jpeg|svg|ico|json))",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/public/index.html"
     }
   ]
 }
