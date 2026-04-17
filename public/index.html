@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinguaLearn — Master Your CBSE Language</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="#home" class="nav-brand">
+        <div class="brand-logo">L</div>
+        <span>LinguaLearn</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#languages">Languages</a></li>
+        <li><a href="#grades">Grades</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#quiz">Quiz</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="nav-icon-btn" onclick="openSearch()" title="Search"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><line x1="13" y1="13" x2="17" y2="17"/></svg></button>
+        <button class="nav-icon-btn" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.3 4.9A7 7 0 004.9 12.3 7 7 0 1012.3 4.9z"/></svg></button>
+        <a href="/pages/login.html" class="nav-btn nav-btn-ghost" id="navLoginBtn">Log in</a>
+        <a href="/pages/signup.html" class="nav-btn nav-btn-solid" id="navSignupBtn">Start Free</a>
+        <a href="/pages/student-dashboard.html" class="nav-btn nav-btn-solid nav-btn-dash" id="navDashBtn" style="display:none">Dashboard</a>
+        <button class="nav-toggle" onclick="toggleNav()"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/></svg></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- DAILY TIP BANNER -->
+  <div class="daily-tip-banner" id="dailyTipBanner">
+    <div class="tip-inner">
+      <span class="tip-dot"></span>
+      <span class="tip-text" id="tipText"></span>
+      <button class="tip-close" onclick="dismissTip()" title="Dismiss">&times;</button>
+    </div>
+  </div>
+
+  <!-- SEARCH OVERLAY -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-container">
+      <div class="search-bar">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="9" r="6.5"/><line x1="14" y1="14" x2="19" y2="19"/></svg>
+        <input type="text" id="searchInput" placeholder="Search languages, chapters, vocabulary..." oninput="runSearch()" autocomplete="off" />
+        <button class="search-close-btn" onclick="closeSearch()">&times;</button>
+      </div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="hero-bg">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-orb hero-orb-3"></div>
+      <div class="hero-grid-lines"></div>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-pill">CBSE Class 6-10 &middot; 8 Languages &middot; AI-Powered</div>
+        <h1>Learn Languages.<br><span class="hero-gradient-text">Score 90%+ in Boards.</span></h1>
+        <p class="hero-desc">The only platform built exclusively for CBSE students. AI tutor, exam prep, mock tests, voice lab &mdash; everything aligned to your syllabus.</p>
+        <div class="hero-cta">
+          <a href="/pages/signup.html" class="btn btn-primary btn-lg">Get Started Free <span class="btn-arrow">&rarr;</span></a>
+          <a href="#features" class="btn btn-glass btn-lg">See Features</a>
+        </div>
+        <div class="hero-proof">
+          <div class="hero-proof-avatars">
+            <div class="avatar" style="background:#a78bfa">P</div>
+            <div class="avatar" style="background:#f472b6">S</div>
+            <div class="avatar" style="background:#60a5fa">R</div>
+            <div class="avatar" style="background:#34d399">A</div>
+          </div>
+          <span>Join <strong>2,000+</strong> CBSE students already learning</span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card-stack">
+          <div class="hero-lang-card hlc-1">
+            <span class="hlc-flag">FR</span>
+            <span class="hlc-word">Bonjour!</span>
+            <span class="hlc-meaning">Hello</span>
+          </div>
+          <div class="hero-lang-card hlc-2">
+            <span class="hlc-flag">DE</span>
+            <span class="hlc-word">Danke!</span>
+            <span class="hlc-meaning">Thank you</span>
+          </div>
+          <div class="hero-lang-card hlc-3">
+            <span class="hlc-flag">JA</span>
+            <span class="hlc-word">こんにちは</span>
+            <span class="hlc-meaning">Hello</span>
+          </div>
+          <div class="hero-lang-card hlc-4">
+            <span class="hlc-flag">SA</span>
+            <span class="hlc-word">नमस्ते</span>
+            <span class="hlc-meaning">Greetings</span>
+          </div>
+        </div>
+        <div class="hero-stats-row">
+          <div class="hero-stat-chip"><strong>8</strong> Languages</div>
+          <div class="hero-stat-chip"><strong>5</strong> Classes</div>
+          <div class="hero-stat-chip"><strong>AI</strong> Tutor</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES BENTO -->
+  <section id="features" class="section features-section">
+    <div class="section-header">
+      <span class="section-tag">Why LinguaLearn</span>
+      <h2>Everything you need to ace your language paper</h2>
+      <p class="section-desc">Built for CBSE students who want real results, not just another study app.</p>
+    </div>
+    <div class="bento-grid">
+      <div class="bento-card bento-lg reveal">
+        <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a6 6 0 016 6c0 4-6 10-6 10S6 12 6 8a6 6 0 016-6z"/><circle cx="12" cy="8" r="2"/></svg></div>
+        <h3>AI Tutor "Gyani"</h3>
+        <p>Ask any question in any language. Gyani adapts to your class level and explains in simple Hindi/English.</p>
+      </div>
+      <div class="bento-card reveal">
+        <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M7 22h10"/><path d="M12 18v4"/></svg></div>
+        <h3>Mock Tests</h3>
+        <p>CBSE-pattern papers with real timing &mdash; UT, Half-Yearly, Annual.</p>
+      </div>
+      <div class="bento-card reveal">
+        <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4m0 16v-4m10-6h-4M6 12H2m15.07-5.07l-2.83 2.83M9.76 14.24l-2.83 2.83m0-10.14l2.83 2.83m4.48 4.48l2.83 2.83"/></svg></div>
+        <h3>Voice Lab</h3>
+        <p>Practice pronunciation with instant AI feedback on accent and clarity.</p>
+      </div>
+      <div class="bento-card reveal">
+        <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></div>
+        <h3>Writing Tests</h3>
+        <p>Type or upload handwritten answers. AI grades with CBSE marking scheme.</p>
+      </div>
+      <div class="bento-card reveal">
+        <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <h3>Weakness Engine</h3>
+        <p>Detects your weak areas, generates targeted drills, tracks improvement over time.</p>
+      </div>
+      <div class="bento-card bento-lg reveal">
+        <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3>Quiz Battle</h3>
+        <p>Challenge friends or AI bots. Compete on the leaderboard. Learn through play &mdash; not pressure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES -->
+  <section id="languages" class="section languages-section">
+    <div class="section-header">
+      <span class="section-tag">Choose Your Language</span>
+      <h2>8 CBSE languages, one platform</h2>
+      <p class="section-desc">All content is mapped to the latest CBSE syllabus for Classes 6&ndash;10.</p>
+    </div>
+    <div class="lang-grid">
+      <div class="lang-card reveal" style="--accent:#3b82f6">
+        <div class="lang-flag-wrap"><span>FR</span></div>
+        <h3>French</h3>
+        <p>Most popular choice. Great for Europe & Canada.</p>
+        <span class="lang-badge">Most Popular</span>
+      </div>
+      <div class="lang-card reveal" style="--accent:#ec4899">
+        <div class="lang-flag-wrap"><span>DE</span></div>
+        <h3>German</h3>
+        <p>Top pick for engineering. Free education in Germany!</p>
+        <span class="lang-badge">High Value</span>
+      </div>
+      <div class="lang-card reveal" style="--accent:#8b5cf6">
+        <div class="lang-flag-wrap"><span>JA</span></div>
+        <h3>Japanese</h3>
+        <p>Newly added! Anime culture & top tech careers.</p>
+        <span class="lang-badge">New</span>
+      </div>
+      <div class="lang-card reveal" style="--accent:#f97316">
+        <div class="lang-flag-wrap"><span>ES</span></div>
+        <h3>Spanish</h3>
+        <p>500M+ speakers. Easy for Hindi speakers!</p>
+        <span class="lang-badge">Easy to Learn</span>
+      </div>
+      <div class="lang-card reveal" style="--accent:#14b8a6">
+        <div class="lang-flag-wrap"><span>SA</span></div>
+        <h3>Sanskrit</h3>
+        <p>Classical Indian language. Consistently high scoring.</p>
+        <span class="lang-badge">High Scoring</span>
+      </div>
+      <div class="lang-card reveal" style="--accent:#06b6d4">
+        <div class="lang-flag-wrap"><span>KO</span></div>
+        <h3>Korean</h3>
+        <p>Newly added by CBSE! K-pop, K-drama, booming economy.</p>
+        <span class="lang-badge">Trending</span>
+      </div>
+      <div class="lang-card reveal" style="--accent:#ef4444">
+        <div class="lang-flag-wrap"><span>ZH</span></div>
+        <h3>Mandarin</h3>
+        <p>World's most spoken language. Future of business.</p>
+        <span class="lang-badge">Future-Ready</span>
+      </div>
+      <div class="lang-card reveal" style="--accent:#7c3aed">
+        <div class="lang-flag-wrap"><span>RU</span></div>
+        <h3>Russian</h3>
+        <p>Select CBSE schools. Strong in science & literature.</p>
+        <span class="lang-badge">Select Schools</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="section dashboard-section">
+    <div class="section-header">
+      <span class="section-tag">Your Progress</span>
+      <h2>Track your learning journey</h2>
+      <p class="section-desc">XP, streaks, badges, and quiz scores &mdash; all in one place.</p>
+    </div>
+    <div class="dashboard-grid">
+      <div class="dash-card xp-card">
+        <div class="dash-icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></div>
+        <div class="dash-card-label">Total XP</div>
+        <div class="dash-card-value" id="dashXP">0</div>
+        <div class="dash-level-label" id="dashLevel">Beginner</div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+          <div class="xp-bar-labels"><span id="xpBarCur">0 XP</span><span id="xpBarNext">100 XP</span></div>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon-wrap dash-icon-streak"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2c.5 4-3 6-3 10a5 5 0 0010 0C19 8 12 2 12 2z"/></svg></div>
+        <div class="dash-card-label">Day Streak</div>
+        <div class="dash-card-value" id="dashStreak">0</div>
+        <div class="dash-card-sub">days in a row</div>
+      </div>
+      <div class="dash-card" onclick="openBadgesModal()" style="cursor:pointer">
+        <div class="dash-icon-wrap dash-icon-badge"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
+        <div class="dash-card-label">Badges Earned</div>
+        <div class="dash-card-value" id="dashBadges">0</div>
+        <div class="dash-card-sub">tap to view</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon-wrap dash-icon-quiz"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="dash-card-label">Best Quiz</div>
+        <div class="dash-card-value" id="dashQuizBest">-</div>
+        <div class="dash-card-sub">out of 10</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon-wrap dash-icon-notes"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <div class="dash-card-label">Notes Viewed</div>
+        <div class="dash-card-value" id="dashNotesViewed">0</div>
+        <div class="dash-card-sub">chapters opened</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRADES -->
+  <section id="grades" class="section grades-section">
+    <div class="section-header">
+      <span class="section-tag">Browse by Grade</span>
+      <h2>Select your class</h2>
+      <p class="section-desc">Tailored notes, exercises, and vocabulary for each grade.</p>
+    </div>
+    <div class="grades-row">
+      <div class="grade-card reveal" onclick="showGradeModal(6)">
+        <div class="grade-num">6</div>
+        <div class="grade-label">Class VI</div>
+        <div class="grade-topics">Basics &middot; Greetings &middot; Numbers</div>
+      </div>
+      <div class="grade-card reveal" onclick="showGradeModal(7)">
+        <div class="grade-num">7</div>
+        <div class="grade-label">Class VII</div>
+        <div class="grade-topics">Sentences &middot; Family &middot; Food</div>
+      </div>
+      <div class="grade-card reveal" onclick="showGradeModal(8)">
+        <div class="grade-num">8</div>
+        <div class="grade-label">Class VIII</div>
+        <div class="grade-topics">Grammar &middot; Tenses &middot; Reading</div>
+      </div>
+      <div class="grade-card reveal" onclick="showGradeModal(9)">
+        <div class="grade-num">9</div>
+        <div class="grade-label">Class IX</div>
+        <div class="grade-topics">Writing &middot; Literature &middot; Advanced</div>
+      </div>
+      <div class="grade-card reveal" onclick="showGradeModal(10)">
+        <div class="grade-num">10</div>
+        <div class="grade-label">Class X</div>
+        <div class="grade-topics">Board Prep &middot; Essays &middot; Comprehension</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section id="resources" class="section resources-section">
+    <div class="section-header">
+      <span class="section-tag">Study Material</span>
+      <h2>Learning resources</h2>
+      <p class="section-desc">Notes, videos, worksheets, and vocabulary &mdash; all CBSE-aligned.</p>
+    </div>
+    <div class="resources-tabs">
+      <button class="tab active" onclick="switchTab(this, 'notes')">Notes</button>
+      <button class="tab" onclick="switchTab(this, 'videos')">Videos</button>
+      <button class="tab" onclick="switchTab(this, 'worksheets')">Worksheets</button>
+      <button class="tab" onclick="switchTab(this, 'vocab')">Vocabulary</button>
+    </div>
+
+    <div id="notes" class="tab-content active">
+      <div class="resource-grid">
+        <div class="resource-card">
+          <div class="rc-color" style="background:#3b82f6"></div>
+          <h4>French Grammar Basics</h4>
+          <p>Class 6-7 &middot; Articles, Gender, Plural</p>
+          <button class="btn-sm" onclick="openNotes('french-grammar')">View Notes &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#ec4899"></div>
+          <h4>German Verb Conjugation</h4>
+          <p>Class 8-9 &middot; Present, Past, Future</p>
+          <button class="btn-sm" onclick="openNotes('german-verbs')">View Notes &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#f97316"></div>
+          <h4>Sanskrit Dhatu Roop</h4>
+          <p>Class 8-10 &middot; All Lakar Forms</p>
+          <button class="btn-sm" onclick="openNotes('sanskrit-dhatu')">View Notes &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#8b5cf6"></div>
+          <h4>Japanese Hiragana Chart</h4>
+          <p>Class 6 &middot; Full Script + Pronunciation</p>
+          <button class="btn-sm" onclick="openNotes('japanese-hiragana')">View Notes &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="videos" class="tab-content">
+      <div class="resource-grid">
+        <div class="resource-card">
+          <div class="rc-color" style="background:#3b82f6"></div>
+          <h4>French Pronunciation Guide</h4>
+          <p>Beginner friendly &middot; Free on DIKSHA</p>
+          <button class="btn-sm" onclick="openVideo('french-pronunciation')">Watch Free &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#ec4899"></div>
+          <h4>German for CBSE</h4>
+          <p>Class 9-10 &middot; Magnet Brains</p>
+          <button class="btn-sm" onclick="openVideo('german-cbse')">Watch Free &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#f97316"></div>
+          <h4>Sanskrit Class 6-10</h4>
+          <p>Ruchira + Shemushi &middot; Magnet Brains</p>
+          <button class="btn-sm" onclick="openVideo('sanskrit-full')">Watch Free &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#8b5cf6"></div>
+          <h4>Japanese Hiragana & Katakana</h4>
+          <p>Complete beginners guide &middot; Free</p>
+          <button class="btn-sm" onclick="openVideo('japanese-script')">Watch Free &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="worksheets" class="tab-content">
+      <div class="resource-grid">
+        <div class="resource-card">
+          <div class="rc-color" style="background:#3b82f6"></div>
+          <h4>Class 6 French Worksheet</h4>
+          <p>Fill-in-the-blanks, matching, MCQs</p>
+          <button class="btn-sm" onclick="openWorksheet('french-6')">Open &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#f97316"></div>
+          <h4>Class 9 Sanskrit Worksheet</h4>
+          <p>Shemushi Ch. 1-6 &middot; Grammar + Translation</p>
+          <button class="btn-sm" onclick="openWorksheet('sanskrit-9')">Open &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#3b82f6"></div>
+          <h4>French Entre Jeunes Class 10</h4>
+          <p>Chapter-wise MCQs + writing practice</p>
+          <button class="btn-sm" onclick="openWorksheet('french-10')">Open &rarr;</button>
+        </div>
+        <div class="resource-card">
+          <div class="rc-color" style="background:#14b8a6"></div>
+          <h4>Multi-Language Vocab Sheet</h4>
+          <p>FR / DE / ES / JA side-by-side</p>
+          <button class="btn-sm" onclick="openWorksheet('vocab-multi')">Open &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="vocab" class="tab-content">
+      <div class="vocab-topics">
+        <div class="vocab-topic" onclick="toggleVocab(this)">
+          <div class="vt-header">Home & Family <span>+</span></div>
+          <div class="vt-body">
+            <div class="vocab-header"><span>English</span><span>French</span><span>German</span><span>Spanish</span></div>
+            <div class="vocab-table">
+              <div class="vrow"><span>Father</span><span>Pere <button class="speak-btn" onclick="event.stopPropagation();speakWord('Pere','fr-FR')">&#9654;</button></span><span>Vater <button class="speak-btn" onclick="event.stopPropagation();speakWord('Vater','de-DE')">&#9654;</button></span><span>Padre <button class="speak-btn" onclick="event.stopPropagation();speakWord('Padre','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Mother</span><span>Mere <button class="speak-btn" onclick="event.stopPropagation();speakWord('Mere','fr-FR')">&#9654;</button></span><span>Mutter <button class="speak-btn" onclick="event.stopPropagation();speakWord('Mutter','de-DE')">&#9654;</button></span><span>Madre <button class="speak-btn" onclick="event.stopPropagation();speakWord('Madre','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Brother</span><span>Frere <button class="speak-btn" onclick="event.stopPropagation();speakWord('Frere','fr-FR')">&#9654;</button></span><span>Bruder <button class="speak-btn" onclick="event.stopPropagation();speakWord('Bruder','de-DE')">&#9654;</button></span><span>Hermano <button class="speak-btn" onclick="event.stopPropagation();speakWord('Hermano','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Sister</span><span>Soeur <button class="speak-btn" onclick="event.stopPropagation();speakWord('Soeur','fr-FR')">&#9654;</button></span><span>Schwester <button class="speak-btn" onclick="event.stopPropagation();speakWord('Schwester','de-DE')">&#9654;</button></span><span>Hermana <button class="speak-btn" onclick="event.stopPropagation();speakWord('Hermana','es-ES')">&#9654;</button></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="vocab-topic" onclick="toggleVocab(this)">
+          <div class="vt-header">Food & Drinks <span>+</span></div>
+          <div class="vt-body">
+            <div class="vocab-header"><span>English</span><span>French</span><span>German</span><span>Spanish</span></div>
+            <div class="vocab-table">
+              <div class="vrow"><span>Water</span><span>Eau <button class="speak-btn" onclick="event.stopPropagation();speakWord('Eau','fr-FR')">&#9654;</button></span><span>Wasser <button class="speak-btn" onclick="event.stopPropagation();speakWord('Wasser','de-DE')">&#9654;</button></span><span>Agua <button class="speak-btn" onclick="event.stopPropagation();speakWord('Agua','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Bread</span><span>Pain <button class="speak-btn" onclick="event.stopPropagation();speakWord('Pain','fr-FR')">&#9654;</button></span><span>Brot <button class="speak-btn" onclick="event.stopPropagation();speakWord('Brot','de-DE')">&#9654;</button></span><span>Pan <button class="speak-btn" onclick="event.stopPropagation();speakWord('Pan','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Milk</span><span>Lait <button class="speak-btn" onclick="event.stopPropagation();speakWord('Lait','fr-FR')">&#9654;</button></span><span>Milch <button class="speak-btn" onclick="event.stopPropagation();speakWord('Milch','de-DE')">&#9654;</button></span><span>Leche <button class="speak-btn" onclick="event.stopPropagation();speakWord('Leche','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Apple</span><span>Pomme <button class="speak-btn" onclick="event.stopPropagation();speakWord('Pomme','fr-FR')">&#9654;</button></span><span>Apfel <button class="speak-btn" onclick="event.stopPropagation();speakWord('Apfel','de-DE')">&#9654;</button></span><span>Manzana <button class="speak-btn" onclick="event.stopPropagation();speakWord('Manzana','es-ES')">&#9654;</button></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="vocab-topic" onclick="toggleVocab(this)">
+          <div class="vt-header">School & Stationery <span>+</span></div>
+          <div class="vt-body">
+            <div class="vocab-header"><span>English</span><span>French</span><span>German</span><span>Spanish</span></div>
+            <div class="vocab-table">
+              <div class="vrow"><span>Book</span><span>Livre <button class="speak-btn" onclick="event.stopPropagation();speakWord('Livre','fr-FR')">&#9654;</button></span><span>Buch <button class="speak-btn" onclick="event.stopPropagation();speakWord('Buch','de-DE')">&#9654;</button></span><span>Libro <button class="speak-btn" onclick="event.stopPropagation();speakWord('Libro','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Pen</span><span>Stylo <button class="speak-btn" onclick="event.stopPropagation();speakWord('Stylo','fr-FR')">&#9654;</button></span><span>Stift <button class="speak-btn" onclick="event.stopPropagation();speakWord('Stift','de-DE')">&#9654;</button></span><span>Boligrafo <button class="speak-btn" onclick="event.stopPropagation();speakWord('Boligrafo','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Teacher</span><span>Professeur <button class="speak-btn" onclick="event.stopPropagation();speakWord('Professeur','fr-FR')">&#9654;</button></span><span>Lehrer <button class="speak-btn" onclick="event.stopPropagation();speakWord('Lehrer','de-DE')">&#9654;</button></span><span>Profesor <button class="speak-btn" onclick="event.stopPropagation();speakWord('Profesor','es-ES')">&#9654;</button></span></div>
+              <div class="vrow"><span>Class</span><span>Classe <button class="speak-btn" onclick="event.stopPropagation();speakWord('Classe','fr-FR')">&#9654;</button></span><span>Klasse <button class="speak-btn" onclick="event.stopPropagation();speakWord('Klasse','de-DE')">&#9654;</button></span><span>Clase <button class="speak-btn" onclick="event.stopPropagation();speakWord('Clase','es-ES')">&#9654;</button></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section id="flashcards" class="section flashcards-section">
+    <div class="section-header">
+      <span class="section-tag">Flashcards</span>
+      <h2>Vocabulary flashcards</h2>
+      <p class="section-desc">Tap to flip. Mark what you know and what you're still learning.</p>
+    </div>
+    <div class="flashcard-filters">
+      <button class="fc-filter active" data-lang="all" onclick="filterFlashcards(this,'all')">All</button>
+      <button class="fc-filter" data-lang="french" onclick="filterFlashcards(this,'french')">French</button>
+      <button class="fc-filter" data-lang="sanskrit" onclick="filterFlashcards(this,'sanskrit')">Sanskrit</button>
+      <button class="fc-filter" data-lang="german" onclick="filterFlashcards(this,'german')">German</button>
+      <button class="fc-filter" data-lang="spanish" onclick="filterFlashcards(this,'spanish')">Spanish</button>
+    </div>
+    <div class="flashcard-arena">
+      <div class="flashcard-wrap">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="fc-front" id="fcFront">
+            <div class="fc-lang-tag" id="fcLangTag">French</div>
+            <div class="fc-word" id="fcWord">Bonjour</div>
+            <div class="fc-hint">tap to flip</div>
+          </div>
+          <div class="fc-back" id="fcBack">
+            <div class="fc-meaning" id="fcMeaning">Hello / Good day</div>
+            <div class="fc-pronunciation" id="fcPronunciation">bon-ZHOOR</div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-counter"><span id="fcCounter">Card 1 of 20</span></div>
+      <div class="fc-nav">
+        <button class="fc-nav-btn" onclick="fcPrev()">&larr; Prev</button>
+        <button class="fc-action-btn known" onclick="markKnown()">I knew it</button>
+        <button class="fc-action-btn learning" onclick="markLearning()">Still learning</button>
+        <button class="fc-nav-btn" onclick="fcNext()">Next &rarr;</button>
+      </div>
+      <div class="fc-stats">
+        <span class="fc-stat-known">Known: <b id="fcKnown">0</b></span>
+        <span class="fc-stat-learning">Learning: <b id="fcLearning">0</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="section quiz-section">
+    <div class="section-header">
+      <span class="section-tag section-tag-light">Quick Quiz</span>
+      <h2>Test your knowledge</h2>
+      <p class="section-desc section-desc-light">Questions shuffle every time. See how much you remember.</p>
+    </div>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="quiz-box" id="quizBox">
+      <div class="quiz-number" id="quizNumber">Question 1 of 10</div>
+      <div class="quiz-q" id="quizQuestion">Loading...</div>
+      <div class="quiz-opts" id="quizOptions"></div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none;margin-top:1rem;width:100%;justify-content:center">Next Question &rarr;</button>
+    </div>
+    <div class="quiz-score">Score: <span id="score">0</span> / <span id="total">0</span></div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2>Ready to master your CBSE language?</h2>
+      <p>Join thousands of students scoring 90%+ with AI-powered learning.</p>
+      <a href="/pages/signup.html" class="btn btn-primary btn-lg">Get Started Free <span class="btn-arrow">&rarr;</span></a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo"><div class="brand-logo brand-logo-sm">L</div><span>LinguaLearn</span></div>
+        <p>AI-powered language learning for CBSE students in Classes 6-10.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#languages">Languages</a>
+        <a href="#grades">Grades</a>
+        <a href="/pages/pricing.html">Pricing</a>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <a href="#resources">Study Material</a>
+        <a href="#flashcards">Flashcards</a>
+        <a href="#quiz">Quiz</a>
+        <a href="/pages/ai-tutor.html">AI Tutor</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 LinguaLearn. Built with care for CBSE students.</span>
+    </div>
+  </footer>
+
+  <!-- GRADE MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- CONTENT MODAL -->
+  <div class="modal-overlay content-modal-overlay" id="contentModalOverlay" onclick="closeContentModal()">
+    <div class="content-modal" onclick="event.stopPropagation()">
+      <div class="cm-header">
+        <div>
+          <div class="cm-tag" id="cmTag">Notes</div>
+          <h3 class="cm-title" id="cmTitle">Title</h3>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <button class="cm-print-btn" id="cmPrintBtn" onclick="printContent()" style="display:none">Print</button>
+          <button class="modal-close" style="position:static" onclick="closeContentModal()">&times;</button>
+        </div>
+      </div>
+      <div class="cm-body" id="cmBody"></div>
+    </div>
+  </div>
+
+  <!-- BADGES MODAL -->
+  <div class="modal-overlay" id="badgesModalOverlay" onclick="closeBadgesModal()">
+    <div class="modal badges-modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeBadgesModal()">&times;</button>
+      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:0.25rem">My Badges</h3>
+      <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem">Earn badges by exploring LinguaLearn</p>
+      <div class="badges-grid" id="badgesGrid"></div>
+    </div>
+  </div>
+
+  <!-- FLOATING WIDGET -->
+  <div class="floating-widget" id="floatingWidget">
+    <div class="fw-row">
+      <div class="fw-item fw-streak" onclick="openBadgesModal()" title="View badges">
+        <svg width="14" height="14" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round"><path d="M7 1c.3 2.4-1.8 3.6-1.8 6a3 3 0 006 0C11.2 4.8 7 1 7 1z"/></svg>
+        <span id="fwStreak">0</span>
+      </div>
+      <div class="fw-item fw-xp" onclick="openBadgesModal()" title="View dashboard">
+        <svg width="14" height="14" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"><polygon points="7,1 2,8 6,8 5.5,13 11,6 7,6"/></svg>
+        <span id="fwXP">0 XP</span>
+      </div>
+    </div>
+    <div class="pomodoro-widget" id="pomodoroWidget">
+      <div class="pomo-label" id="pomoLabel">Focus</div>
+      <div class="pomo-time" id="pomoTime">25:00</div>
+      <div class="pomo-btns">
+        <button class="pomo-btn" id="pomoStartBtn" onclick="pomodoroToggle()">&#9654;</button>
+        <button class="pomo-btn" onclick="pomodoroReset()">&#8634;</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    (function checkAuth() {
+      const token = localStorage.getItem('ll_token');
+      if (token) {
+        const loginBtn = document.getElementById('navLoginBtn');
+        const signupBtn = document.getElementById('navSignupBtn');
+        const dashBtn = document.getElementById('navDashBtn');
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (signupBtn) signupBtn.style.display = 'none';
+        if (dashBtn) dashBtn.style.display = 'inline-flex';
+      }
+    })();
+  </script>
+</body>
+</html>

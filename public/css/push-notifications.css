@@ -1,0 +1,64 @@
+/* ===== PUSH NOTIFICATION PERMISSION PROMPT ===== */
+
+.push-prompt {
+  position: fixed; bottom: -120px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  transition: bottom 0.4s ease;
+}
+.push-prompt-show {
+  bottom: 20px;
+}
+.push-prompt-inner {
+  display: flex; align-items: center; gap: 1rem;
+  background: white; border-radius: 20px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 8px 32px rgba(91,94,244,0.2);
+  border: 2px solid #e8eaff;
+  max-width: 500px;
+}
+.push-prompt-icon {
+  font-size: 2rem; flex-shrink: 0;
+}
+.push-prompt-text strong {
+  font-size: 0.92rem; font-weight: 900; display: block;
+  color: #1e293b; margin-bottom: 0.15rem;
+}
+.push-prompt-text p {
+  font-size: 0.78rem; color: #64748b; font-weight: 700;
+  margin: 0; line-height: 1.5;
+}
+.push-prompt-btns {
+  display: flex; flex-direction: column; gap: 0.4rem;
+  flex-shrink: 0;
+}
+.push-yes {
+  background: linear-gradient(135deg, #5b5ef4, #7209b7);
+  color: white; border: none; border-radius: 10px;
+  padding: 0.55rem 1rem; font-family: 'Nunito', sans-serif;
+  font-weight: 800; font-size: 0.82rem; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.push-yes:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91,94,244,0.3);
+}
+.push-no {
+  background: none; border: none; color: #94a3b8;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700; font-size: 0.75rem;
+  cursor: pointer; padding: 0.3rem;
+}
+.push-no:hover { color: #64748b; }
+
+@media (max-width: 540px) {
+  .push-prompt-inner {
+    flex-direction: column; text-align: center;
+    padding: 1.25rem;
+  }
+  .push-prompt-btns {
+    flex-direction: row; gap: 0.6rem;
+    width: 100%; justify-content: center;
+  }
+  .push-yes { flex: 1; }
+}

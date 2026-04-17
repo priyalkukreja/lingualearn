@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapter-wise Study — LinguaLearn</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="chapters.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">🌐</span>
+      <span>LinguaLearn</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#grades">Grades</a></li>
+      <li><a href="index.html#languages">Languages</a></li>
+      <li><a href="chapters.html" style="color:var(--primary)">Chapters</a></li>
+      <li><a href="index.html#quiz">Quiz</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="ch-hero">
+    <div class="ch-hero-inner">
+      <div class="badge">📚 Chapter-wise Content</div>
+      <h1>Study <span class="highlight">Chapter by Chapter</span></h1>
+      <p>CBSE textbook content arranged precisely by chapter — with key topics, grammar focus, vocabulary, original practice questions, and reference book pointers.</p>
+    </div>
+    <div class="ch-hero-blobs"></div>
+  </section>
+
+  <!-- SELECTORS -->
+  <section class="selectors-section">
+    <!-- Language Selector -->
+    <div class="sel-block">
+      <div class="sel-label">Step 1 — Choose your Language</div>
+      <div class="lang-selector" id="langSelector">
+        <button class="ls-btn active" data-lang="sanskrit" onclick="selectLang(this)">🕉️ Sanskrit</button>
+        <button class="ls-btn" data-lang="french" onclick="selectLang(this)">🇫🇷 French</button>
+        <button class="ls-btn" data-lang="german" onclick="selectLang(this)">🇩🇪 German</button>
+        <button class="ls-btn" data-lang="spanish" onclick="selectLang(this)">🇪🇸 Spanish</button>
+        <button class="ls-btn" data-lang="japanese" onclick="selectLang(this)">🇯🇵 Japanese</button>
+        <button class="ls-btn" data-lang="korean" onclick="selectLang(this)">🇰🇷 Korean</button>
+      </div>
+    </div>
+
+    <!-- Class Selector -->
+    <div class="sel-block">
+      <div class="sel-label">Step 2 — Choose your Class</div>
+      <div class="class-selector" id="classSelector">
+        <button class="cs-btn active" data-class="6" onclick="selectClass(this)">VI</button>
+        <button class="cs-btn" data-class="7" onclick="selectClass(this)">VII</button>
+        <button class="cs-btn" data-class="8" onclick="selectClass(this)">VIII</button>
+        <button class="cs-btn" data-class="9" onclick="selectClass(this)">IX</button>
+        <button class="cs-btn" data-class="10" onclick="selectClass(this)">X</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEXTBOOK BANNER -->
+  <div class="tb-banner-wrap">
+    <div class="tb-banner" id="textbookBanner">
+      <div class="tb-info">
+        <span class="tb-icon" id="tbIcon">🕉️</span>
+        <div>
+          <div class="tb-name" id="tbName">Ruchira — भाग 1</div>
+          <div class="tb-meta" id="tbMeta">NCERT | Class 6 Sanskrit | Official CBSE Textbook</div>
+        </div>
+      </div>
+      <!-- For international languages: textbook switcher shown here -->
+      <div class="tb-switcher" id="tbSwitcher" style="display:none">
+        <span class="tb-sw-label">Your school uses:</span>
+        <select id="tbSelect" onchange="switchTextbook(this.value)" class="tb-select">
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOT AVAILABLE FOR THIS CLASS -->
+  <div class="not-available" id="notAvailable" style="display:none">
+    <div class="na-inner">
+      <div style="font-size:3rem">🚧</div>
+      <h3 id="naTitle">Not available for this class</h3>
+      <p id="naMsg">German is offered as an additional language from Class 9 onwards in CBSE schools.</p>
+    </div>
+  </div>
+
+  <!-- CHAPTERS CONTENT -->
+  <section class="chapters-section" id="chaptersSection">
+    <div class="chapters-header">
+      <h2 id="chapterCount">15 Chapters</h2>
+      <p class="section-sub" id="chapterSubtitle">Click any chapter to expand notes, topics, and practice questions.</p>
+    </div>
+    <div class="chapters-list" id="chaptersList"></div>
+  </section>
+
+  <!-- REFERENCE BOOKS SECTION -->
+  <section class="refbooks-section" id="refBooksSection">
+    <div class="section-label"><span>📖 Go Beyond the Textbook</span></div>
+    <h2>Reference Books</h2>
+    <p class="section-sub">Recommended books for extra practice and higher scores.</p>
+    <div class="refbooks-grid" id="refBooksGrid"></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-name"><span>🌐</span><span>LinguaLearn</span></div>
+        <p>Free language learning for CBSE students in Classes 6–10.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigate</h4>
+        <a href="index.html">Home</a>
+        <a href="chapters.html">Chapters</a>
+        <a href="index.html#quiz">Quiz</a>
+        <a href="index.html#resources">Resources</a>
+      </div>
+      <div class="footer-links">
+        <h4>Languages</h4>
+        <a href="#" onclick="selectLangByName('sanskrit')">Sanskrit</a>
+        <a href="#" onclick="selectLangByName('french')">French</a>
+        <a href="#" onclick="selectLangByName('german')">German</a>
+        <a href="#" onclick="selectLangByName('spanish')">Spanish</a>
+      </div>
+      <div class="footer-links">
+        <h4>Official Links</h4>
+        <a href="https://ncert.nic.in" target="_blank">NCERT Website</a>
+        <a href="https://cbseacademic.nic.in" target="_blank">CBSE Academics</a>
+        <a href="https://cbseacademic.nic.in/curriculum_2026.html" target="_blank">CBSE Curriculum 2026</a>
+      </div>
+    </div>
+    <div class="footer-bottom">Made with love for CBSE students · 2025 · Free forever 🌍</div>
+  </footer>
+
+  <script src="chapters-data.js"></script>
+  <script src="chapters.js"></script>
+</body>
+</html>

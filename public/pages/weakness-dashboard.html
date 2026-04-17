@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Weak Areas — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/weakness.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link rel="stylesheet" href="/css/push-notifications.css" />
+  <link rel="stylesheet" href="/css/robot-tutor.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/weakness" style="color:var(--primary)">Weak Areas</a></li>
+      <li><a href="/exam-prep">Exam Prep</a></li>
+      <li><a href="/voice-lab">Voice Lab</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+      <span class="nav-streak" id="navStreak">🔥 0</span>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="dash-hero">
+    <div class="dash-hero-inner">
+      <div class="dash-welcome">
+        <h1>🎯 Beat Your Weaknesses</h1>
+        <p id="heroSub">Focus on what matters most. Turn weak areas into strengths and watch your scores soar!</p>
+      </div>
+      <div class="dash-quick-actions">
+        <button class="dqa-btn primary" onclick="startSmartDrill()">⚡ Smart Drill (Auto-pick weak topics)</button>
+        <a href="/exam-prep" class="dqa-btn">📋 Exam Priority View</a>
+        <a href="/tutor" class="dqa-btn">🤖 Practice with Gyani</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary Stats -->
+  <section class="dash-stats">
+    <div class="stat-card" style="border-color:#fecaca">
+      <div class="sc-icon">🔴</div>
+      <div class="sc-value" id="criticalCount">0</div>
+      <div class="sc-label">Critical Areas</div>
+    </div>
+    <div class="stat-card" style="border-color:#fed7aa">
+      <div class="sc-icon">🟠</div>
+      <div class="sc-value" id="weakCount">0</div>
+      <div class="sc-label">Weak Areas</div>
+    </div>
+    <div class="stat-card" style="border-color:#86efac">
+      <div class="sc-icon">🟢</div>
+      <div class="sc-value" id="strongCount">0</div>
+      <div class="sc-label">Strong Areas</div>
+    </div>
+    <div class="stat-card" style="border-color:#c7d2fe">
+      <div class="sc-icon">🎯</div>
+      <div class="sc-value" id="drillsDone">0</div>
+      <div class="sc-label">Drills Completed</div>
+    </div>
+    <div class="stat-card" style="border-color:#c7d2fe">
+      <div class="sc-icon">⚔️</div>
+      <div class="sc-value" id="badgesEarned">0</div>
+      <div class="sc-label">Badges Earned</div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="dash-body" style="grid-template-columns: 1fr">
+    <!-- Feature 1: Weakness Dashboard -->
+    <div class="weakness-panel">
+      <h3>📊 Your Weak Areas</h3>
+      <p class="wp-sub">Topics where you score below 75% — practice these to boost your marks!</p>
+      <div class="wp-tabs">
+        <button class="wp-tab active" onclick="filterWeakness('all')">All</button>
+        <button class="wp-tab" onclick="filterWeakness('critical')">🔴 Critical</button>
+        <button class="wp-tab" onclick="filterWeakness('weak')">🟠 Weak</button>
+        <button class="wp-tab" onclick="filterWeakness('average')">🟡 Almost There</button>
+      </div>
+      <div class="weakness-cards" id="weaknessCards">
+        <div class="no-data">Loading your weakness data...</div>
+      </div>
+    </div>
+
+    <!-- Feature 5: Peer Comparison -->
+    <div class="weakness-panel peer-section">
+      <h3>👥 How You Compare (Anonymous)</h3>
+      <p class="wp-sub">See how other CBSE students perform on the same topics — you're not alone!</p>
+      <div id="peerComparisons">
+        <div class="no-data">Complete some quizzes to see peer comparisons</div>
+      </div>
+    </div>
+
+    <!-- Feature 4: Exam Priority -->
+    <div class="weakness-panel">
+      <h3>📋 Exam-Smart Priority</h3>
+      <p class="wp-sub">Your weak topics are moved to the top for next exam — more time where it matters!</p>
+      <div id="examPriorityView">
+        <div class="no-data">Select your upcoming exam to see prioritized topics</div>
+      </div>
+      <div style="margin-top:1rem; display:flex; gap:0.5rem; flex-wrap:wrap">
+        <button class="wp-tab" onclick="loadExamPriority('ut1')">UT-1</button>
+        <button class="wp-tab" onclick="loadExamPriority('ut2')">UT-2</button>
+        <button class="wp-tab" onclick="loadExamPriority('half_yearly')">Half-Yearly</button>
+        <button class="wp-tab" onclick="loadExamPriority('annual')">Annual</button>
+      </div>
+    </div>
+
+    <!-- Feature 6: Gamified Challenges -->
+    <div class="weakness-panel challenge-section">
+      <h3>⚔️ Beat Your Weakness — Challenges</h3>
+      <p class="wp-sub">Complete challenges to earn badges and bonus XP! Make weakness practice fun 🎮</p>
+      <div class="challenge-grid" id="challengeGrid">
+        <div class="no-data">Loading challenges...</div>
+      </div>
+    </div>
+
+    <!-- Weekly Report -->
+    <div class="weakness-panel">
+      <h3>📈 This Week's Progress</h3>
+      <p class="wp-sub">Your weakness improvement over the past 7 days</p>
+      <div id="weeklyReport">
+        <div class="no-data">Practice for a week to see your progress report!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Drill Overlay (Feature 2) -->
+  <div class="drill-overlay" id="drillOverlay">
+    <div class="drill-modal">
+      <div class="drill-header">
+        <div class="drill-title" id="drillTitle">Weakness Drill</div>
+        <button class="drill-close" onclick="closeDrill()">✕</button>
+      </div>
+      <div class="drill-progress">
+        <div class="drill-progress-bar"><div class="drill-progress-fill" id="drillProgressFill"></div></div>
+        <div class="drill-count" id="drillCount">Question 1 of 10</div>
+      </div>
+      <div id="drillContent"></div>
+      <div class="drill-actions" id="drillActions"></div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/cbse-syllabus-data.js"></script>
+  <script src="/js/weakness-engine.js"></script>
+  <script src="/js/robot-tutor.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/push-notifications.js"></script>
+  <script src="/js/weakness-dashboard-app.js"></script>
+</body>
+</html>

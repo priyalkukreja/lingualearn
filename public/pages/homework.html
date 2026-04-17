@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homework — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/homework.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link rel="stylesheet" href="/css/push-notifications.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/my-homework" style="color:var(--primary)">Homework</a></li>
+      <li><a href="/writing-test">Writing Test</a></li>
+      <li><a href="/voice-lab">Voice Lab</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <section class="hw-hero">
+    <div class="hw-hero-inner">
+      <h1>📝 Homework Check</h1>
+      <p>Upload your homework and get instant AI feedback with corrections, explanations, and practice questions.</p>
+    </div>
+  </section>
+
+  <section class="hw-upload-section">
+    <div class="hw-container">
+      <div class="hw-upload-card">
+        <div class="hw-title-row">
+          <label for="hwTitle" class="hw-label">Title</label>
+          <input type="text" id="hwTitle" class="hw-input" placeholder="e.g. Hindi Grammar Ch-5, French Worksheet 3..." />
+        </div>
+
+        <div class="hw-dropzone" id="dropzone">
+          <div class="dropzone-icon">📄</div>
+          <p class="dropzone-text">Drag & drop your homework here</p>
+          <p class="dropzone-sub">PDF or Image (JPG, PNG) — Max 10 MB</p>
+          <button class="btn btn-outline dropzone-btn" id="browseBtn">Browse Files</button>
+          <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.webp" hidden />
+        </div>
+
+        <div class="hw-file-preview" id="filePreview" style="display:none">
+          <span class="fp-icon">📎</span>
+          <span class="fp-name" id="fileName"></span>
+          <span class="fp-size" id="fileSize"></span>
+          <button class="fp-remove" id="removeFile" title="Remove">✕</button>
+        </div>
+
+        <button class="btn btn-primary hw-upload-btn" id="uploadBtn" disabled>
+          <span id="uploadBtnText">Upload & Analyze</span>
+          <span class="spinner" id="uploadSpinner" style="display:none"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="hw-feedback-section" id="feedbackSection" style="display:none">
+    <div class="hw-container">
+      <div class="hw-feedback-header">
+        <h2>AI Feedback</h2>
+        <div class="hw-score-badge" id="scoreBadge">
+          <span class="score-label">Score</span>
+          <span class="score-value" id="scoreValue">—</span>
+        </div>
+      </div>
+
+      <div class="hw-feedback-list" id="feedbackList"></div>
+
+      <div class="hw-practice" id="practiceSection" style="display:none">
+        <h3>🎯 Practice Questions</h3>
+        <div class="hw-practice-list" id="practiceList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hw-past-section">
+    <div class="hw-container">
+      <h2>Past Homework</h2>
+      <p class="section-sub">Your submission history with scores</p>
+      <div class="hw-past-list" id="pastList">
+        <div class="hw-empty" id="pastEmpty">No homework submitted yet. Upload your first one above!</div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/push-notifications.js"></script>
+  <script src="/js/homework-app.js"></script>
+</body>
+</html>

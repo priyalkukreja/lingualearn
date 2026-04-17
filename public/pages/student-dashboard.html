@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Dashboard — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link rel="stylesheet" href="/css/push-notifications.css" />
+  <link rel="stylesheet" href="/css/weakness.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard" style="color:var(--primary)">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/my-homework">Homework</a></li>
+      <li><a href="/exam-prep">Exam Prep</a></li>
+      <li><a href="/weakness">Weak Areas</a></li>
+      <li><a href="/writing-test">Writing Test</a></li>
+      <li><a href="/voice-lab">Voice Lab</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+      <span class="nav-streak" id="navStreak">🔥 0</span>
+      <button class="nav-profile-btn" id="navProfile" onclick="toggleProfileMenu()">👤</button>
+      <div class="profile-menu" id="profileMenu">
+        <div class="pm-name" id="pmName">Student</div>
+        <div class="pm-plan" id="pmPlan">Free Trial</div>
+        <a href="/pricing" class="pm-link">💎 Upgrade Plan</a>
+        <button class="pm-link pm-logout" onclick="logout()">🚪 Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="dash-hero">
+    <div class="dash-hero-inner">
+      <div class="dash-welcome">
+        <h1 id="welcomeMsg">Welcome back! 👋</h1>
+        <p id="resumeMsg">Loading your progress...</p>
+      </div>
+      <div class="dash-quick-actions">
+        <a href="/tutor" class="dqa-btn primary">🤖 Continue Learning</a>
+        <a href="/my-homework" class="dqa-btn">📝 Upload Homework</a>
+        <a href="/voice-lab" class="dqa-btn">🎤 Voice Lab</a>
+        <a href="/exam-prep" class="dqa-btn">📋 Exam Prep</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="dash-stats">
+    <div class="stat-card xp-card">
+      <div class="sc-icon">⚡</div>
+      <div class="sc-value" id="totalXP">0</div>
+      <div class="sc-label">Total XP</div>
+      <div class="sc-level" id="xpLevel">Beginner</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">🔥</div>
+      <div class="sc-value" id="streak">0</div>
+      <div class="sc-label">Day Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">📖</div>
+      <div class="sc-value" id="sessionsCount">0</div>
+      <div class="sc-label">Total Sessions</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">⏱️</div>
+      <div class="sc-value" id="studyHours">0h</div>
+      <div class="sc-label">Study Time</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">📝</div>
+      <div class="sc-value" id="hwCompleted">0</div>
+      <div class="sc-label">Homework Done</div>
+    </div>
+    <div class="stat-card plan-card">
+      <div class="sc-icon">💎</div>
+      <div class="sc-value" id="planName">Trial</div>
+      <div class="sc-label" id="planDetail">30 days free</div>
+    </div>
+  </section>
+
+  <section class="dash-body">
+    <div class="dash-main">
+      <div class="dash-section">
+        <h3>📊 Skill Radar</h3>
+        <p class="ds-sub">Your strength across different areas</p>
+        <canvas id="skillRadar" width="400" height="300"></canvas>
+        <div id="skillList" class="skill-list"></div>
+      </div>
+
+      <div class="dash-section">
+        <h3>🎯 Top Weak Areas</h3>
+        <p class="ds-sub">Focus on these to boost your score fastest</p>
+        <div id="weaknesses" class="weakness-cards"></div>
+        <a href="/weakness" class="ds-link">View all weak areas & start drills →</a>
+      </div>
+
+      <div class="dash-section">
+        <h3>⚔️ Active Challenges</h3>
+        <div id="dashChallenges" class="challenge-grid" style="grid-template-columns:1fr"></div>
+        <a href="/weakness" class="ds-link">See all challenges →</a>
+      </div>
+    </div>
+
+    <div class="dash-sidebar">
+      <div class="dash-section">
+        <h3>📅 Recent Sessions</h3>
+        <div id="recentSessions" class="session-list">
+          <div class="no-data">No sessions yet. Start learning!</div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <h3>📝 Homework</h3>
+        <div id="homeworkList" class="hw-list">
+          <div class="no-data">No homework submitted yet.</div>
+        </div>
+        <a href="/my-homework" class="ds-link">Upload homework →</a>
+      </div>
+
+      <div class="dash-section">
+        <h3>🔄 Quick Revision</h3>
+        <div id="revisionArea" class="revision-box">
+          <button class="btn-sm" onclick="loadRevision()">Generate revision of last class</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/weakness-engine.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/push-notifications.js"></script>
+  <script src="/js/dashboard-app.js"></script>
+</body>
+</html>

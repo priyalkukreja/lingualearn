@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Battle — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/quiz-battle.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand"><span class="brand-icon">🌐</span><span>LinguaLearn</span></a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/quiz-battle" style="color:var(--primary)">Quiz Battle</a></li>
+      <li><a href="/mock-test">Mock Test</a></li>
+    </ul>
+    <div class="nav-actions"><span class="nav-xp" id="navXP">0 XP</span></div>
+  </nav>
+
+  <!-- Lobby -->
+  <section class="qb-lobby" id="lobbyScreen">
+    <div class="qb-lobby-inner">
+      <div class="qb-logo">⚔️</div>
+      <h1>Quiz <span class="highlight">Battle</span></h1>
+      <p>Challenge classmates or fight the AI bot in real-time language quizzes!</p>
+
+      <div class="qb-modes">
+        <div class="qb-mode-card" onclick="startBattle('ai')">
+          <div class="qb-mode-icon">🤖</div>
+          <h3>vs AI Bot</h3>
+          <p>Battle Gyani — 3 difficulty levels</p>
+        </div>
+        <div class="qb-mode-card" onclick="startBattle('friend')">
+          <div class="qb-mode-icon">👥</div>
+          <h3>vs Friend</h3>
+          <p>Share code & battle on same device</p>
+        </div>
+        <div class="qb-mode-card" onclick="startBattle('random')">
+          <div class="qb-mode-icon">🌍</div>
+          <h3>Random Match</h3>
+          <p>Match with another CBSE student</p>
+          <span class="qb-coming-soon">Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="qb-leaderboard">
+        <h3>🏆 This Week's Leaderboard</h3>
+        <div id="leaderboard" class="qb-lb-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Battle Screen -->
+  <section class="qb-battle" id="battleScreen" style="display:none">
+    <div class="qb-battle-header">
+      <div class="qb-player qb-player-left">
+        <div class="qb-avatar" id="p1Avatar">👤</div>
+        <div class="qb-pname" id="p1Name">You</div>
+        <div class="qb-pscore" id="p1Score">0</div>
+      </div>
+      <div class="qb-vs">
+        <div class="qb-round" id="roundNum">1/10</div>
+        <div class="qb-battle-timer" id="battleTimer">10</div>
+      </div>
+      <div class="qb-player qb-player-right">
+        <div class="qb-avatar" id="p2Avatar">🤖</div>
+        <div class="qb-pname" id="p2Name">Gyani Bot</div>
+        <div class="qb-pscore" id="p2Score">0</div>
+      </div>
+    </div>
+
+    <div class="qb-question-area">
+      <div class="qb-q-text" id="battleQuestion">Loading...</div>
+      <div class="qb-options" id="battleOptions"></div>
+    </div>
+
+    <div class="qb-feedback" id="battleFeedback" style="display:none"></div>
+  </section>
+
+  <!-- Results -->
+  <section class="qb-results" id="resultsScreen" style="display:none">
+    <div class="qb-results-inner" id="battleResults"></div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/weakness-engine.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/quiz-battle-app.js"></script>
+</body>
+</html>

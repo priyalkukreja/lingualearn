@@ -1,0 +1,104 @@
+/* ===== LIVE STATS BAR ===== */
+
+.stats-bar {
+  background: linear-gradient(135deg, #f8f9ff 0%, #fef5ff 50%, #fff8f0 100%);
+  border-bottom: 2px solid #eeeeff;
+  padding: 0.5rem 1.5rem;
+  position: sticky; top: 60px; z-index: 90;
+  animation: statsBarSlide 0.4s ease;
+}
+@keyframes statsBarSlide {
+  from { opacity: 0; transform: translateY(-100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sb-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* ===== STAT ITEMS ===== */
+.sb-stats {
+  display: flex; align-items: center; gap: 1rem;
+  flex-wrap: wrap;
+}
+.sb-stat {
+  display: flex; align-items: center; gap: 0.3rem;
+  font-size: 0.78rem; font-weight: 700;
+  color: #64748b; white-space: nowrap;
+}
+.sb-stat strong {
+  color: #1e293b; font-weight: 900;
+}
+.sb-icon { font-size: 0.85rem; }
+
+/* Divider dots between stats */
+.sb-stat + .sb-stat::before {
+  content: '·';
+  color: #cbd5e1; font-weight: 900; font-size: 1rem;
+  margin-right: 0.2rem;
+}
+
+/* ===== GOAL PROGRESS BAR ===== */
+.sb-goal {
+  display: flex; align-items: center; gap: 0.6rem;
+  flex: 1; min-width: 150px; max-width: 300px;
+}
+.sb-goal-bar {
+  flex: 1; height: 8px; background: #eeeeff;
+  border-radius: 50px; overflow: hidden;
+}
+.sb-goal-fill {
+  height: 100%; border-radius: 50px; width: 0%;
+  background: linear-gradient(90deg, #5b5ef4, #7209b7);
+  transition: width 0.8s ease, background 0.5s ease;
+}
+.sb-goal-text {
+  font-size: 0.72rem; font-weight: 900;
+  color: #5b5ef4; white-space: nowrap;
+  min-width: 80px; text-align: right;
+}
+
+/* ===== MILESTONE MESSAGE ===== */
+.sb-message {
+  font-size: 0.78rem; font-weight: 900;
+  padding: 0.25rem 0.75rem; border-radius: 50px;
+  background: white; border: 1.5px solid #eeeeff;
+  box-shadow: 0 2px 8px rgba(91,94,244,0.1);
+  white-space: nowrap;
+}
+.sb-msg-pop {
+  animation: msgPop 0.4s ease;
+}
+@keyframes msgPop {
+  0% { opacity: 0; transform: scale(0.8) translateY(-5px); }
+  60% { transform: scale(1.05) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ===== GOAL REACHED GLOW ===== */
+.stats-bar.goal-reached {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 50%, #f0f9ff 100%);
+  border-bottom-color: #a7f3d0;
+}
+.stats-bar.goal-reached .sb-goal-bar {
+  box-shadow: 0 0 10px rgba(22,163,74,0.3);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .stats-bar { padding: 0.4rem 1rem; top: 56px; }
+  .sb-inner { gap: 0.5rem; }
+  .sb-stats { gap: 0.5rem; }
+  .sb-stat { font-size: 0.72rem; }
+  .sb-stat + .sb-stat::before { display: none; }
+  .sb-goal { min-width: 120px; max-width: 200px; }
+  .sb-message { font-size: 0.72rem; padding: 0.2rem 0.5rem; }
+}
+
+@media (max-width: 480px) {
+  .sb-inner { flex-direction: column; align-items: stretch; gap: 0.3rem; }
+  .sb-stats { justify-content: space-between; }
+  .sb-goal { max-width: 100%; }
+}

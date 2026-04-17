@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/pricing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/my-homework">Homework</a></li>
+      <li><a href="/voice-lab">Voice Lab</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <section class="pr-hero">
+    <div class="pr-badge">🎓 For CBSE Class 6-10 Students Only</div>
+    <h1>Choose Your <span class="highlight">Plan</span></h1>
+    <p>AI tutor aligned 100% to CBSE syllabus. Score 90%+ in your additional language paper!</p>
+  </section>
+
+  <!-- Current Plan Banner -->
+  <div class="pr-current" id="currentPlan" style="display:none">
+    <span class="pr-current-icon">💎</span>
+    <span class="pr-current-text" id="currentPlanText">You are on the Free Trial</span>
+  </div>
+
+  <!-- Pricing Cards -->
+  <section class="pr-cards-section">
+    <div class="pr-container">
+      <div class="pr-cards">
+
+        <!-- Explorer -->
+        <div class="pr-card">
+          <div class="pr-card-header explorer">
+            <div class="pr-plan-icon">🚀</div>
+            <h3>Explorer</h3>
+            <p class="pr-plan-desc">Perfect for getting started</p>
+          </div>
+          <div class="pr-card-body">
+            <div class="pr-price">
+              <span class="pr-currency">₹</span>
+              <span class="pr-amount">199</span>
+              <span class="pr-period">/month</span>
+            </div>
+            <div class="pr-trial-badge">🎁 7-day free trial included</div>
+            <ul class="pr-features">
+              <li class="included"><span class="feat-check">✓</span> AI Tutor — 50 messages/day</li>
+              <li class="included"><span class="feat-check">✓</span> Homework Check — 5 uploads/month</li>
+              <li class="included"><span class="feat-check">✓</span> Voice Lab — Basic mode</li>
+              <li class="included"><span class="feat-check">✓</span> 2 Languages (Hindi + 1 more)</li>
+              <li class="included"><span class="feat-check">✓</span> Flashcards & Vocabulary</li>
+              <li class="included"><span class="feat-check">✓</span> Basic Exam Prep</li>
+              <li class="excluded"><span class="feat-x">✕</span> Unlimited AI messages</li>
+              <li class="excluded"><span class="feat-x">✕</span> Advanced pronunciation scoring</li>
+              <li class="excluded"><span class="feat-x">✕</span> Personalized revision plans</li>
+              <li class="excluded"><span class="feat-x">✕</span> Priority support</li>
+            </ul>
+            <button class="btn btn-outline pr-buy-btn" onclick="handleBuy('explorer')">
+              Coming Soon — Razorpay
+            </button>
+          </div>
+        </div>
+
+        <!-- Topper (featured) -->
+        <div class="pr-card featured">
+          <div class="pr-popular-tag">⭐ MOST POPULAR</div>
+          <div class="pr-card-header topper">
+            <div class="pr-plan-icon">👑</div>
+            <h3>Topper</h3>
+            <p class="pr-plan-desc">For serious board exam prep</p>
+          </div>
+          <div class="pr-card-body">
+            <div class="pr-price">
+              <span class="pr-currency">₹</span>
+              <span class="pr-amount">349</span>
+              <span class="pr-period">/month</span>
+            </div>
+            <div class="pr-trial-badge">🎁 7-day free trial included</div>
+            <ul class="pr-features">
+              <li class="included"><span class="feat-check">✓</span> AI Tutor — Unlimited messages</li>
+              <li class="included"><span class="feat-check">✓</span> Homework Check — Unlimited uploads</li>
+              <li class="included"><span class="feat-check">✓</span> Voice Lab — All 3 modes</li>
+              <li class="included"><span class="feat-check">✓</span> All 5 Languages</li>
+              <li class="included"><span class="feat-check">✓</span> Flashcards & Vocabulary</li>
+              <li class="included"><span class="feat-check">✓</span> Full Exam Prep + Mock Tests</li>
+              <li class="included"><span class="feat-check">✓</span> Advanced pronunciation scoring</li>
+              <li class="included"><span class="feat-check">✓</span> Personalized AI revision plans</li>
+              <li class="included"><span class="feat-check">✓</span> Oral exam practice</li>
+              <li class="included"><span class="feat-check">✓</span> Priority WhatsApp support</li>
+            </ul>
+            <button class="btn btn-primary pr-buy-btn" onclick="handleBuy('topper')">
+              Coming Soon — Razorpay
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Comparison -->
+  <section class="pr-compare-section">
+    <div class="pr-container">
+      <h2>Feature Comparison</h2>
+      <p class="section-sub">See exactly what you get with each plan</p>
+      <div class="pr-table-wrap">
+        <table class="pr-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Explorer <span class="th-price">₹199/mo</span></th>
+              <th>Topper <span class="th-price">₹349/mo</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>AI Tutor Messages</td><td>50/day</td><td class="highlight-cell">Unlimited</td></tr>
+            <tr><td>Homework Uploads</td><td>5/month</td><td class="highlight-cell">Unlimited</td></tr>
+            <tr><td>Languages</td><td>2</td><td class="highlight-cell">5 (All)</td></tr>
+            <tr><td>Voice Lab</td><td>Basic Q&A</td><td class="highlight-cell">All 3 modes</td></tr>
+            <tr><td>Pronunciation Scoring</td><td>—</td><td class="highlight-cell">✓ Advanced</td></tr>
+            <tr><td>Exam Prep</td><td>Basic</td><td class="highlight-cell">Full + Mocks</td></tr>
+            <tr><td>Revision Plans</td><td>—</td><td class="highlight-cell">AI-Personalized</td></tr>
+            <tr><td>Flashcards</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Dashboard & XP</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Support</td><td>Email</td><td class="highlight-cell">Priority WhatsApp</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="pr-faq-section">
+    <div class="pr-container">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>Is there a free trial?</span><span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-a">Yes! Both plans come with a 7-day free trial. No payment required to start. You can explore all features before deciding.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>Can I switch plans later?</span><span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-a">Absolutely. You can upgrade from Explorer to Topper anytime. The price difference will be prorated for the remaining days.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>Which classes does this cover?</span><span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-a">LinguaLearn covers CBSE classes 6 through 10 for Hindi, French, Sanskrit, German, and Spanish language subjects.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>How does payment work?</span><span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-a">We will be integrating Razorpay for secure payments via UPI, cards, and net banking. Payment integration is coming soon!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script>
+    // Show current plan if logged in
+    if (isLoggedIn()) {
+      const student = getStudent();
+      const planEl = document.getElementById('currentPlan');
+      const planText = document.getElementById('currentPlanText');
+      planEl.style.display = 'flex';
+      if (student?.plan === 'topper') {
+        planText.textContent = 'You are on the Topper plan 👑';
+      } else if (student?.plan === 'explorer') {
+        planText.textContent = 'You are on the Explorer plan 🚀';
+      } else {
+        planText.textContent = 'You are on the Free Trial — upgrade anytime!';
+      }
+    }
+
+    function handleBuy(plan) {
+      alert('Razorpay payment integration coming soon! You selected the ' + plan.charAt(0).toUpperCase() + plan.slice(1) + ' plan.');
+    }
+
+    function toggleFaq(el) {
+      const item = el.parentElement;
+      const answer = item.querySelector('.faq-a');
+      const arrow = el.querySelector('.faq-arrow');
+      const isOpen = answer.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-arrow').forEach(a => a.style.transform = '');
+      if (!isOpen) {
+        answer.classList.add('open');
+        arrow.style.transform = 'rotate(180deg)';
+      }
+    }
+  </script>
+</body>
+</html>

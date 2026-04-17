@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice Lab — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/voice.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link rel="stylesheet" href="/css/push-notifications.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/my-homework">Homework</a></li>
+      <li><a href="/voice-lab" style="color:var(--primary)">Voice Lab</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <section class="vl-hero">
+    <h1>🎤 Voice Lab</h1>
+    <p>Speak, listen, and perfect your pronunciation with AI-powered voice interaction.</p>
+  </section>
+
+  <!-- Mode Selector -->
+  <section class="vl-modes">
+    <div class="vl-container">
+      <div class="mode-cards">
+        <div class="mode-card active" data-mode="qa">
+          <span class="mode-icon">💬</span>
+          <h3>Voice Q&A</h3>
+          <p>Ask questions by voice, get spoken AI answers</p>
+        </div>
+        <div class="mode-card" data-mode="pronunciation">
+          <span class="mode-icon">🗣️</span>
+          <h3>Pronunciation</h3>
+          <p>Practice words and get accuracy scores</p>
+        </div>
+        <div class="mode-card" data-mode="oral">
+          <span class="mode-icon">📋</span>
+          <h3>Oral Exam</h3>
+          <p>Simulate oral exam Q&A with scoring</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Voice Interaction Area -->
+  <section class="vl-interaction">
+    <div class="vl-container">
+
+      <!-- Voice Q&A Mode -->
+      <div class="vl-panel" id="panel-qa">
+        <div class="vl-prompt-area">
+          <p class="vl-instruction">Tap the mic and ask a question in any language</p>
+        </div>
+        <div class="vl-response-area" id="qaResponse" style="display:none">
+          <div class="vl-response-label">AI Response</div>
+          <div class="vl-response-text" id="qaText"></div>
+        </div>
+      </div>
+
+      <!-- Pronunciation Mode -->
+      <div class="vl-panel" id="panel-pronunciation" style="display:none">
+        <div class="vl-target-word">
+          <div class="vl-target-label">Say this word/phrase:</div>
+          <div class="vl-target-text" id="targetText">Bonjour</div>
+          <button class="btn-sm vl-hear-btn" id="hearBtn">🔊 Hear it</button>
+          <button class="btn-sm vl-next-word" id="nextWord">Next Word →</button>
+        </div>
+        <div class="vl-score-display" id="pronScore" style="display:none">
+          <div class="vl-score-ring">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" class="ring-bg" />
+              <circle cx="60" cy="60" r="52" class="ring-fill" id="scoreRing" />
+            </svg>
+            <span class="ring-text" id="scorePercent">0%</span>
+          </div>
+          <div class="vl-score-detail">
+            <p class="vl-detected-label">You said:</p>
+            <p class="vl-detected-text" id="detectedPron"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Oral Exam Mode -->
+      <div class="vl-panel" id="panel-oral" style="display:none">
+        <div class="vl-oral-info">
+          <p class="vl-instruction">The AI will ask you questions. Answer by speaking.</p>
+          <div class="vl-oral-q" id="oralQ" style="display:none">
+            <div class="vl-oral-label">Question <span id="oralQNum">1</span> of 5</div>
+            <div class="vl-oral-text" id="oralQText"></div>
+          </div>
+        </div>
+        <div class="vl-oral-answers" id="oralAnswers"></div>
+        <button class="btn btn-primary vl-start-exam" id="startExam">Start Oral Exam</button>
+        <div class="vl-oral-result" id="oralResult" style="display:none">
+          <h3>Exam Complete!</h3>
+          <div class="vl-oral-final" id="oralFinal"></div>
+        </div>
+      </div>
+
+      <!-- Mic Button (shared) -->
+      <div class="vl-mic-wrap">
+        <button class="vl-mic-btn" id="micBtn" title="Hold or click to speak">
+          <span class="mic-icon">🎙️</span>
+          <div class="mic-waves">
+            <span></span><span></span><span></span>
+          </div>
+        </button>
+        <p class="vl-mic-status" id="micStatus">Tap to speak</p>
+      </div>
+
+      <!-- Detected Text -->
+      <div class="vl-detected" id="detectedArea" style="display:none">
+        <div class="vl-detected-label">Detected Speech:</div>
+        <div class="vl-detected-text" id="detectedText"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/push-notifications.js"></script>
+  <script src="/js/voice-app.js"></script>
+</body>
+</html>

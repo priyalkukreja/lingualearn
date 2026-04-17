@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam Prep — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/exam-prep.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link rel="stylesheet" href="/css/push-notifications.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/my-homework">Homework</a></li>
+      <li><a href="/exam-prep" style="color:var(--primary)">Exam Prep</a></li>
+      <li><a href="/writing-test">Writing Test</a></li>
+      <li><a href="/voice-lab">Voice Lab</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <section class="ep-hero">
+    <h1>📋 Exam Prep</h1>
+    <p>Pick your exam, we auto-fill the syllabus — just confirm and get your AI revision plan!</p>
+  </section>
+
+  <!-- Step 1: Pick Exam -->
+  <section class="ep-section">
+    <div class="ep-container">
+      <div class="ep-card">
+        <h2 class="ep-card-title">📅 Pick Your Upcoming Exam</h2>
+        <p class="ep-card-sub">Select exam type — date and syllabus auto-fill based on CBSE pattern</p>
+
+        <div class="ep-exam-picker" id="examPicker">
+          <div class="ep-exam-option" data-type="ut1">
+            <div class="ep-exam-icon">📝</div>
+            <div class="ep-exam-name">Unit Test 1</div>
+            <div class="ep-exam-when">July–Aug</div>
+          </div>
+          <div class="ep-exam-option" data-type="ut2">
+            <div class="ep-exam-icon">📝</div>
+            <div class="ep-exam-name">Unit Test 2</div>
+            <div class="ep-exam-when">Sept–Oct</div>
+          </div>
+          <div class="ep-exam-option" data-type="half_yearly">
+            <div class="ep-exam-icon">📄</div>
+            <div class="ep-exam-name">Half-Yearly</div>
+            <div class="ep-exam-when">November</div>
+          </div>
+          <div class="ep-exam-option" data-type="annual">
+            <div class="ep-exam-icon">🎓</div>
+            <div class="ep-exam-name">Annual Exam</div>
+            <div class="ep-exam-when">Feb–March</div>
+          </div>
+        </div>
+
+        <!-- Auto-filled details (shown after picking exam type) -->
+        <div class="ep-details" id="examDetails" style="display:none">
+          <div class="ep-details-header">
+            <span class="ep-details-badge" id="examBadge">UT1</span>
+            <span class="ep-details-lang" id="examLang">French · Class 8</span>
+          </div>
+
+          <div class="ep-form-row">
+            <div class="ep-field">
+              <label>Exam Date <span class="ep-auto-tag">auto-filled</span></label>
+              <input type="date" id="examDate" class="ep-input" />
+            </div>
+            <div class="ep-field">
+              <label>Days Until Exam</label>
+              <div class="ep-countdown-inline" id="daysLeft">—</div>
+            </div>
+          </div>
+
+          <div class="ep-field">
+            <label>Syllabus / Chapters <span class="ep-auto-tag">auto-filled from CBSE pattern</span></label>
+            <div class="ep-syllabus-chips" id="syllabusChips"></div>
+            <input type="text" id="extraChapters" class="ep-input ep-input-sm" placeholder="+ Add custom chapter or topic (optional)" />
+          </div>
+
+          <div class="ep-actions">
+            <button class="btn btn-primary ep-schedule-btn" id="scheduleBtn">
+              🚀 Generate My Revision Plan
+            </button>
+            <button class="btn btn-outline ep-reset-btn" id="resetBtn">Change Exam</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Revision Plan -->
+  <section class="ep-section" id="revisionSection" style="display:none">
+    <div class="ep-container">
+      <div class="ep-card">
+        <div class="ep-card-header">
+          <h2 class="ep-card-title">🗓️ Your Revision Plan</h2>
+          <span class="ep-countdown" id="countdown"></span>
+        </div>
+        <div class="ep-plan-grid" id="planGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mock Test -->
+  <section class="ep-section ep-mock-section">
+    <div class="ep-container">
+      <div class="ep-card">
+        <h2 class="ep-card-title">🧪 Mock Test</h2>
+        <p class="ep-card-sub">Quick 10-question test based on your exam syllabus</p>
+        <div id="mockSetup">
+          <button class="btn btn-primary" id="startMock">Start Mock Test</button>
+        </div>
+        <div id="mockArea" style="display:none">
+          <div class="mock-progress">
+            <div class="mock-bar"><div class="mock-fill" id="mockFill"></div></div>
+            <span class="mock-count" id="mockCount">1/10</span>
+          </div>
+          <div class="mock-question" id="mockQ"></div>
+          <div class="mock-options" id="mockOpts"></div>
+          <div class="mock-feedback" id="mockFeedback"></div>
+        </div>
+        <div id="mockResult" style="display:none">
+          <div class="mock-result-card">
+            <div class="mock-score" id="mockScore">0/10</div>
+            <p class="mock-msg" id="mockMsg"></p>
+            <button class="btn btn-outline" id="retryMock">Retry</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Last-Minute Sheet (dynamic based on language) -->
+  <section class="ep-section ep-revision-sheet">
+    <div class="ep-container">
+      <div class="ep-card">
+        <h2 class="ep-card-title">⚡ Last-Minute Revision Sheet</h2>
+        <p class="ep-card-sub">Key rules and must-remember points for your language</p>
+        <div class="ep-sheet-grid" id="sheetGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/push-notifications.js"></script>
+  <script src="/js/exam-prep-app.js"></script>
+</body>
+</html>

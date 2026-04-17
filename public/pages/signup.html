@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Textbook Selector Styles */
+    .textbook-step {
+      display: none;
+      animation: slideDown 0.3s ease;
+      margin-top: 0.5rem;
+    }
+    .textbook-step.visible { display: block; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
+    .textbook-step label { font-size: 0.85rem; font-weight: 700; color: #374151; margin-bottom: 0.35rem; display: block; }
+    .textbook-step select { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.88rem; font-family: inherit; font-weight: 600; background: #fff; color: #111827; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; cursor: pointer; }
+    .textbook-step select:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+
+    .custom-textbook-area {
+      display: none;
+      margin-top: 0.75rem;
+      padding: 1rem;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      animation: slideDown 0.3s ease;
+    }
+    .custom-textbook-area.visible { display: block; }
+    .custom-textbook-area input[type="text"] { width: 100%; padding: 0.6rem 0.85rem; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.85rem; font-family: inherit; font-weight: 600; margin-bottom: 0.6rem; }
+    .custom-textbook-area input[type="text"]:focus { outline: none; border-color: #6366f1; }
+
+    .upload-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 0.6rem;
+    }
+    .upload-area:hover { border-color: #6366f1; background: rgba(99,102,241,0.03); }
+    .upload-area svg { margin-bottom: 0.5rem; color: #9ca3af; }
+    .upload-area p { font-size: 0.8rem; color: #6b7280; font-weight: 600; margin-bottom: 0.2rem; }
+    .upload-area span { font-size: 0.72rem; color: #9ca3af; }
+    .upload-area input { display: none; }
+    .upload-area.has-file { border-color: #10b981; background: rgba(16,185,129,0.04); }
+    .upload-area.has-file p { color: #059669; }
+
+    .extract-btn {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+      color: #374151;
+      transition: all 0.2s;
+      margin-bottom: 0.6rem;
+    }
+    .extract-btn:hover { background: #e5e7eb; }
+    .extract-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .or-divider {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin: 0.75rem 0; font-size: 0.72rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+
+    .manual-chapters {
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+    .manual-chapters.visible { display: block; }
+    .manual-chapters textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      font-weight: 500;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .manual-chapters textarea:focus { outline: none; border-color: #6366f1; }
+    .manual-chapters p { font-size: 0.72rem; color: #9ca3af; margin-top: 0.3rem; }
+
+    .extracted-preview {
+      display: none;
+      margin-top: 0.6rem;
+      padding: 0.75rem;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 8px;
+      animation: slideDown 0.3s ease;
+    }
+    .extracted-preview.visible { display: block; }
+    .extracted-preview h4 { font-size: 0.78rem; font-weight: 800; color: #065f46; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .extracted-preview ul { list-style: none; padding: 0; }
+    .extracted-preview li { font-size: 0.8rem; font-weight: 600; color: #374151; padding: 0.2rem 0; }
+    .extracted-preview li::before { content: ''; display: inline-block; width: 6px; height: 6px; background: #10b981; border-radius: 50%; margin-right: 0.5rem; }
+
+    .textbook-info {
+      display: none;
+      margin-top: 0.5rem;
+      padding: 0.6rem 0.85rem;
+      background: rgba(99,102,241,0.06);
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #4f46e5;
+      animation: slideDown 0.3s ease;
+    }
+    .textbook-info.visible { display: flex; align-items: center; gap: 0.4rem; }
+
+    .session-notice {
+      margin-top: 1rem;
+      padding: 0.65rem 0.85rem;
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #92400e;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-brand-icon" style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#ec4899);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:1rem;">L</div>
+        <div class="auth-brand-name">LinguaLearn</div>
+        <div class="auth-brand-sub">AI Language Tutor for CBSE Students</div>
+        <div class="trial-badge">30 days FREE trial &middot; CBSE Class 6-10</div>
+      </div>
+
+      <form class="auth-form" id="signupForm">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="name" placeholder="Your name" required />
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@email.com" required />
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="Min 6 characters" minlength="6" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Class</label>
+            <select id="studentClass" required>
+              <option value="">Select</option>
+              <option value="6">Class 6</option>
+              <option value="7">Class 7</option>
+              <option value="8">Class 8</option>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Language</label>
+            <select id="language" required>
+              <option value="">Select</option>
+              <option value="french">French</option>
+              <option value="german">German</option>
+              <option value="sanskrit">Sanskrit</option>
+              <option value="spanish">Spanish</option>
+              <option value="japanese">Japanese</option>
+              <option value="korean">Korean</option>
+              <option value="mandarin">Mandarin</option>
+              <option value="russian">Russian</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TEXTBOOK SELECTOR -->
+        <div class="textbook-step" id="textbookStep">
+          <label>Your School's Textbook</label>
+          <select id="textbookSelect">
+            <option value="">Loading textbooks...</option>
+          </select>
+
+          <div class="textbook-info" id="textbookInfo">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 5v3m0 2h.01"/></svg>
+            <span id="textbookInfoText"></span>
+          </div>
+
+          <!-- Custom textbook area -->
+          <div class="custom-textbook-area" id="customArea">
+            <input type="text" id="customTextbookName" placeholder="Type your textbook name (e.g. Apprenons le Francais)" />
+
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 18V8m0 0l-4 4m4-4l4 4"/><path d="M4 20a3 3 0 003 3h14a3 3 0 003-3"/></svg>
+              <p id="uploadText">Upload table of contents (PDF)</p>
+              <span>PDF or text file, max 10MB</span>
+              <input type="file" id="fileInput" accept=".pdf,.txt" />
+            </div>
+
+            <button type="button" class="extract-btn" id="extractBtn" onclick="extractChapters()" disabled>
+              Extract chapters with AI
+            </button>
+
+            <div class="extracted-preview" id="extractedPreview">
+              <h4>Extracted Chapters</h4>
+              <ul id="extractedList"></ul>
+            </div>
+
+            <div class="or-divider">or type manually</div>
+
+            <div class="manual-chapters visible" id="manualChapters">
+              <textarea id="manualChapterInput" placeholder="Type one chapter per line:&#10;1. Bonjour! - Greetings, Alphabet&#10;2. La famille - Family, Numbers&#10;3. Au lycee - School, Articles"></textarea>
+              <p>One chapter per line. Format: number. Title - topics</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Parent's Email (optional — for reports)</label>
+          <input type="email" id="parentEmail" placeholder="parent@email.com" />
+        </div>
+
+        <div class="session-notice">
+          Your free trial includes full access to all features for 30 days. After the trial, choose a plan to continue. You can change your textbook anytime from the dashboard.
+        </div>
+
+        <button type="submit" class="auth-submit">Create Free Account</button>
+        <div class="auth-msg" id="authMsg"></div>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="/login">Login here</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedTextbookId = '';
+    let extractedChapters = null;
+
+    const classSelect = document.getElementById('studentClass');
+    const langSelect = document.getElementById('language');
+    const textbookStep = document.getElementById('textbookStep');
+    const textbookSelect = document.getElementById('textbookSelect');
+    const customArea = document.getElementById('customArea');
+    const textbookInfo = document.getElementById('textbookInfo');
+    const textbookInfoText = document.getElementById('textbookInfoText');
+
+    function checkAndLoadTextbooks() {
+      const cls = classSelect.value;
+      const lang = langSelect.value;
+      if (!cls || !lang) {
+        textbookStep.classList.remove('visible');
+        return;
+      }
+      loadTextbooks(lang, cls);
+    }
+
+    classSelect.addEventListener('change', checkAndLoadTextbooks);
+    langSelect.addEventListener('change', checkAndLoadTextbooks);
+
+    async function loadTextbooks(language, studentClass) {
+      textbookSelect.innerHTML = '<option value="">Loading...</option>';
+      textbookStep.classList.add('visible');
+      customArea.classList.remove('visible');
+      textbookInfo.classList.remove('visible');
+
+      try {
+        const res = await fetch(`/api/textbook/catalog?language=${language}&studentClass=${studentClass}`);
+        const data = await res.json();
+
+        textbookSelect.innerHTML = '<option value="">-- Select your textbook --</option>';
+        if (data.books && data.books.length > 0) {
+          data.books.forEach(book => {
+            const opt = document.createElement('option');
+            opt.value = book.id;
+            opt.textContent = `${book.name} (${book.publisher})`;
+            textbookSelect.appendChild(opt);
+          });
+        }
+        const customOpt = document.createElement('option');
+        customOpt.value = 'custom';
+        customOpt.textContent = "My textbook isn't listed";
+        textbookSelect.appendChild(customOpt);
+
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = 'cbse-default';
+        defaultOpt.textContent = "I'll use CBSE common syllabus";
+        textbookSelect.appendChild(defaultOpt);
+      } catch {
+        textbookSelect.innerHTML = '<option value="cbse-default">CBSE Common Syllabus (default)</option><option value="custom">My textbook isn\'t listed</option>';
+      }
+    }
+
+    textbookSelect.addEventListener('change', function () {
+      selectedTextbookId = this.value;
+      customArea.classList.remove('visible');
+      textbookInfo.classList.remove('visible');
+
+      if (this.value === 'custom') {
+        customArea.classList.add('visible');
+      } else if (this.value === 'cbse-default') {
+        textbookInfo.classList.add('visible');
+        textbookInfoText.textContent = "We'll use CBSE common syllabus. You can add your textbook later from the dashboard.";
+      } else if (this.value) {
+        const selectedOption = this.options[this.selectedIndex];
+        textbookInfo.classList.add('visible');
+        textbookInfoText.textContent = `${selectedOption.textContent} — chapters will be mapped to your study plan.`;
+      }
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function () {
+      const file = this.files[0];
+      const area = document.getElementById('uploadArea');
+      const text = document.getElementById('uploadText');
+      const btn = document.getElementById('extractBtn');
+      if (file) {
+        area.classList.add('has-file');
+        text.textContent = file.name;
+        btn.disabled = false;
+      } else {
+        area.classList.remove('has-file');
+        text.textContent = 'Upload table of contents (PDF)';
+        btn.disabled = true;
+      }
+    });
+
+    async function extractChapters() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return;
+
+      const btn = document.getElementById('extractBtn');
+      btn.textContent = 'Extracting with AI...';
+      btn.disabled = true;
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('language', langSelect.value);
+      formData.append('studentClass', classSelect.value);
+      formData.append('customName', document.getElementById('customTextbookName').value || 'Custom Textbook');
+
+      try {
+        const res = await fetch('/api/textbook/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.extracted && data.chapters) {
+          extractedChapters = data.chapters;
+          const list = document.getElementById('extractedList');
+          list.innerHTML = data.chapters.map(ch =>
+            `<li>Ch ${ch.number}. ${ch.title} — ${ch.topics?.join(', ') || ''}</li>`
+          ).join('');
+          document.getElementById('extractedPreview').classList.add('visible');
+          btn.textContent = 'Chapters extracted!';
+        } else {
+          btn.textContent = data.message || 'Could not extract. Type manually below.';
+          setTimeout(() => { btn.textContent = 'Extract chapters with AI'; btn.disabled = false; }, 3000);
+        }
+      } catch {
+        btn.textContent = 'Extraction failed. Type manually below.';
+        setTimeout(() => { btn.textContent = 'Extract chapters with AI'; btn.disabled = false; }, 3000);
+      }
+    }
+
+    function parseManualChapters(text) {
+      if (!text.trim()) return null;
+      const lines = text.trim().split('\n').filter(l => l.trim());
+      return lines.map((line, idx) => {
+        const match = line.match(/^\d+[\.\)]\s*(.+?)(?:\s*[-–—]\s*(.+))?$/);
+        if (match) {
+          return {
+            number: idx + 1,
+            title: match[1].trim(),
+            topics: match[2] ? match[2].split(',').map(t => t.trim()) : []
+          };
+        }
+        return { number: idx + 1, title: line.trim(), topics: [] };
+      });
+    }
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const signupForm = document.getElementById('signupForm');
+
+      signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = signupForm.querySelector('button[type="submit"]');
+        const msg = document.getElementById('authMsg');
+        btn.disabled = true;
+        btn.textContent = 'Creating account...';
+        msg.textContent = '';
+
+        const email = document.getElementById('email').value.trim();
+        const language = langSelect.value;
+        const studentClass = classSelect.value;
+
+        try {
+          const res = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: document.getElementById('name').value.trim(),
+              email,
+              password: document.getElementById('password').value,
+              studentClass,
+              language,
+              parentEmail: document.getElementById('parentEmail')?.value.trim() || ''
+            })
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            // Save textbook selection
+            if (selectedTextbookId && selectedTextbookId !== 'cbse-default') {
+              try {
+                if (selectedTextbookId === 'custom') {
+                  const chapters = extractedChapters || parseManualChapters(document.getElementById('manualChapterInput').value);
+                  if (chapters && chapters.length) {
+                    await fetch('/api/textbook/confirm-custom', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        email,
+                        language,
+                        studentClass,
+                        customName: document.getElementById('customTextbookName').value || 'Custom Textbook',
+                        chapters
+                      })
+                    });
+                  }
+                } else {
+                  await fetch('/api/textbook/select', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, textbookId: selectedTextbookId, language, studentClass })
+                  });
+                }
+              } catch { /* textbook save is non-blocking */ }
+            }
+
+            localStorage.setItem('ll_textbook_id', selectedTextbookId || 'cbse-default');
+            msg.style.color = '#059669';
+            msg.textContent = 'Account created! Redirecting to login...';
+            setTimeout(() => window.location.href = '/login', 1500);
+          } else {
+            msg.style.color = '#dc2626';
+            msg.textContent = data.error || 'Signup failed';
+            btn.disabled = false;
+            btn.textContent = 'Create Free Account';
+          }
+        } catch (err) {
+          msg.style.color = '#dc2626';
+          msg.textContent = 'Network error. Please try again.';
+          btn.disabled = false;
+          btn.textContent = 'Create Free Account';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing Test — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/writing-test.css" />
+  <link rel="stylesheet" href="/css/robot-tutor.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link rel="stylesheet" href="/css/push-notifications.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/my-homework">Homework</a></li>
+      <li><a href="/exam-prep">Exam Prep</a></li>
+      <li><a href="/writing-test" style="color:var(--primary)">Writing Test</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <section class="wt-hero">
+    <h1>✍️ Writing Test</h1>
+    <p>Practice essays, letters, dialogues & more — type directly or snap a photo of your handwriting!</p>
+  </section>
+
+  <!-- Step 1: Pick Writing Task -->
+  <section class="wt-section">
+    <div class="wt-container">
+      <div class="wt-card">
+        <h2 class="wt-card-title">📝 Choose a Writing Task</h2>
+        <p class="wt-card-sub">Pick a task type, or let AI generate a prompt for you</p>
+
+        <div class="wt-task-picker" id="taskPicker">
+          <div class="wt-task-option" data-type="essay">
+            <div class="wt-task-icon">📄</div>
+            <div class="wt-task-name">Essay</div>
+            <div class="wt-task-desc">150–200 words</div>
+          </div>
+          <div class="wt-task-option" data-type="letter">
+            <div class="wt-task-icon">✉️</div>
+            <div class="wt-task-name">Letter</div>
+            <div class="wt-task-desc">Formal / Informal</div>
+          </div>
+          <div class="wt-task-option" data-type="dialogue">
+            <div class="wt-task-icon">💬</div>
+            <div class="wt-task-name">Dialogue</div>
+            <div class="wt-task-desc">Conversation writing</div>
+          </div>
+          <div class="wt-task-option" data-type="paragraph">
+            <div class="wt-task-icon">📋</div>
+            <div class="wt-task-name">Paragraph</div>
+            <div class="wt-task-desc">Short answer / Describe</div>
+          </div>
+          <div class="wt-task-option" data-type="story">
+            <div class="wt-task-icon">📖</div>
+            <div class="wt-task-name">Story</div>
+            <div class="wt-task-desc">Creative writing</div>
+          </div>
+          <div class="wt-task-option" data-type="grammar">
+            <div class="wt-task-icon">🔤</div>
+            <div class="wt-task-name">Grammar</div>
+            <div class="wt-task-desc">Fill-in / Transform</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2: Writing Prompt + Input -->
+  <section class="wt-section" id="writingArea" style="display:none">
+    <div class="wt-container">
+      <div class="wt-card">
+        <!-- AI-generated prompt -->
+        <div class="wt-prompt-box" id="promptBox">
+          <div class="wt-prompt-label">Your Writing Prompt</div>
+          <div class="wt-prompt-text" id="promptText">Loading...</div>
+          <div class="wt-prompt-meta">
+            <span class="wt-prompt-badge" id="promptBadge">Essay</span>
+            <span class="wt-prompt-marks" id="promptMarks">5 marks</span>
+            <button class="wt-new-prompt-btn" id="newPromptBtn">🔄 New Prompt</button>
+          </div>
+        </div>
+
+        <!-- Mode toggle: Type vs Camera -->
+        <div class="wt-mode-toggle">
+          <button class="wt-mode-btn active" id="modeTypeBtn" data-mode="type">
+            <span class="wt-mode-icon">⌨️</span> Type Answer
+          </button>
+          <button class="wt-mode-btn" id="modeCamBtn" data-mode="camera">
+            <span class="wt-mode-icon">📷</span> Photo Upload
+          </button>
+        </div>
+
+        <!-- MODE A: Type directly -->
+        <div class="wt-type-area" id="typeArea">
+          <textarea id="writingInput" class="wt-textarea" placeholder="Start writing your answer here..." rows="12"></textarea>
+          <div class="wt-type-footer">
+            <span class="wt-word-count" id="wordCount">0 words</span>
+            <span class="wt-char-count" id="charCount">0 characters</span>
+          </div>
+        </div>
+
+        <!-- MODE B: Camera / Photo upload -->
+        <div class="wt-camera-area" id="cameraArea" style="display:none">
+          <div class="wt-cam-instructions">
+            <p>📸 Write your answer on paper, then upload a photo</p>
+            <p class="wt-cam-tip">Tip: Use good lighting, keep the paper flat, and write clearly</p>
+          </div>
+
+          <!-- Camera capture (mobile) or file upload -->
+          <div class="wt-cam-options">
+            <label class="wt-cam-btn" id="cameraBtn">
+              <span class="wt-cam-icon">📷</span>
+              <span>Take Photo</span>
+              <input type="file" accept="image/*" capture="environment" id="cameraInput" hidden />
+            </label>
+            <label class="wt-cam-btn" id="galleryBtn">
+              <span class="wt-cam-icon">🖼️</span>
+              <span>From Gallery</span>
+              <input type="file" accept="image/*" id="galleryInput" hidden />
+            </label>
+          </div>
+
+          <!-- Image preview -->
+          <div class="wt-img-preview" id="imgPreview" style="display:none">
+            <img id="previewImg" src="" alt="Your handwriting" />
+            <button class="wt-img-remove" id="imgRemove">✕ Remove</button>
+          </div>
+
+          <!-- OCR progress -->
+          <div class="wt-ocr-status" id="ocrStatus" style="display:none">
+            <div class="wt-ocr-bar"><div class="wt-ocr-fill" id="ocrFill"></div></div>
+            <span class="wt-ocr-text" id="ocrText">Extracting text...</span>
+          </div>
+
+          <!-- Extracted text review -->
+          <div class="wt-ocr-review" id="ocrReview" style="display:none">
+            <div class="wt-ocr-label">
+              📝 Extracted Text — <em>please review and fix any errors</em>
+            </div>
+            <textarea id="ocrOutput" class="wt-textarea wt-textarea-sm" rows="8"></textarea>
+            <div class="wt-type-footer">
+              <span class="wt-word-count" id="ocrWordCount">0 words</span>
+              <button class="wt-ocr-confirm-btn" id="ocrConfirmBtn">✅ Text looks correct</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button class="btn btn-primary wt-submit-btn" id="submitBtn" disabled>
+          <span id="submitText">✨ Check My Writing</span>
+          <span class="spinner" id="submitSpinner" style="display:none"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 3: AI Feedback -->
+  <section class="wt-section wt-feedback-section" id="feedbackSection" style="display:none">
+    <div class="wt-container">
+      <div class="wt-card">
+        <div class="wt-fb-header">
+          <h2 class="wt-card-title">📊 AI Writing Feedback</h2>
+          <div class="wt-score-ring" id="scoreRing">
+            <svg viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52" />
+              <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52" />
+            </svg>
+            <div class="ring-text">
+              <span class="ring-score" id="ringScore">0</span>
+              <span class="ring-total">/10</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score breakdown -->
+        <div class="wt-score-bars" id="scoreBars"></div>
+
+        <!-- Detailed feedback -->
+        <div class="wt-fb-details" id="fbDetails"></div>
+
+        <!-- Corrected version -->
+        <div class="wt-corrected" id="correctedSection" style="display:none">
+          <h3>✅ Corrected Version</h3>
+          <div class="wt-corrected-text" id="correctedText"></div>
+        </div>
+
+        <!-- Tips for improvement -->
+        <div class="wt-tips" id="tipsSection" style="display:none">
+          <h3>💡 Tips to Improve</h3>
+          <ul class="wt-tips-list" id="tipsList"></ul>
+        </div>
+
+        <!-- Actions -->
+        <div class="wt-fb-actions">
+          <button class="btn btn-primary" id="tryAgainBtn">✍️ Try Another</button>
+          <button class="btn btn-outline" id="practiceMoreBtn">📝 Practice Same Type</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Past Writing Tests -->
+  <section class="wt-section wt-past-section">
+    <div class="wt-container">
+      <h2 class="wt-card-title">📚 Past Writing Tests</h2>
+      <div class="wt-past-list" id="pastList">
+        <div class="wt-empty" id="pastEmpty">No writing tests yet — pick a task above to start!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating Robot Tutor -->
+  <div class="robot-floating" id="floatingRobot"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/push-notifications.js"></script>
+  <script src="/js/robot-tutor.js"></script>
+  <script src="/js/writing-test-app.js"></script>
+</body>
+</html>

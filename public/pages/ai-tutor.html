@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Tutor — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/ai-tutor.css" />
+  <link rel="stylesheet" href="/css/robot-tutor.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link rel="stylesheet" href="/css/push-notifications.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor" style="color:var(--primary)">AI Tutor</a></li>
+      <li><a href="/my-homework">Homework</a></li>
+      <li><a href="/writing-test">Writing Test</a></li>
+      <li><a href="/voice-lab">Voice Lab</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <div class="tutor-layout">
+    <aside class="tutor-sidebar">
+      <!-- Robot Tutor Avatar -->
+      <div class="sidebar-robot" id="sidebarRobot"></div>
+
+      <div class="ts-header">
+        <h3>Gyani — AI Tutor</h3>
+        <p id="tsInfo">Loading...</p>
+      </div>
+
+      <div class="ts-section">
+        <div class="ts-label">Quick Topics</div>
+        <div class="ts-topics" id="quickTopics"></div>
+      </div>
+
+      <div class="ts-section">
+        <div class="ts-label">Teaching Method</div>
+        <select id="methodSelect" class="ts-select">
+          <option value="default">Auto (AI picks best)</option>
+          <option value="visual">📊 Visual / Diagrams</option>
+          <option value="story">📖 Story Mode</option>
+          <option value="pattern">📋 Pattern Tables</option>
+          <option value="mnemonic">🧠 Memory Tricks</option>
+          <option value="micro">⚡ Micro Lessons</option>
+          <option value="game">🎮 Game Style</option>
+        </select>
+      </div>
+
+      <div class="ts-section">
+        <div class="ts-label">Weak Areas</div>
+        <div id="weakAreas" class="ts-weak"></div>
+      </div>
+    </aside>
+
+    <main class="tutor-main">
+      <!-- Robot header in chat -->
+      <div class="chat-robot-header">
+        <div id="chatRobot"></div>
+        <div class="chat-robot-info">
+          <h3>Gyani</h3>
+          <p>Your AI study buddy — always ready to help!</p>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-bubble ai">
+          <div class="cb-icon">🤖</div>
+          <div class="cb-content">
+            <p>Hey! I'm <strong>Gyani</strong>, your AI study buddy! What would you like to learn today?</p>
+            <p>Ask me anything — grammar, vocabulary, pronunciation, or just say "teach me something new!" 🚀</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <input type="text" id="chatInput" placeholder="Ask anything... e.g. 'Explain French articles'" autocomplete="off" />
+          <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">Send →</button>
+        </div>
+        <div class="chat-hints">
+          <button class="chat-hint" onclick="quickSend('Teach me something new')">✨ Teach me something new</button>
+          <button class="chat-hint" onclick="quickSend('Give me a quiz')">🧩 Quick quiz</button>
+          <button class="chat-hint" onclick="quickSend('Revise my last class')">🔄 Revise last class</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/push-notifications.js"></script>
+  <script src="/js/robot-tutor.js"></script>
+  <script src="/js/ai-tutor-app.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Test — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/mock-test.css" />
+  <link rel="stylesheet" href="/css/stats-bar.css" />
+  <link rel="stylesheet" href="/css/robot-tutor.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand"><span class="brand-icon">🌐</span><span>LinguaLearn</span></a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/exam-prep">Exam Prep</a></li>
+      <li><a href="/mock-test" style="color:var(--primary)">Mock Test</a></li>
+      <li><a href="/weakness">Weak Areas</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <!-- Setup Screen -->
+  <section class="mt-setup" id="setupScreen">
+    <div class="mt-setup-inner">
+      <div class="mt-badge">📝 CBSE Pattern Mock Test</div>
+      <h1>Take a <span class="highlight">Mock Exam</span></h1>
+      <p>AI generates a full exam paper matching your CBSE pattern — just like the real thing!</p>
+
+      <div class="mt-config">
+        <div class="mt-config-card">
+          <h3>Choose Exam Type</h3>
+          <div class="mt-exam-options" id="examOptions">
+            <button class="mt-opt active" onclick="selectExam(this,'ut1')">📘 Unit Test 1</button>
+            <button class="mt-opt" onclick="selectExam(this,'ut2')">📗 Unit Test 2</button>
+            <button class="mt-opt" onclick="selectExam(this,'half_yearly')">📙 Half-Yearly</button>
+            <button class="mt-opt" onclick="selectExam(this,'annual')">📕 Annual Exam</button>
+          </div>
+        </div>
+
+        <div class="mt-config-card">
+          <h3>Test Settings</h3>
+          <div class="mt-settings">
+            <div class="mt-setting">
+              <label>Difficulty</label>
+              <select id="difficulty">
+                <option value="mixed">Mixed (Recommended)</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard — Board Level</option>
+              </select>
+            </div>
+            <div class="mt-setting">
+              <label>Focus on Weaknesses?</label>
+              <select id="focusWeak">
+                <option value="yes">Yes — Extra questions on weak topics</option>
+                <option value="no">No — Balanced paper</option>
+              </select>
+            </div>
+            <div class="mt-setting">
+              <label>Time Limit (auto-set per CBSE exam type)</label>
+              <select id="timeLimit">
+                <option value="40" selected>40 minutes — Unit Test (CBSE)</option>
+                <option value="90">90 minutes — Half-Yearly (CBSE)</option>
+                <option value="180">3 hours — Annual/Board (CBSE)</option>
+                <option value="20">20 minutes — Quick Practice</option>
+                <option value="0">No time limit</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-info-cards">
+          <div class="mt-info"><span>📊</span> Matches exact CBSE marks pattern</div>
+          <div class="mt-info"><span>🎯</span> Extra questions on your weak areas</div>
+          <div class="mt-info"><span>🤖</span> AI grades instantly with explanations</div>
+          <div class="mt-info"><span>📈</span> Predicts your likely exam score</div>
+        </div>
+
+        <button class="btn btn-primary mt-start-btn" onclick="generateTest()">
+          🚀 Generate My Mock Test
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Test Screen -->
+  <section class="mt-test" id="testScreen" style="display:none">
+    <div class="mt-test-header">
+      <div class="mt-test-title" id="testTitle">Mock Test</div>
+      <div class="mt-timer" id="testTimer">45:00</div>
+      <div class="mt-progress-info">
+        <span id="answeredCount">0</span>/<span id="totalCount">0</span> answered
+      </div>
+    </div>
+    <div class="mt-test-progress">
+      <div class="mt-test-progress-fill" id="testProgressFill"></div>
+    </div>
+
+    <div class="mt-sections" id="testSections"></div>
+
+    <div class="mt-submit-bar">
+      <div class="mt-submit-info" id="submitInfo">Answer all questions before submitting</div>
+      <button class="btn btn-primary" onclick="submitTest()">📋 Submit Test</button>
+    </div>
+  </section>
+
+  <!-- Results Screen -->
+  <section class="mt-results" id="resultsScreen" style="display:none">
+    <div class="mt-results-inner">
+      <div class="mt-result-hero" id="resultHero"></div>
+      <div class="mt-result-breakdown" id="resultBreakdown"></div>
+      <div class="mt-result-answers" id="resultAnswers"></div>
+      <div class="mt-result-actions">
+        <button class="btn btn-primary" onclick="location.reload()">Take Another Test</button>
+        <a href="/weakness" class="btn btn-outline">Practice Weak Areas</a>
+        <a href="/dashboard" class="btn btn-outline">Back to Dashboard</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading Overlay -->
+  <div class="mt-loading" id="loadingOverlay" style="display:none">
+    <div class="mt-loading-inner">
+      <div class="mt-loading-anim">📝</div>
+      <h2>Generating Your Paper...</h2>
+      <p>AI is creating a CBSE-pattern exam paper just for you</p>
+      <div class="mt-loading-bar"><div class="mt-loading-fill"></div></div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/cbse-syllabus-data.js"></script>
+  <script src="/js/weakness-engine.js"></script>
+  <script src="/js/robot-tutor.js"></script>
+  <script src="/js/stats-bar.js"></script>
+  <script src="/js/mock-test-app.js"></script>
+</body>
+</html>

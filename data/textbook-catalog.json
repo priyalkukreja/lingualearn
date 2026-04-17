@@ -1,0 +1,430 @@
+{
+  "french": {
+    "6": [
+      {
+        "id": "fr6-apprenons1",
+        "name": "Apprenons le Francais (Part 1)",
+        "publisher": "Mahitha Ranjit",
+        "chapters": [
+          { "number": 0, "title": "Bonjour!", "topics": ["French alphabet", "Greetings", "Classroom phrases"] },
+          { "number": 1, "title": "La salle de classe", "topics": ["Classroom objects", "Articles", "Gender of nouns"] },
+          { "number": 2, "title": "Les articles", "topics": ["Definite articles", "Indefinite articles", "L'apostrophe"] },
+          { "number": 3, "title": "Salut les copains!", "topics": ["Introductions", "Nationalities", "etre conjugation"] },
+          { "number": 4, "title": "Ma famille", "topics": ["Family members", "Possessive adjectives", "Numbers 1-20"] },
+          { "number": 5, "title": "Au cafe", "topics": ["Food vocabulary", "Ordering at cafe", "Numbers 20-50"] }
+        ]
+      },
+      {
+        "id": "fr6-entrejeunes",
+        "name": "Entre Jeunes",
+        "publisher": "Mala Sinha",
+        "chapters": [
+          { "number": 0, "title": "Bienvenue!", "topics": ["French alphabet", "Accents", "Basic greetings"] },
+          { "number": 1, "title": "Bonjour!", "topics": ["Greetings", "Introductions", "Classroom language"] },
+          { "number": 2, "title": "La famille", "topics": ["Family vocabulary", "Possessives", "Numbers"] },
+          { "number": 3, "title": "Au lycee", "topics": ["School vocabulary", "Classroom objects", "Articles"] },
+          { "number": 4, "title": "Les copains", "topics": ["Describing people", "Adjectives", "Colours"] },
+          { "number": 5, "title": "Les activites", "topics": ["Hobbies", "Daily activities", "-er verb conjugation"] }
+        ]
+      }
+    ],
+    "7": [
+      {
+        "id": "fr7-apprenons2",
+        "name": "Apprenons le Francais (Part 2)",
+        "publisher": "Mahitha Ranjit",
+        "chapters": [
+          { "number": 1, "title": "La rentree", "topics": ["Back to school", "Timetable", "School subjects"] },
+          { "number": 2, "title": "A Paris", "topics": ["Paris landmarks", "Directions", "Prepositions of place"] },
+          { "number": 3, "title": "Une journee de Pauline", "topics": ["Daily routine", "Reflexive verbs", "Time"] },
+          { "number": 4, "title": "Les fetes en France", "topics": ["French festivals", "Months", "Dates"] },
+          { "number": 5, "title": "Sur la route", "topics": ["Transport", "Aller + infinitive", "Near future"] },
+          { "number": 6, "title": "Au restaurant", "topics": ["Food ordering", "Partitive articles", "Quantities"] }
+        ]
+      }
+    ],
+    "8": [
+      {
+        "id": "fr8-apprenons3",
+        "name": "Apprenons le Francais (Part 3)",
+        "publisher": "Mahitha Ranjit",
+        "chapters": [
+          { "number": 1, "title": "La France et ses villes", "topics": ["French cities", "Comparatives", "Superlatives"] },
+          { "number": 2, "title": "Les vacances", "topics": ["Holidays", "Passe compose", "Past tense"] },
+          { "number": 3, "title": "Une visite chez le medecin", "topics": ["Health", "Body parts", "Imparfait intro"] },
+          { "number": 4, "title": "La meteo", "topics": ["Weather", "Seasons", "Future tense"] },
+          { "number": 5, "title": "Les medias", "topics": ["Media", "Internet", "Pronouns"] },
+          { "number": 6, "title": "Faisons les courses", "topics": ["Shopping", "Quantities", "Demonstrative adjectives"] }
+        ]
+      }
+    ],
+    "9": [
+      {
+        "id": "fr9-apprenons4",
+        "name": "Apprenons le Francais (Part 4)",
+        "publisher": "Mahitha Ranjit",
+        "chapters": [
+          { "number": 1, "title": "La France - ses richesses", "topics": ["French culture", "Relative pronouns", "Passive voice"] },
+          { "number": 2, "title": "Les loisirs", "topics": ["Leisure activities", "Conditional tense", "Si clauses"] },
+          { "number": 3, "title": "Chercher du travail", "topics": ["Job search", "CV writing", "Formal letters"] },
+          { "number": 4, "title": "L'environnement", "topics": ["Environment", "Subjonctif", "Essay writing"] },
+          { "number": 5, "title": "Les voyages", "topics": ["Travel", "Dialogue writing", "Pronoun placement"] }
+        ]
+      },
+      {
+        "id": "fr9-entrejeunes9",
+        "name": "Entre Jeunes (Book IX)",
+        "publisher": "Mala Sinha",
+        "chapters": [
+          { "number": 1, "title": "La sante", "topics": ["Health", "Body", "Chez le medecin"] },
+          { "number": 2, "title": "Apres le bac", "topics": ["Career planning", "Studies in France", "Formal writing"] },
+          { "number": 3, "title": "La cuisine francaise", "topics": ["French cuisine", "Recipes", "Partitive articles review"] },
+          { "number": 4, "title": "Planete en danger", "topics": ["Environment", "Climate change", "Opinion writing"] },
+          { "number": 5, "title": "Vive le sport!", "topics": ["Sports", "Comparisons", "Reported speech"] }
+        ]
+      }
+    ],
+    "10": [
+      {
+        "id": "fr10-apprenons5",
+        "name": "Apprenons le Francais (Part 5)",
+        "publisher": "Mahitha Ranjit",
+        "chapters": [
+          { "number": 1, "title": "Les Francais et la lecture", "topics": ["Reading habits", "Plus-que-parfait", "Relative pronouns"] },
+          { "number": 2, "title": "La mode", "topics": ["Fashion", "Adjective agreement review", "Description"] },
+          { "number": 3, "title": "La technologie", "topics": ["Technology", "Passive voice", "Formal letter"] },
+          { "number": 4, "title": "Les medias et vous", "topics": ["Media influence", "Essay writing", "Argument structure"] },
+          { "number": 5, "title": "En pleine forme", "topics": ["Health & fitness", "Board exam prep", "Comprehension practice"] }
+        ]
+      },
+      {
+        "id": "fr10-entrejeunes10",
+        "name": "Entre Jeunes (Book X)",
+        "publisher": "Mala Sinha",
+        "chapters": [
+          { "number": 1, "title": "La sante - vivre bien", "topics": ["Healthy living", "Reflexive verbs review", "Dialogue"] },
+          { "number": 2, "title": "Apres le bac", "topics": ["Career choices", "Conditional", "Formal writing"] },
+          { "number": 3, "title": "Chercher du travail", "topics": ["Job interviews", "CV", "Informal letter"] },
+          { "number": 4, "title": "La cuisine", "topics": ["French cooking", "Instructions", "Imperative mood"] },
+          { "number": 5, "title": "Les medias", "topics": ["Media & society", "Essay", "Board pattern writing"] },
+          { "number": 6, "title": "Planete en danger", "topics": ["Environment", "Debate", "Comprehension"] },
+          { "number": 7, "title": "En pleine forme", "topics": ["Fitness", "Board revision", "Previous year practice"] }
+        ]
+      }
+    ]
+  },
+  "german": {
+    "6": [
+      {
+        "id": "de6-lehrwerk1",
+        "name": "Lehrwerk (CBSE German - Part 1)",
+        "publisher": "CBSE",
+        "chapters": [
+          { "number": 1, "title": "Hallo!", "topics": ["Greetings", "German alphabet", "Self-introduction"] },
+          { "number": 2, "title": "Meine Familie", "topics": ["Family members", "Possessive pronouns", "Numbers 1-20"] },
+          { "number": 3, "title": "In der Schule", "topics": ["School vocabulary", "Articles", "Classroom objects"] },
+          { "number": 4, "title": "Essen und Trinken", "topics": ["Food and drinks", "Ordering", "Accusative case intro"] },
+          { "number": 5, "title": "Mein Tag", "topics": ["Daily routine", "Time", "Separable verbs"] }
+        ]
+      }
+    ],
+    "7": [
+      {
+        "id": "de7-lehrwerk2",
+        "name": "Lehrwerk (CBSE German - Part 2)",
+        "publisher": "CBSE",
+        "chapters": [
+          { "number": 1, "title": "Wiederholung", "topics": ["Review of Class 6", "Present tense review"] },
+          { "number": 2, "title": "Mein Hobby", "topics": ["Hobbies", "Modal verbs", "Accusative case"] },
+          { "number": 3, "title": "Einkaufen", "topics": ["Shopping", "Prices", "Dative case intro"] },
+          { "number": 4, "title": "Reisen", "topics": ["Travel", "Directions", "Prepositions"] },
+          { "number": 5, "title": "Feste in Deutschland", "topics": ["German festivals", "Months", "Ordinal numbers"] }
+        ]
+      }
+    ],
+    "8": [
+      {
+        "id": "de8-bestefreunde",
+        "name": "Beste Freunde (A1.2)",
+        "publisher": "Hueber Verlag",
+        "chapters": [
+          { "number": 1, "title": "Mein Alltag", "topics": ["Daily life", "Present tense irregular", "Time expressions"] },
+          { "number": 2, "title": "Freizeit", "topics": ["Free time", "Perfekt tense intro", "Past participles"] },
+          { "number": 3, "title": "Wetter und Kleidung", "topics": ["Weather", "Clothing", "Adjective endings"] },
+          { "number": 4, "title": "Gesundheit", "topics": ["Health", "Body parts", "Modal verbs review"] },
+          { "number": 5, "title": "Medien", "topics": ["Media", "Technology", "Subordinate clauses"] }
+        ]
+      }
+    ],
+    "9": [
+      {
+        "id": "de9-bestefreunde2",
+        "name": "Beste Freunde (A2.1)",
+        "publisher": "Hueber Verlag",
+        "chapters": [
+          { "number": 1, "title": "Schule und Beruf", "topics": ["School system", "Careers", "Future tense"] },
+          { "number": 2, "title": "Umwelt", "topics": ["Environment", "Recycling", "Passive voice intro"] },
+          { "number": 3, "title": "Stadt und Land", "topics": ["City vs rural", "Comparatives", "Dative prepositions"] },
+          { "number": 4, "title": "Reisen und Ferien", "topics": ["Travel planning", "Prateritum of sein/haben", "Letter writing"] },
+          { "number": 5, "title": "Kultur", "topics": ["German culture", "Relative clauses", "Essay writing"] }
+        ]
+      }
+    ],
+    "10": [
+      {
+        "id": "de10-bestefreunde3",
+        "name": "Beste Freunde (A2.2)",
+        "publisher": "Hueber Verlag",
+        "chapters": [
+          { "number": 1, "title": "Zusammenleben", "topics": ["Living together", "Konjunktiv II", "Wishes"] },
+          { "number": 2, "title": "Berufswelt", "topics": ["Working world", "Job applications", "Formal letters"] },
+          { "number": 3, "title": "Medien und Technik", "topics": ["Media & tech", "N-Deklination", "Passive voice"] },
+          { "number": 4, "title": "Gesund leben", "topics": ["Healthy living", "Board prep", "Comprehension"] },
+          { "number": 5, "title": "Prufungsvorbereitung", "topics": ["Board revision", "All grammar review", "Previous year papers"] }
+        ]
+      }
+    ]
+  },
+  "sanskrit": {
+    "6": [
+      {
+        "id": "sa6-ruchira1",
+        "name": "Ruchira (Pratham Bhag)",
+        "publisher": "NCERT",
+        "chapters": [
+          { "number": 1, "title": "शब्दपरिचयः I", "topics": ["Noun introduction", "Masculine nouns", "This/That"] },
+          { "number": 2, "title": "शब्दपरिचयः II", "topics": ["Feminine nouns", "Singular/Plural", "Pronoun intro"] },
+          { "number": 3, "title": "शब्दपरिचयः III", "topics": ["Neuter nouns", "Numbers 1-10", "Colours"] },
+          { "number": 4, "title": "विद्यालयः", "topics": ["School vocabulary", "Verbs intro", "Present tense"] },
+          { "number": 5, "title": "वृक्षाः", "topics": ["Trees", "Adjectives", "Agreement"] },
+          { "number": 6, "title": "समुद्रतटः", "topics": ["Beach", "Avyaya (indeclinables)", "Sentence formation"] },
+          { "number": 7, "title": "बकस्य प्रतिकारः", "topics": ["Story", "Comprehension", "Vocabulary building"] },
+          { "number": 8, "title": "सूक्तिस्तबकः", "topics": ["Subhashitas", "Moral verses", "Translation"] },
+          { "number": 9, "title": "क्रीडास्पर्धा", "topics": ["Sports", "Lat lakar intro", "Verb forms"] },
+          { "number": 10, "title": "कृषिकाः कर्मवीराः", "topics": ["Farmers", "Past tense intro", "Comprehension"] }
+        ]
+      }
+    ],
+    "7": [
+      {
+        "id": "sa7-ruchira2",
+        "name": "Ruchira (Dwitiya Bhag)",
+        "publisher": "NCERT",
+        "chapters": [
+          { "number": 1, "title": "सुभाषितानि", "topics": ["Wise sayings", "Shloka recitation", "Sandhi intro"] },
+          { "number": 2, "title": "दुर्बुद्धिः विनश्यति", "topics": ["Panchatantra story", "Comprehension", "Vocabulary"] },
+          { "number": 3, "title": "स्वावलम्बनम्", "topics": ["Self-reliance", "Lat lakar practice", "Sentence formation"] },
+          { "number": 4, "title": "हास्यबालकविसम्मेलनम्", "topics": ["Humour", "Dialogue", "Lot lakar intro"] },
+          { "number": 5, "title": "पण्डिता रमाबाई", "topics": ["Biography", "Past tense", "Translation practice"] }
+        ]
+      }
+    ],
+    "8": [
+      {
+        "id": "sa8-ruchira3",
+        "name": "Ruchira (Tritiya Bhag)",
+        "publisher": "NCERT",
+        "chapters": [
+          { "number": 1, "title": "सुभाषितानि", "topics": ["Advanced subhashitas", "Sandhi rules", "Meaning extraction"] },
+          { "number": 2, "title": "बिलस्य वाणी न कदापि मे श्रुता", "topics": ["Panchatantra", "Comprehension", "Grammar in context"] },
+          { "number": 3, "title": "डिजीभारतम्", "topics": ["Digital India", "Modern Sanskrit", "Translation"] },
+          { "number": 4, "title": "सदैव पुरतो निधेहि चरणम्", "topics": ["Song/poem", "Dhatu roop", "Lat lakar"] },
+          { "number": 5, "title": "कण्ठे पतिता मौक्तिकमाला", "topics": ["Story", "Shabd roop", "Vibhakti"] }
+        ]
+      }
+    ],
+    "9": [
+      {
+        "id": "sa9-shemushi1",
+        "name": "Shemushi (Pratham Bhag)",
+        "publisher": "NCERT",
+        "chapters": [
+          { "number": 1, "title": "भारतीवसन्तगीतिः", "topics": ["Spring poem", "Shloka analysis", "Rasa"] },
+          { "number": 2, "title": "स्वर्णकाकः", "topics": ["Golden crow story", "Comprehension", "Vocabulary"] },
+          { "number": 3, "title": "गोदोहनम्", "topics": ["Drama", "Dialogue comprehension", "Lot lakar"] },
+          { "number": 4, "title": "कल्पतरुः", "topics": ["Wish-granting tree", "Sandhi", "Samas"] },
+          { "number": 5, "title": "सूक्तिमौक्तिकम्", "topics": ["Wise pearls", "Shloka meaning", "Grammar in verse"] },
+          { "number": 6, "title": "भ्रान्तो बालः", "topics": ["Lost child", "Avyaya", "Pratyaya"] },
+          { "number": 7, "title": "प्रत्यभिज्ञानम्", "topics": ["Recognition drama", "Patra lekhan", "Formal writing"] },
+          { "number": 8, "title": "लौहतुला", "topics": ["Iron balance story", "Comprehension", "Nibandh"] }
+        ]
+      }
+    ],
+    "10": [
+      {
+        "id": "sa10-shemushi2",
+        "name": "Shemushi (Dwitiya Bhag)",
+        "publisher": "NCERT",
+        "chapters": [
+          { "number": 1, "title": "शुचिपर्यावरणम्", "topics": ["Clean environment", "Shloka", "Sandhi splitting"] },
+          { "number": 2, "title": "बुद्धिर्बलवती सदा", "topics": ["Intellect story", "Comprehension", "Vocabulary"] },
+          { "number": 3, "title": "व्यायामः सर्वदा पथ्यः", "topics": ["Exercise importance", "Health", "Sandhi practice"] },
+          { "number": 4, "title": "शिशुलालनम्", "topics": ["Child care poem", "Shloka analysis", "Pratyaya"] },
+          { "number": 5, "title": "जननी तुल्यवत्सला", "topics": ["Mother's love", "Drama", "Avyaya/Samas"] },
+          { "number": 6, "title": "सुभाषितानि", "topics": ["Board-level subhashitas", "Translation", "Grammar application"] },
+          { "number": 7, "title": "सौहार्दं प्रकृतेः शोभा", "topics": ["Nature harmony", "Essay", "Letter writing"] },
+          { "number": 8, "title": "विचित्रः साक्षी", "topics": ["Strange witness", "Comprehension", "Board pattern Q&A"] },
+          { "number": 9, "title": "मङ्गलम्", "topics": ["Auspiciousness", "Upanishad excerpts", "Board revision"] },
+          { "number": 10, "title": "अन्योक्तयः", "topics": ["Indirect speech poetry", "Advanced grammar", "Previous year patterns"] }
+        ]
+      }
+    ]
+  },
+  "spanish": {
+    "6": [
+      {
+        "id": "es6-cbse",
+        "name": "CBSE Spanish Textbook (Level 1)",
+        "publisher": "CBSE",
+        "chapters": [
+          { "number": 1, "title": "Hola!", "topics": ["Greetings", "Spanish alphabet", "Introductions"] },
+          { "number": 2, "title": "Mi familia", "topics": ["Family", "Ser/Estar", "Numbers 1-30"] },
+          { "number": 3, "title": "En la escuela", "topics": ["School", "Classroom objects", "Articles"] },
+          { "number": 4, "title": "Los colores y la ropa", "topics": ["Colours", "Clothing", "Adjectives"] },
+          { "number": 5, "title": "La comida", "topics": ["Food", "Gustar", "Ordering food"] }
+        ]
+      }
+    ],
+    "10": [
+      {
+        "id": "es10-cbse",
+        "name": "CBSE Spanish Textbook (Level 5)",
+        "publisher": "CBSE",
+        "chapters": [
+          { "number": 1, "title": "La salud", "topics": ["Health", "Subjunctive intro", "Doctor visit"] },
+          { "number": 2, "title": "El medio ambiente", "topics": ["Environment", "Future tense", "Opinion writing"] },
+          { "number": 3, "title": "Los medios de comunicacion", "topics": ["Media", "Conditional tense", "Essay"] },
+          { "number": 4, "title": "El mundo del trabajo", "topics": ["Work world", "Formal letters", "CV writing"] },
+          { "number": 5, "title": "Preparacion para el examen", "topics": ["Board revision", "All grammar", "Past papers"] }
+        ]
+      }
+    ]
+  },
+  "japanese": {
+    "6": [
+      {
+        "id": "ja6-cbse",
+        "name": "CBSE Japanese Textbook (Introductory)",
+        "publisher": "CBSE / Japan Foundation",
+        "chapters": [
+          { "number": 1, "title": "Hiragana", "topics": ["46 Hiragana characters", "Stroke order", "Pronunciation"] },
+          { "number": 2, "title": "Katakana", "topics": ["46 Katakana characters", "Foreign words", "Practice"] },
+          { "number": 3, "title": "Jikoshoukai", "topics": ["Self-introduction", "Greetings", "Watashi wa..."] },
+          { "number": 4, "title": "Kazu", "topics": ["Numbers 1-100", "Counting", "Age"] },
+          { "number": 5, "title": "Gakkou", "topics": ["School vocabulary", "Classroom phrases", "Kore/Sore/Are"] }
+        ]
+      }
+    ],
+    "10": [
+      {
+        "id": "ja10-cbse",
+        "name": "CBSE Japanese Textbook (Advanced)",
+        "publisher": "CBSE / Japan Foundation",
+        "chapters": [
+          { "number": 1, "title": "Nihon no bunka", "topics": ["Japanese culture", "Reading passages", "Essay writing"] },
+          { "number": 2, "title": "Kankyou mondai", "topics": ["Environment", "Te-form review", "Opinions"] },
+          { "number": 3, "title": "Shokugyou", "topics": ["Careers", "Formal speech", "Letter writing"] },
+          { "number": 4, "title": "Kanji renshuu", "topics": ["100 Kanji review", "Reading practice", "Comprehension"] },
+          { "number": 5, "title": "Shiken junbi", "topics": ["Board exam prep", "All grammar review", "Past papers"] }
+        ]
+      }
+    ]
+  },
+  "korean": {
+    "6": [
+      {
+        "id": "ko6-cbse",
+        "name": "CBSE Korean Textbook (Introductory)",
+        "publisher": "CBSE / Korean Cultural Centre",
+        "chapters": [
+          { "number": 1, "title": "Hangul", "topics": ["Korean alphabet", "Consonants", "Vowels"] },
+          { "number": 2, "title": "Insa", "topics": ["Greetings", "Self-introduction", "Honorifics"] },
+          { "number": 3, "title": "Sukja", "topics": ["Numbers", "Sino-Korean", "Native Korean numbers"] },
+          { "number": 4, "title": "Hakgyo", "topics": ["School vocabulary", "Basic particles", "Simple sentences"] }
+        ]
+      }
+    ]
+  },
+  "mandarin": {
+    "6": [
+      {
+        "id": "zh6-cbse",
+        "name": "CBSE Mandarin Textbook (Introductory)",
+        "publisher": "CBSE / Confucius Institute",
+        "chapters": [
+          { "number": 1, "title": "Pinyin", "topics": ["Pinyin system", "Tones", "Pronunciation"] },
+          { "number": 2, "title": "Ni hao!", "topics": ["Greetings", "Self-introduction", "Basic phrases"] },
+          { "number": 3, "title": "Shuzi", "topics": ["Numbers 1-100", "Counting", "Age expressions"] },
+          { "number": 4, "title": "Wo de jia", "topics": ["Family", "Measure words", "Possessives"] }
+        ]
+      }
+    ]
+  },
+  "russian": {
+    "6": [
+      {
+        "id": "ru6-cbse",
+        "name": "CBSE Russian Textbook (Introductory)",
+        "publisher": "CBSE",
+        "chapters": [
+          { "number": 1, "title": "Russian Alphabet", "topics": ["Cyrillic script", "Pronunciation", "Handwriting"] },
+          { "number": 2, "title": "Privet!", "topics": ["Greetings", "Introductions", "Basic phrases"] },
+          { "number": 3, "title": "Moya semya", "topics": ["Family", "Gender of nouns", "Possessives"] },
+          { "number": 4, "title": "V shkole", "topics": ["School", "Cases intro", "Adjectives"] }
+        ]
+      }
+    ]
+  },
+  "_boardPattern": {
+    "french": {
+      "sections": [
+        { "name": "Section A - Reading", "marks": 20, "type": "reading", "desc": "Unseen passages with MCQs and short answers" },
+        { "name": "Section B - Writing", "marks": 20, "type": "writing", "desc": "Letter, essay, dialogue, message" },
+        { "name": "Section C - Grammar", "marks": 20, "type": "grammar", "desc": "Fill-ins, verb conjugation, transformations" },
+        { "name": "Section D - Literature", "marks": 20, "type": "literature", "desc": "Textbook-based questions from prescribed chapters" }
+      ],
+      "totalMarks": 80,
+      "duration": 180
+    },
+    "german": {
+      "sections": [
+        { "name": "Section A - Leseverstehen", "marks": 20, "type": "reading", "desc": "Reading comprehension" },
+        { "name": "Section B - Schreiben", "marks": 20, "type": "writing", "desc": "Letter, essay, dialogue" },
+        { "name": "Section C - Grammatik", "marks": 20, "type": "grammar", "desc": "Grammar exercises" },
+        { "name": "Section D - Literatur", "marks": 20, "type": "literature", "desc": "Textbook-based questions" }
+      ],
+      "totalMarks": 80,
+      "duration": 180
+    },
+    "sanskrit": {
+      "sections": [
+        { "name": "Section A - Apathit Avbodhanam", "marks": 20, "type": "reading", "desc": "Unseen passage comprehension" },
+        { "name": "Section B - Rachanaatmak Karyam", "marks": 20, "type": "writing", "desc": "Letter, essay, picture description" },
+        { "name": "Section C - Vyakaranam", "marks": 20, "type": "grammar", "desc": "Sandhi, Samas, Pratyaya, Dhatu roop, Shabd roop" },
+        { "name": "Section D - Pathit Avbodhanam", "marks": 20, "type": "literature", "desc": "Textbook-based Shemushi/Ruchira questions" }
+      ],
+      "totalMarks": 80,
+      "duration": 180
+    },
+    "spanish": {
+      "sections": [
+        { "name": "Section A - Reading", "marks": 20, "type": "reading", "desc": "Unseen passages" },
+        { "name": "Section B - Writing", "marks": 20, "type": "writing", "desc": "Letter, essay, dialogue" },
+        { "name": "Section C - Grammar", "marks": 20, "type": "grammar", "desc": "Verb conjugation, fill-ins" },
+        { "name": "Section D - Literature", "marks": 20, "type": "literature", "desc": "Textbook-based questions" }
+      ],
+      "totalMarks": 80,
+      "duration": 180
+    },
+    "japanese": {
+      "sections": [
+        { "name": "Section A - Reading", "marks": 20, "type": "reading", "desc": "Unseen passages in Hiragana/Katakana" },
+        { "name": "Section B - Writing", "marks": 20, "type": "writing", "desc": "Composition, letter, self-introduction" },
+        { "name": "Section C - Grammar", "marks": 20, "type": "grammar", "desc": "Particles, verb forms, sentence patterns" },
+        { "name": "Section D - Literature", "marks": 20, "type": "literature", "desc": "Textbook-based questions" }
+      ],
+      "totalMarks": 80,
+      "duration": 180
+    }
+  }
+}
