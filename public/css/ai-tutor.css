@@ -429,6 +429,41 @@
   box-shadow: 0 2px 8px rgba(129,140,248,0.3);
 }
 
+/* ===== USAGE SUGGESTIONS ===== */
+.wu-suggest {
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(99,102,241,0.15);
+}
+.wu-suggest-title {
+  font-size: 0.78rem; font-weight: 800; color: #c4b5fd;
+  margin-bottom: 0.4rem;
+}
+.wu-suggest-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 0.3rem;
+}
+.wu-suggest-list li {
+  font-size: 0.7rem; color: #94a3b8; line-height: 1.4;
+  padding-left: 1rem; position: relative;
+}
+.wu-suggest-list li::before {
+  content: '→'; position: absolute; left: 0;
+  color: #818cf8; font-weight: 700;
+}
+.wu-suggest-list li strong {
+  color: #e2e8f0;
+}
+.wu-suggest-tip {
+  margin-top: 0.5rem;
+  font-size: 0.72rem; font-weight: 700;
+  padding: 0.4rem 0.6rem; border-radius: 8px;
+  background: rgba(99,102,241,0.12);
+  color: #a5b4fc; text-align: center;
+  display: none;
+}
+.wu-suggest-tip.show { display: block; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .tutor-layout-v2 { grid-template-columns: 1fr; }

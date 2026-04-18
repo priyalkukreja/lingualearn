@@ -358,6 +358,37 @@ function updateWeeklyUI(data) {
       else dayEl.classList.remove('active');
     }
   }
+
+  const tipEl = document.getElementById('wuTip');
+  if (tipEl) {
+    let tip = '';
+    const activeDays = data.days.filter(Boolean).length;
+    let mins = data.totalMinutes;
+    if (data.startTime) mins += Math.round((Date.now() - data.startTime) / 60000);
+
+    if (activeDays >= 7) {
+      tip = '🏆 Perfect week! You used Gyani every single day!';
+    } else if (activeDays >= 5) {
+      tip = '🔥 Great streak! Just ' + (7 - activeDays) + ' more day(s) for a perfect week!';
+    } else if (data.messages > 0 && data.messages < 10) {
+      tip = '💬 Try asking ' + (10 - data.messages) + ' more questions this session!';
+    } else if (mins > 0 && mins < 15) {
+      tip = '⏱️ ' + (15 - mins) + ' more min today to hit the recommended 15 min!';
+    } else if (activeDays === 0) {
+      tip = '🚀 Start your week strong — ask Gyani anything!';
+    } else if (activeDays < 4) {
+      tip = '📅 You\'ve practised ' + activeDays + ' day(s) — aim for at least 5 this week!';
+    } else if (data.messages >= 10) {
+      tip = '⭐ ' + data.messages + ' messages this week — you\'re doing amazing!';
+    }
+
+    if (tip) {
+      tipEl.textContent = tip;
+      tipEl.classList.add('show');
+    } else {
+      tipEl.classList.remove('show');
+    }
+  }
 }
 
 window.addEventListener('beforeunload', function () {
