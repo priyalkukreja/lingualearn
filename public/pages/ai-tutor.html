@@ -28,69 +28,153 @@
     </div>
   </nav>
 
-  <div class="tutor-layout">
-    <aside class="tutor-sidebar">
-      <!-- Robot Tutor Avatar -->
-      <div class="sidebar-robot" id="sidebarRobot"></div>
+  <!-- XP Gain Animation -->
+  <div class="xp-popup" id="xpPopup">+10 XP</div>
 
-      <div class="ts-header">
-        <h3>Gyani — AI Tutor</h3>
-        <p id="tsInfo">Loading...</p>
-      </div>
+  <!-- Combo Counter -->
+  <div class="combo-counter" id="comboCounter">
+    <div class="combo-number" id="comboNumber">0</div>
+    <div class="combo-label">COMBO</div>
+    <div class="combo-fire" id="comboFire"></div>
+  </div>
 
-      <div class="ts-section">
-        <div class="ts-label">Quick Topics</div>
-        <div class="ts-topics" id="quickTopics"></div>
-      </div>
-
-      <div class="ts-section">
-        <div class="ts-label">Teaching Method</div>
-        <select id="methodSelect" class="ts-select">
-          <option value="default">Auto (AI picks best)</option>
-          <option value="visual">📊 Visual / Diagrams</option>
-          <option value="story">📖 Story Mode</option>
-          <option value="pattern">📋 Pattern Tables</option>
-          <option value="mnemonic">🧠 Memory Tricks</option>
-          <option value="micro">⚡ Micro Lessons</option>
-          <option value="game">🎮 Game Style</option>
-        </select>
-      </div>
-
-      <div class="ts-section">
-        <div class="ts-label">Weak Areas</div>
-        <div id="weakAreas" class="ts-weak"></div>
-      </div>
-    </aside>
-
-    <main class="tutor-main">
-      <!-- Robot header in chat -->
-      <div class="chat-robot-header">
-        <div id="chatRobot"></div>
-        <div class="chat-robot-info">
-          <h3>Gyani</h3>
-          <p>Your AI study buddy — always ready to help!</p>
+  <div class="tutor-layout-v2">
+    <aside class="tutor-sidebar-v2">
+      <!-- Gyani Character Card -->
+      <div class="gyani-card">
+        <div class="gyani-avatar" id="gyaniAvatar">
+          <div class="gyani-face" id="gyaniFace">🤖</div>
+          <div class="gyani-mood" id="gyaniMood">😊</div>
+        </div>
+        <h3 class="gyani-name">Gyani</h3>
+        <p class="gyani-title">Your AI Study Buddy</p>
+        <div class="gyani-status" id="gyaniStatus">
+          <span class="status-dot"></span> Ready to teach!
         </div>
       </div>
 
-      <div class="chat-messages" id="chatMessages">
-        <div class="chat-bubble ai">
-          <div class="cb-icon">🤖</div>
-          <div class="cb-content">
-            <p>Hey! I'm <strong>Gyani</strong>, your AI study buddy! What would you like to learn today?</p>
-            <p>Ask me anything — grammar, vocabulary, pronunciation, or just say "teach me something new!" 🚀</p>
+      <!-- Session Stats -->
+      <div class="session-stats">
+        <div class="ss-item">
+          <span class="ss-icon">⚡</span>
+          <span class="ss-val" id="sessionXP">0</span>
+          <span class="ss-label">XP earned</span>
+        </div>
+        <div class="ss-item">
+          <span class="ss-icon">✅</span>
+          <span class="ss-val" id="sessionCorrect">0</span>
+          <span class="ss-label">Correct</span>
+        </div>
+        <div class="ss-item">
+          <span class="ss-icon">🔥</span>
+          <span class="ss-val" id="sessionCombo">0</span>
+          <span class="ss-label">Best combo</span>
+        </div>
+      </div>
+
+      <!-- Quick Topics -->
+      <div class="ts-section">
+        <div class="ts-label">⚡ Quick Topics</div>
+        <div class="ts-topics" id="quickTopics"></div>
+      </div>
+
+      <!-- Teaching Style Selector -->
+      <div class="ts-section">
+        <div class="ts-label">🎮 Teaching Style</div>
+        <div class="style-grid">
+          <button class="style-btn active" data-method="default" onclick="setMethod(this)">
+            <span>🤖</span> Auto
+          </button>
+          <button class="style-btn" data-method="story" onclick="setMethod(this)">
+            <span>📖</span> Story
+          </button>
+          <button class="style-btn" data-method="game" onclick="setMethod(this)">
+            <span>🎮</span> Game
+          </button>
+          <button class="style-btn" data-method="visual" onclick="setMethod(this)">
+            <span>📊</span> Visual
+          </button>
+          <button class="style-btn" data-method="micro" onclick="setMethod(this)">
+            <span>⚡</span> Micro
+          </button>
+          <button class="style-btn" data-method="mnemonic" onclick="setMethod(this)">
+            <span>🧠</span> Tricks
+          </button>
+        </div>
+        <input type="hidden" id="methodSelect" value="default" />
+      </div>
+
+      <!-- Weak Areas -->
+      <div class="ts-section">
+        <div class="ts-label">👾 Weak Areas</div>
+        <div id="weakAreas" class="ts-weak-v2"></div>
+      </div>
+    </aside>
+
+    <main class="tutor-main-v2">
+      <!-- Chat Header with Gyani -->
+      <div class="chat-header-v2">
+        <div class="ch-left">
+          <div class="ch-avatar">🤖</div>
+          <div>
+            <h3>Gyani</h3>
+            <p id="gyaniTypingStatus">Your AI study buddy — always ready!</p>
+          </div>
+        </div>
+        <div class="ch-right">
+          <div class="session-xp-badge">
+            <span>⚡</span>
+            <span id="headerXP">0 XP</span>
           </div>
         </div>
       </div>
 
-      <div class="chat-input-area">
-        <div class="chat-input-wrap">
-          <input type="text" id="chatInput" placeholder="Ask anything... e.g. 'Explain French articles'" autocomplete="off" />
-          <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">Send →</button>
+      <!-- Chat Messages -->
+      <div class="chat-messages-v2" id="chatMessages">
+        <div class="chat-bubble ai">
+          <div class="cb-avatar">🤖</div>
+          <div class="cb-content-v2">
+            <div class="cb-name">Gyani</div>
+            <p>Hey! I'm <strong>Gyani</strong>, your AI study buddy! 🎮</p>
+            <p>Think of me as your personal tutor who makes learning feel like a game. What do you want to learn today?</p>
+            <div class="cb-reactions">
+              <button class="reaction-btn" onclick="reactToMessage(this, '👍')">👍</button>
+              <button class="reaction-btn" onclick="reactToMessage(this, '❤️')">❤️</button>
+              <button class="reaction-btn" onclick="reactToMessage(this, '🔥')">🔥</button>
+            </div>
+          </div>
         </div>
-        <div class="chat-hints">
-          <button class="chat-hint" onclick="quickSend('Teach me something new')">✨ Teach me something new</button>
-          <button class="chat-hint" onclick="quickSend('Give me a quiz')">🧩 Quick quiz</button>
-          <button class="chat-hint" onclick="quickSend('Revise my last class')">🔄 Revise last class</button>
+      </div>
+
+      <!-- Quick Action Chips -->
+      <div class="quick-chips" id="quickChips">
+        <button class="qc-chip primary" onclick="quickSend('Teach me something new')">
+          <span>✨</span> Teach me something new
+        </button>
+        <button class="qc-chip" onclick="quickSend('Give me a quiz')">
+          <span>🧩</span> Quick quiz
+        </button>
+        <button class="qc-chip" onclick="quickSend('Revise my last class')">
+          <span>🔄</span> Revise last class
+        </button>
+        <button class="qc-chip" onclick="quickSend('Tell me a story in the language I am learning')">
+          <span>📖</span> Story time
+        </button>
+        <button class="qc-chip" onclick="quickSend('Play a word game with me')">
+          <span>🎮</span> Word game
+        </button>
+        <button class="qc-chip" onclick="quickSend('Give me a challenge')">
+          <span>⚔️</span> Challenge me
+        </button>
+      </div>
+
+      <!-- Chat Input -->
+      <div class="chat-input-v2">
+        <div class="ci-wrap">
+          <input type="text" id="chatInput" placeholder="Type your answer or ask anything..." autocomplete="off" />
+          <button class="ci-send" id="sendBtn" onclick="sendMessage()">
+            <span class="send-icon">➤</span>
+          </button>
         </div>
       </div>
     </main>

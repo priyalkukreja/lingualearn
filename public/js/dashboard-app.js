@@ -1,12 +1,57 @@
+const MOTIVATIONAL_QUOTES = [
+  '"The expert in anything was once a beginner." — Keep going! 💪',
+  '"Small daily improvements are the key to staggering long-term results." 🚀',
+  '"You don\'t have to be great to start, but you have to start to be great." ⭐',
+  '"Every champion was once a contender who refused to give up." 🏆',
+  '"Your brain is a muscle. The more you use it, the stronger it gets." 🧠',
+  '"Consistency beats intensity. Show up every day!" 🔥',
+  '"Mistakes are proof that you are trying." 💡',
+  '"You\'re not behind. You\'re on your own path." 🌟',
+];
+
+const LEVEL_THRESHOLDS = [
+  { xp: 0, name: 'Newbie', emoji: '🌱' },
+  { xp: 50, name: 'Learner', emoji: '📚' },
+  { xp: 150, name: 'Explorer', emoji: '🧭' },
+  { xp: 300, name: 'Warrior', emoji: '⚔️' },
+  { xp: 500, name: 'Scholar', emoji: '🎓' },
+  { xp: 800, name: 'Champion', emoji: '🏆' },
+  { xp: 1200, name: 'Master', emoji: '👑' },
+  { xp: 2000, name: 'Legend', emoji: '🌟' },
+];
+
+function getLevel(xp) {
+  let level = LEVEL_THRESHOLDS[0];
+  let levelNum = 1;
+  for (let i = 0; i < LEVEL_THRESHOLDS.length; i++) {
+    if (xp >= LEVEL_THRESHOLDS[i].xp) {
+      level = LEVEL_THRESHOLDS[i];
+      levelNum = i + 1;
+    }
+  }
+  const nextIdx = Math.min(levelNum, LEVEL_THRESHOLDS.length - 1);
+  const nextXP = LEVEL_THRESHOLDS[nextIdx].xp;
+  const prevXP = level.xp;
+  const progress = nextXP > prevXP ? ((xp - prevXP) / (nextXP - prevXP)) * 100 : 100;
+  return { ...level, levelNum, progress, xpToNext: Math.max(0, nextXP - xp) };
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   if (!requireAuth()) return;
 
   const student = getStudent();
   if (student) {
-    document.getElementById('welcomeMsg').textContent = `Welcome back, ${student.name}! 👋`;
+    const name = student.name || 'Student';
+    const hour = new Date().getHours();
+    let greeting = 'Hey';
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 17) greeting = 'Good afternoon';
+    else greeting = 'Good evening';
+
+    document.getElementById('welcomeMsg').textContent = `${greeting}, ${name}! 👋`;
     document.getElementById('navXP').textContent = (student.total_xp || 0) + ' XP';
     document.getElementById('navStreak').textContent = '🔥 ' + (student.current_streak || 0);
-    document.getElementById('pmName').textContent = student.name;
+    document.getElementById('pmName').textContent = name;
 
     const plans = { explorer_trial: 'Free Trial', explorer: 'Explorer', topper: 'Topper' };
     document.getElementById('pmPlan').textContent = plans[student.plan] || student.plan;
@@ -15,13 +60,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('planName').textContent = plans[student.plan] || 'Trial';
 
     const xp = student.total_xp || 0;
-    let level = 'Beginner';
-    if (xp >= 1000) level = 'Master';
-    else if (xp >= 600) level = 'Scholar';
-    else if (xp >= 300) level = 'Explorer';
-    else if (xp >= 100) level = 'Learner';
-    document.getElementById('xpLevel').textContent = level;
+    const lvl = getLevel(xp);
+
+    document.getElementById('xpLevel').textContent = `${lvl.emoji} ${lvl.name}`;
+    document.getElementById('xpToNext').textContent = lvl.xpToNext > 0 ? `${lvl.xpToNext} XP to next level` : 'Max level!';
+    document.getElementById('avatarLevel').textContent = lvl.levelNum;
+    document.getElementById('heroXP').textContent = xp;
+    document.getElementById('heroStreak').textContent = student.current_streak || 0;
+    document.getElementById('heroRank').textContent = lvl.name;
+
+    setTimeout(() => {
+      document.getElementById('xpLevelFill').style.width = lvl.progress + '%';
+      const ring = document.getElementById('xpRingProgress');
+      const circumference = 339.3;
+      ring.style.strokeDashoffset = circumference - (circumference * lvl.progress / 100);
+      ring.style.transition = 'stroke-dashoffset 1.5s ease';
+    }, 300);
+
+    const streakCount = student.current_streak || 0;
+    const flamesContainer = document.getElementById('streakFlames');
+    const flameCount = Math.min(streakCount, 10);
+    flamesContainer.innerHTML = Array(flameCount).fill(0).map((_, i) =>
+      `<span class="streak-flame" style="animation-delay:${i * 0.1}s">🔥</span>`
+    ).join('');
+
+    showDailyReward(student);
   }
+
+  const quoteEl = document.getElementById('motivationText');
+  quoteEl.textContent = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
+
+  updateMissionTimer();
+  setInterval(updateMissionTimer, 60000);
 
   await startSession();
   loadLastSession();
@@ -33,14 +103,64 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadDashboardChallenges();
 });
 
+function showDailyReward(student) {
+  const today = new Date().toDateString();
+  const lastClaimed = localStorage.getItem('ll_daily_claimed');
+  if (lastClaimed === today) return;
+
+  const overlay = document.getElementById('dailyRewardOverlay');
+  overlay.classList.add('show');
+
+  const streak = student.current_streak || 0;
+  const dayInWeek = (streak % 7) || 0;
+
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById('drDay' + i);
+    if (i <= dayInWeek) el.classList.add('claimed');
+    if (i === dayInWeek + 1) el.classList.add('today');
+  }
+
+  const rewards = [15, 20, 25, 30, 35, 50, 100];
+  const todayReward = rewards[Math.min(dayInWeek, 6)];
+  document.getElementById('drPrize').querySelector('.dr-prize-text').textContent = `+${todayReward} XP`;
+}
+
+window.claimDailyReward = function() {
+  localStorage.setItem('ll_daily_claimed', new Date().toDateString());
+  document.getElementById('dailyRewardOverlay').classList.remove('show');
+  showXPFloat('+15 XP');
+};
+
+function showXPFloat(text) {
+  const container = document.getElementById('xpFloatContainer');
+  const el = document.createElement('div');
+  el.className = 'xp-float';
+  el.textContent = text;
+  el.style.left = (window.innerWidth / 2 - 30) + 'px';
+  el.style.top = (window.innerHeight / 2) + 'px';
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 1500);
+}
+
+function updateMissionTimer() {
+  const now = new Date();
+  const endOfDay = new Date(now);
+  endOfDay.setHours(23, 59, 59, 999);
+  const diff = endOfDay - now;
+  const hours = Math.floor(diff / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const el = document.getElementById('missionTimer');
+  if (el) el.textContent = `${hours}h ${mins}m`;
+}
+
 async function loadLastSession() {
   const data = await apiGet('/api/sessions/current');
   if (data?.session?.last_chapter) {
     document.getElementById('resumeMsg').textContent =
-      `You left off at "${data.session.last_chapter}". Ready to continue?`;
+      `You left off at "${data.session.last_chapter}". Let's crush it!`;
   } else {
     document.getElementById('resumeMsg').textContent =
-      "Start a new learning session — your AI tutor is waiting!";
+      "Your adventure awaits — let's learn something awesome!";
   }
 }
 
@@ -74,7 +194,7 @@ async function loadSessions() {
         : 0;
       totalMin += duration;
       const date = new Date(s.start_time).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-      return `<div class="session-item">
+      return `<div class="session-item-v2">
         <span class="si-date">${date} · ${duration} min</span>
         <span class="si-xp">+${s.xp_earned || 0} XP</span>
       </div>`;
@@ -97,7 +217,7 @@ async function loadSkills() {
 
   list.innerHTML = data.radar.map(r => {
     const color = colors[r.category] || '#5b5ef4';
-    return `<div class="skill-item">
+    return `<div class="skill-item-v2">
       <span class="skill-name">${r.category}</span>
       <div class="skill-bar">
         <div class="skill-bar-fill" style="width:${r.accuracy}%;background:${color}"></div>
@@ -105,18 +225,6 @@ async function loadSkills() {
       <span class="skill-pct" style="color:${color}">${r.accuracy}%</span>
     </div>`;
   }).join('');
-
-  const weakData = await apiGet('/api/skills/weaknesses');
-  const weakContainer = document.getElementById('weaknesses');
-  if (weakData?.weaknesses?.length) {
-    weakContainer.innerHTML = weakData.weaknesses.map(w =>
-      `<div class="weak-item">
-        <span class="wi-icon">⚠️</span>
-        <span class="wi-name">${w.skill_name.replace(/_/g, ' ')}</span>
-        <span class="wi-pct">${Math.round(w.accuracy)}%</span>
-      </div>`
-    ).join('');
-  }
 }
 
 async function loadHomework() {
@@ -140,7 +248,7 @@ async function loadHomework() {
 
 async function loadRevision() {
   const area = document.getElementById('revisionArea');
-  area.innerHTML = '<div style="text-align:center;padding:1rem;color:#5b5ef4;font-weight:700">Generating revision...</div>';
+  area.innerHTML = '<div style="text-align:center;padding:1rem;color:#5b5ef4;font-weight:700">⚡ Generating revision...</div>';
 
   const sessionData = await apiGet('/api/sessions/current');
   const topics = sessionData?.session?.topics_covered || ['General vocabulary', 'Basic grammar'];
@@ -149,7 +257,7 @@ async function loadRevision() {
   if (data?.revision) {
     area.innerHTML = `<div class="revision-content">${data.revision}</div>`;
   } else {
-    area.innerHTML = '<div class="no-data">Could not generate revision. Try again later.</div>';
+    area.innerHTML = '<div class="no-data-v2">Could not generate revision. Try again later.</div>';
   }
 }
 
@@ -159,18 +267,17 @@ function loadDashboardWeakness() {
   const top = WeaknessEngine.getTopWeaknesses(3);
 
   if (!top.length) {
-    container.innerHTML = '<div class="no-data">Complete quizzes to see weak areas!</div>';
+    container.innerHTML = '<div class="no-data-v2">Complete quizzes to unlock boss battles! 👾</div>';
     return;
   }
 
-  container.innerHTML = top.map(w => `
-    <div class="wk-card ${w.severity.level}" style="cursor:default">
-      <div class="wk-severity">${w.severity.icon}</div>
-      <div class="wk-info">
-        <div class="wk-topic">${w.topic.replace(/_/g, ' ')}</div>
-        <div class="wk-category">${w.category} · ${w.severity.label}</div>
-      </div>
-      <div class="wk-score" style="color:${w.severity.color}">${w.accuracy}%</div>
+  const bossEmojis = ['👾', '🐉', '👿', '🤖', '💀'];
+  container.innerHTML = top.map((w, i) => `
+    <div class="boss-card">
+      <span class="boss-icon">${bossEmojis[i % bossEmojis.length]}</span>
+      <span class="boss-name">${w.topic.replace(/_/g, ' ')}</span>
+      <span class="boss-hp">${w.accuracy}% HP</span>
+      <a href="/weakness" class="boss-attack-btn">Attack!</a>
     </div>
   `).join('');
 }
@@ -181,7 +288,7 @@ function loadDashboardChallenges() {
   const challenges = WeaknessEngine.getActiveChallenges().filter(c => !c.completed).slice(0, 2);
 
   if (!challenges.length) {
-    container.innerHTML = '<div class="no-data">All challenges completed! 🏆</div>';
+    container.innerHTML = '<div class="no-data-v2">All quests completed! 🏆 You\'re a legend!</div>';
     return;
   }
 

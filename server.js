@@ -69,6 +69,22 @@ app.get('/weakness', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'pages', 'weakness-dashboard.html'));
 });
 
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pages', 'signup.html'));
+});
+
+app.get('/quiz-battle', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pages', 'quiz-battle.html'));
+});
+
+app.get('/mock-test', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pages', 'mock-test.html'));
+});
+
+app.get('/onboarding', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pages', 'onboarding.html'));
+});
+
 if (process.env.VERCEL !== '1') {
   app.listen(PORT, () => {
     console.log(`LinguaLearn server running at http://localhost:${PORT}`);

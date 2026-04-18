@@ -38,103 +38,356 @@
     </div>
   </nav>
 
-  <section class="dash-hero">
-    <div class="dash-hero-inner">
-      <div class="dash-welcome">
-        <h1 id="welcomeMsg">Welcome back! 👋</h1>
-        <p id="resumeMsg">Loading your progress...</p>
+  <!-- Daily Reward Popup -->
+  <div class="daily-reward-overlay" id="dailyRewardOverlay">
+    <div class="daily-reward-box">
+      <div class="dr-sparkles">✨</div>
+      <h2 class="dr-title">Daily Reward!</h2>
+      <p class="dr-subtitle">You showed up — that's what winners do!</p>
+      <div class="dr-prize" id="drPrize">
+        <span class="dr-prize-icon">🎁</span>
+        <span class="dr-prize-text">+15 XP</span>
       </div>
-      <div class="dash-quick-actions">
-        <a href="/tutor" class="dqa-btn primary">🤖 Continue Learning</a>
-        <a href="/my-homework" class="dqa-btn">📝 Upload Homework</a>
-        <a href="/voice-lab" class="dqa-btn">🎤 Voice Lab</a>
-        <a href="/exam-prep" class="dqa-btn">📋 Exam Prep</a>
+      <div class="dr-streak-row">
+        <div class="dr-day" id="drDay1"><span>1</span></div>
+        <div class="dr-day" id="drDay2"><span>2</span></div>
+        <div class="dr-day" id="drDay3"><span>3</span></div>
+        <div class="dr-day" id="drDay4"><span>4</span></div>
+        <div class="dr-day" id="drDay5"><span>5</span></div>
+        <div class="dr-day special" id="drDay6"><span>6</span></div>
+        <div class="dr-day special mega" id="drDay7"><span>7</span></div>
+      </div>
+      <button class="dr-claim-btn" onclick="claimDailyReward()">Claim Reward 🎉</button>
+    </div>
+  </div>
+
+  <!-- XP Gain Animation (floating) -->
+  <div class="xp-float-container" id="xpFloatContainer"></div>
+
+  <!-- Hero with Avatar & Level -->
+  <section class="dash-hero-v2">
+    <div class="dash-hero-inner-v2">
+      <div class="hero-left">
+        <div class="avatar-ring" id="avatarRing">
+          <div class="avatar-level-badge" id="avatarLevel">1</div>
+          <div class="avatar-circle" id="avatarCircle">
+            <span class="avatar-emoji" id="avatarEmoji">🧑‍🎓</span>
+          </div>
+          <svg class="avatar-xp-ring" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="6"/>
+            <circle cx="60" cy="60" r="54" fill="none" stroke="url(#xpGrad)" stroke-width="6"
+              stroke-dasharray="339.3" stroke-dashoffset="339.3" stroke-linecap="round" id="xpRingProgress"
+              transform="rotate(-90 60 60)"/>
+            <defs>
+              <linearGradient id="xpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fbbf24"/>
+                <stop offset="100%" stop-color="#f97316"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="hero-greeting">
+          <h1 id="welcomeMsg">Hey there! 👋</h1>
+          <p class="hero-tagline" id="resumeMsg">Loading...</p>
+          <div class="hero-badges-row" id="heroBadges">
+            <span class="mini-badge streak-badge">🔥 <span id="heroStreak">0</span> day streak</span>
+            <span class="mini-badge xp-badge">⚡ <span id="heroXP">0</span> XP</span>
+            <span class="mini-badge rank-badge">🏆 <span id="heroRank">Newbie</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="countdown-card" id="examCountdown" style="display:none">
+          <div class="cc-icon">📅</div>
+          <div class="cc-info">
+            <div class="cc-label">Next Exam In</div>
+            <div class="cc-days" id="ccDays">--</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="dash-stats">
-    <div class="stat-card xp-card">
-      <div class="sc-icon">⚡</div>
-      <div class="sc-value" id="totalXP">0</div>
-      <div class="sc-label">Total XP</div>
-      <div class="sc-level" id="xpLevel">Beginner</div>
+  <!-- Today's Missions -->
+  <section class="missions-section">
+    <div class="missions-header">
+      <h2>🎯 Today's Missions</h2>
+      <div class="missions-timer">Resets in <span id="missionTimer">--:--</span></div>
     </div>
-    <div class="stat-card">
-      <div class="sc-icon">🔥</div>
-      <div class="sc-value" id="streak">0</div>
-      <div class="sc-label">Day Streak</div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-icon">📖</div>
-      <div class="sc-value" id="sessionsCount">0</div>
-      <div class="sc-label">Total Sessions</div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-icon">⏱️</div>
-      <div class="sc-value" id="studyHours">0h</div>
-      <div class="sc-label">Study Time</div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-icon">📝</div>
-      <div class="sc-value" id="hwCompleted">0</div>
-      <div class="sc-label">Homework Done</div>
-    </div>
-    <div class="stat-card plan-card">
-      <div class="sc-icon">💎</div>
-      <div class="sc-value" id="planName">Trial</div>
-      <div class="sc-label" id="planDetail">30 days free</div>
+    <div class="missions-grid" id="missionsGrid">
+      <a href="/tutor" class="mission-card" data-mission="learn" style="text-decoration:none;color:inherit">
+        <div class="mc-left">
+          <div class="mc-icon-wrap learn">🤖</div>
+          <div class="mc-info">
+            <div class="mc-title">Chat with Gyani</div>
+            <div class="mc-desc">Complete 1 AI tutoring session</div>
+          </div>
+        </div>
+        <div class="mc-right">
+          <div class="mc-reward">+20 XP</div>
+          <div class="mc-progress-ring">
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#eee" stroke-width="3"/>
+            <circle cx="18" cy="18" r="15" fill="none" stroke="#5b5ef4" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2" stroke-linecap="round" class="mc-ring-fill"/></svg>
+          </div>
+        </div>
+      </a>
+      <a href="/quiz-battle" class="mission-card" data-mission="quiz" style="text-decoration:none;color:inherit">
+        <div class="mc-left">
+          <div class="mc-icon-wrap quiz">🧩</div>
+          <div class="mc-info">
+            <div class="mc-title">Quick Quiz</div>
+            <div class="mc-desc">Score 70%+ in a quiz</div>
+          </div>
+        </div>
+        <div class="mc-right">
+          <div class="mc-reward">+15 XP</div>
+          <div class="mc-progress-ring">
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#eee" stroke-width="3"/>
+            <circle cx="18" cy="18" r="15" fill="none" stroke="#f72585" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2" stroke-linecap="round" class="mc-ring-fill"/></svg>
+          </div>
+        </div>
+      </a>
+      <a href="/writing-test" class="mission-card" data-mission="practice" style="text-decoration:none;color:inherit">
+        <div class="mc-left">
+          <div class="mc-icon-wrap practice">✍️</div>
+          <div class="mc-info">
+            <div class="mc-title">Writing Practice</div>
+            <div class="mc-desc">Submit a writing exercise</div>
+          </div>
+        </div>
+        <div class="mc-right">
+          <div class="mc-reward">+25 XP</div>
+          <div class="mc-progress-ring">
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#eee" stroke-width="3"/>
+            <circle cx="18" cy="18" r="15" fill="none" stroke="#06d6a0" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2" stroke-linecap="round" class="mc-ring-fill"/></svg>
+          </div>
+        </div>
+      </a>
+      <a href="/exam-prep" class="mission-card bonus-mission" data-mission="bonus" style="text-decoration:none;color:inherit">
+        <div class="mc-left">
+          <div class="mc-icon-wrap bonus">⭐</div>
+          <div class="mc-info">
+            <div class="mc-title">Bonus: Beat Your Record!</div>
+            <div class="mc-desc">Get a higher score than yesterday</div>
+          </div>
+        </div>
+        <div class="mc-right">
+          <div class="mc-reward bonus-reward">+50 XP</div>
+          <div class="mc-progress-ring">
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#eee" stroke-width="3"/>
+            <circle cx="18" cy="18" r="15" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2" stroke-linecap="round" class="mc-ring-fill"/></svg>
+          </div>
+        </div>
+      </a>
     </div>
   </section>
 
+  <!-- Quick Action Buttons (game-style) -->
+  <section class="quick-actions-v2">
+    <a href="/tutor" class="qa-card qa-primary">
+      <div class="qa-glow"></div>
+      <div class="qa-icon">🤖</div>
+      <div class="qa-label">Continue Learning</div>
+      <div class="qa-arrow">→</div>
+    </a>
+    <a href="/quiz-battle" class="qa-card qa-battle">
+      <div class="qa-glow"></div>
+      <div class="qa-icon">⚔️</div>
+      <div class="qa-label">Quiz Battle</div>
+      <div class="qa-arrow">→</div>
+    </a>
+    <a href="/my-homework" class="qa-card qa-hw">
+      <div class="qa-glow"></div>
+      <div class="qa-icon">📝</div>
+      <div class="qa-label">Homework</div>
+      <div class="qa-arrow">→</div>
+    </a>
+    <a href="/voice-lab" class="qa-card qa-voice">
+      <div class="qa-glow"></div>
+      <div class="qa-icon">🎤</div>
+      <div class="qa-label">Voice Lab</div>
+      <div class="qa-arrow">→</div>
+    </a>
+    <a href="/mock-test" class="qa-card qa-mock">
+      <div class="qa-glow"></div>
+      <div class="qa-icon">📋</div>
+      <div class="qa-label">Mock Test</div>
+      <div class="qa-arrow">→</div>
+    </a>
+  </section>
+
+  <!-- Stats Row (game-style cards) -->
+  <section class="game-stats">
+    <div class="gs-card xp-card-v2">
+      <div class="gs-header">
+        <span class="gs-emoji">⚡</span>
+        <span class="gs-title">Total XP</span>
+      </div>
+      <div class="gs-value" id="totalXP">0</div>
+      <div class="gs-level-bar">
+        <div class="gs-level-fill" id="xpLevelFill" style="width:0%"></div>
+      </div>
+      <div class="gs-level-info">
+        <span id="xpLevel">Beginner</span>
+        <span id="xpToNext">100 XP to next level</span>
+      </div>
+    </div>
+    <div class="gs-card streak-card-v2">
+      <div class="gs-header">
+        <span class="gs-emoji fire-anim">🔥</span>
+        <span class="gs-title">Streak</span>
+      </div>
+      <div class="gs-value" id="streak">0</div>
+      <div class="gs-sub">days in a row</div>
+      <div class="streak-flames" id="streakFlames"></div>
+    </div>
+    <div class="gs-card">
+      <div class="gs-header">
+        <span class="gs-emoji">📖</span>
+        <span class="gs-title">Sessions</span>
+      </div>
+      <div class="gs-value" id="sessionsCount">0</div>
+      <div class="gs-sub">completed</div>
+    </div>
+    <div class="gs-card">
+      <div class="gs-header">
+        <span class="gs-emoji">⏱️</span>
+        <span class="gs-title">Study Time</span>
+      </div>
+      <div class="gs-value" id="studyHours">0h</div>
+      <div class="gs-sub">total</div>
+    </div>
+    <div class="gs-card">
+      <div class="gs-header">
+        <span class="gs-emoji">📝</span>
+        <span class="gs-title">Homework</span>
+      </div>
+      <div class="gs-value" id="hwCompleted">0</div>
+      <div class="gs-sub">graded</div>
+    </div>
+    <div class="gs-card plan-card-v2">
+      <div class="gs-header">
+        <span class="gs-emoji">💎</span>
+        <span class="gs-title">Plan</span>
+      </div>
+      <div class="gs-value" id="planName">Trial</div>
+      <div class="gs-sub" id="planDetail">30 days free</div>
+      <a href="/pricing" class="gs-upgrade-btn">Upgrade</a>
+    </div>
+  </section>
+
+  <!-- Main Content Grid -->
   <section class="dash-body">
     <div class="dash-main">
-      <div class="dash-section">
-        <h3>📊 Skill Radar</h3>
-        <p class="ds-sub">Your strength across different areas</p>
+      <!-- Skill Radar with game styling -->
+      <div class="dash-section game-section">
+        <div class="ds-header-row">
+          <h3>📊 Power Stats</h3>
+          <span class="ds-badge">Your skills</span>
+        </div>
         <canvas id="skillRadar" width="400" height="300"></canvas>
-        <div id="skillList" class="skill-list"></div>
+        <div id="skillList" class="skill-list-v2"></div>
       </div>
 
-      <div class="dash-section">
-        <h3>🎯 Top Weak Areas</h3>
-        <p class="ds-sub">Focus on these to boost your score fastest</p>
-        <div id="weaknesses" class="weakness-cards"></div>
-        <a href="/weakness" class="ds-link">View all weak areas & start drills →</a>
+      <!-- Weak Areas as "Boss Battles" -->
+      <div class="dash-section game-section boss-section">
+        <div class="ds-header-row">
+          <h3>👾 Boss Battles</h3>
+          <span class="ds-badge danger">Defeat them!</span>
+        </div>
+        <p class="ds-sub">These topics are your toughest enemies. Defeat them to level up!</p>
+        <div id="weaknesses" class="boss-cards"></div>
+        <a href="/weakness" class="ds-link-v2">Enter the arena →</a>
       </div>
 
-      <div class="dash-section">
-        <h3>⚔️ Active Challenges</h3>
+      <!-- Active Challenges -->
+      <div class="dash-section game-section">
+        <div class="ds-header-row">
+          <h3>⚔️ Active Quests</h3>
+          <span class="ds-badge quest">In progress</span>
+        </div>
         <div id="dashChallenges" class="challenge-grid" style="grid-template-columns:1fr"></div>
-        <a href="/weakness" class="ds-link">See all challenges →</a>
+        <a href="/weakness" class="ds-link-v2">See all quests →</a>
       </div>
     </div>
 
     <div class="dash-sidebar">
-      <div class="dash-section">
-        <h3>📅 Recent Sessions</h3>
-        <div id="recentSessions" class="session-list">
-          <div class="no-data">No sessions yet. Start learning!</div>
+      <!-- Leaderboard Peek -->
+      <div class="dash-section game-section leaderboard-section">
+        <div class="ds-header-row">
+          <h3>🏆 Leaderboard</h3>
+        </div>
+        <div class="lb-list" id="leaderboardList">
+          <div class="lb-item gold">
+            <span class="lb-rank">1</span>
+            <span class="lb-name">You could be here!</span>
+            <span class="lb-xp">---</span>
+          </div>
+        </div>
+        <div class="lb-your-rank">
+          <span>Your Rank:</span>
+          <span class="lb-your-pos" id="yourRank">#--</span>
         </div>
       </div>
 
-      <div class="dash-section">
-        <h3>📝 Homework</h3>
+      <!-- Achievement Showcase -->
+      <div class="dash-section game-section">
+        <div class="ds-header-row">
+          <h3>🏅 Trophies</h3>
+        </div>
+        <div class="trophy-grid" id="trophyGrid">
+          <div class="trophy-item unlocked">🌟<span>First Steps</span></div>
+          <div class="trophy-item locked">🎯<span>Sharpshooter</span></div>
+          <div class="trophy-item locked">🔥<span>On Fire</span></div>
+          <div class="trophy-item locked">👑<span>Champion</span></div>
+          <div class="trophy-item locked">💎<span>Diamond</span></div>
+          <div class="trophy-item locked">🚀<span>Rocket</span></div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="dash-section game-section">
+        <div class="ds-header-row">
+          <h3>📅 Recent</h3>
+        </div>
+        <div id="recentSessions" class="session-list-v2">
+          <div class="no-data-v2">No sessions yet. Start your adventure!</div>
+        </div>
+      </div>
+
+      <!-- Homework -->
+      <div class="dash-section game-section">
+        <div class="ds-header-row">
+          <h3>📝 Homework</h3>
+        </div>
         <div id="homeworkList" class="hw-list">
-          <div class="no-data">No homework submitted yet.</div>
+          <div class="no-data-v2">No homework submitted yet.</div>
         </div>
-        <a href="/my-homework" class="ds-link">Upload homework →</a>
+        <a href="/my-homework" class="ds-link-v2">Upload homework →</a>
       </div>
 
-      <div class="dash-section">
-        <h3>🔄 Quick Revision</h3>
+      <!-- Quick Revision -->
+      <div class="dash-section game-section">
+        <div class="ds-header-row">
+          <h3>🔄 Quick Revision</h3>
+        </div>
         <div id="revisionArea" class="revision-box">
-          <button class="btn-sm" onclick="loadRevision()">Generate revision of last class</button>
+          <button class="revision-btn" onclick="loadRevision()">⚡ Generate revision of last class</button>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Motivational Footer -->
+  <div class="motivation-bar">
+    <div class="motivation-text" id="motivationText">"The expert in anything was once a beginner." — Keep going! 💪</div>
+  </div>
+
+  <script>
+    if (!localStorage.getItem('ll_onboarded')) {
+      window.location.href = '/onboarding';
+    }
+  </script>
   <script src="/js/api.js"></script>
   <script src="/js/weakness-engine.js"></script>
   <script src="/js/stats-bar.js"></script>

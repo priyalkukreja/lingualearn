@@ -56,6 +56,18 @@
       "dest": "/public/pages/weakness-dashboard.html"
     },
     {
+      "src": "/quiz-battle",
+      "dest": "/public/pages/quiz-battle.html"
+    },
+    {
+      "src": "/mock-test",
+      "dest": "/public/pages/mock-test.html"
+    },
+    {
+      "src": "/onboarding",
+      "dest": "/public/pages/onboarding.html"
+    },
+    {
       "src": "/css/(.*)",
       "dest": "/public/css/$1"
     },

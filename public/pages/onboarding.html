@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome — LinguaLearn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Inter',sans-serif;
+      min-height:100vh;
+      background:linear-gradient(135deg,#eef2ff 0%,#fdf2f8 50%,#eff6ff 100%);
+      display:flex; align-items:center; justify-content:center;
+      padding:1.5rem;
+    }
+    .onboard-container {
+      width:100%; max-width:520px;
+      background:#fff;
+      border-radius:20px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.08);
+      overflow:hidden;
+    }
+    .onboard-header {
+      background:linear-gradient(135deg,#6366f1,#ec4899);
+      padding:2rem 2rem 1.5rem;
+      text-align:center; color:#fff;
+    }
+    .onboard-header h1 { font-size:1.5rem; font-weight:900; margin-bottom:0.3rem; }
+    .onboard-header p { font-size:0.85rem; opacity:0.9; }
+    .progress-bar { display:flex; gap:6px; padding:1.25rem 2rem 0; }
+    .progress-dot {
+      flex:1; height:5px; border-radius:10px; background:#e5e7eb; transition:background 0.3s;
+    }
+    .progress-dot.active { background:linear-gradient(90deg,#6366f1,#ec4899); }
+    .progress-dot.done { background:#10b981; }
+
+    .step { display:none; padding:1.5rem 2rem 2rem; animation:fadeIn 0.3s ease; }
+    .step.active { display:block; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    .step h2 { font-size:1.15rem; font-weight:800; color:#111827; margin-bottom:0.3rem; }
+    .step p.sub { font-size:0.82rem; color:#6b7280; margin-bottom:1.25rem; }
+
+    .option-grid { display:grid; gap:0.6rem; }
+    .option-grid.cols-2 { grid-template-columns:1fr 1fr; }
+    .option-grid.cols-3 { grid-template-columns:1fr 1fr 1fr; }
+
+    .option-card {
+      padding:0.85rem 1rem;
+      border:2px solid #e5e7eb;
+      border-radius:12px;
+      cursor:pointer;
+      transition:all 0.2s;
+      text-align:center;
+    }
+    .option-card:hover { border-color:#a5b4fc; background:#f5f3ff; }
+    .option-card.selected { border-color:#6366f1; background:#eef2ff; box-shadow:0 0 0 3px rgba(99,102,241,0.15); }
+    .option-card .opt-emoji { font-size:1.5rem; display:block; margin-bottom:0.3rem; }
+    .option-card .opt-label { font-size:0.82rem; font-weight:700; color:#374151; }
+    .option-card .opt-desc { font-size:0.7rem; color:#9ca3af; margin-top:0.15rem; }
+
+    .form-group { margin-bottom:1rem; }
+    .form-group label { display:block; font-size:0.82rem; font-weight:700; color:#374151; margin-bottom:0.4rem; }
+    .form-group select, .form-group input {
+      width:100%; padding:0.7rem 0.9rem; border:2px solid #e5e7eb; border-radius:10px;
+      font-size:0.88rem; font-family:inherit; font-weight:600; color:#111827;
+      background:#fff; appearance:none; cursor:pointer;
+    }
+    .form-group select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 0.75rem center; }
+    .form-group select:focus, .form-group input:focus { outline:none; border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,0.1); }
+
+    .btn-row { display:flex; gap:0.75rem; margin-top:1.5rem; }
+    .btn-back {
+      padding:0.7rem 1.25rem; border:2px solid #e5e7eb; border-radius:10px;
+      background:#fff; font-size:0.85rem; font-weight:700; color:#6b7280;
+      cursor:pointer; font-family:inherit; transition:all 0.2s;
+    }
+    .btn-back:hover { border-color:#d1d5db; background:#f9fafb; }
+    .btn-next {
+      flex:1; padding:0.7rem 1.25rem; border:none; border-radius:10px;
+      background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff;
+      font-size:0.85rem; font-weight:700; cursor:pointer; font-family:inherit;
+      transition:all 0.2s;
+    }
+    .btn-next:hover { transform:translateY(-1px); box-shadow:0 4px 15px rgba(99,102,241,0.3); }
+    .btn-next:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
+
+    .goal-check { display:flex; align-items:center; gap:0.6rem; padding:0.65rem 0.85rem; border:2px solid #e5e7eb; border-radius:10px; cursor:pointer; transition:all 0.2s; margin-bottom:0.5rem; }
+    .goal-check:hover { border-color:#a5b4fc; }
+    .goal-check.selected { border-color:#6366f1; background:#eef2ff; }
+    .goal-check input { display:none; }
+    .goal-check .check-box { width:20px; height:20px; border:2px solid #d1d5db; border-radius:6px; display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; }
+    .goal-check.selected .check-box { background:#6366f1; border-color:#6366f1; }
+    .goal-check.selected .check-box::after { content:''; display:block; width:6px; height:10px; border:solid white; border-width:0 2.5px 2.5px 0; transform:rotate(45deg); margin-top:-2px; }
+    .goal-check .goal-text { font-size:0.82rem; font-weight:600; color:#374151; }
+
+    .ready-screen { text-align:center; padding:2rem; }
+    .ready-screen .big-emoji { font-size:3.5rem; margin-bottom:1rem; }
+    .ready-screen h2 { font-size:1.35rem; font-weight:900; color:#111827; margin-bottom:0.5rem; }
+    .ready-screen p { font-size:0.88rem; color:#6b7280; line-height:1.6; }
+    .ready-features { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin:1.5rem 0; text-align:left; }
+    .ready-feat { display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.7rem; background:#f9fafb; border-radius:8px; font-size:0.78rem; font-weight:600; color:#374151; }
+
+    @media(max-width:500px) {
+      .option-grid.cols-3 { grid-template-columns:1fr 1fr; }
+      .ready-features { grid-template-columns:1fr; }
+      .onboard-header h1 { font-size:1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="onboard-container">
+    <div class="onboard-header">
+      <h1>Welcome to LinguaLearn!</h1>
+      <p>Let's set up your learning profile in 30 seconds</p>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-dot active" id="dot1"></div>
+      <div class="progress-dot" id="dot2"></div>
+      <div class="progress-dot" id="dot3"></div>
+      <div class="progress-dot" id="dot4"></div>
+      <div class="progress-dot" id="dot5"></div>
+    </div>
+
+    <!-- Step 1: Class -->
+    <div class="step active" id="step1">
+      <h2>Which class are you in?</h2>
+      <p class="sub">We'll show you content matched to your CBSE grade level.</p>
+      <div class="option-grid cols-3" id="classOptions">
+        <div class="option-card" data-value="6" onclick="selectOption(this,'class')">
+          <span class="opt-emoji">6</span>
+          <span class="opt-label">Class 6</span>
+        </div>
+        <div class="option-card" data-value="7" onclick="selectOption(this,'class')">
+          <span class="opt-emoji">7</span>
+          <span class="opt-label">Class 7</span>
+        </div>
+        <div class="option-card" data-value="8" onclick="selectOption(this,'class')">
+          <span class="opt-emoji">8</span>
+          <span class="opt-label">Class 8</span>
+        </div>
+        <div class="option-card" data-value="9" onclick="selectOption(this,'class')">
+          <span class="opt-emoji">9</span>
+          <span class="opt-label">Class 9</span>
+        </div>
+        <div class="option-card" data-value="10" onclick="selectOption(this,'class')">
+          <span class="opt-emoji">10</span>
+          <span class="opt-label">Class 10</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-next" id="btn1" disabled onclick="goStep(2)">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Language -->
+    <div class="step" id="step2">
+      <h2>Which language are you learning?</h2>
+      <p class="sub">Pick your CBSE additional language subject.</p>
+      <div class="option-grid cols-2" id="langOptions">
+        <div class="option-card" data-value="french" onclick="selectOption(this,'language')">
+          <span class="opt-emoji">🇫🇷</span>
+          <span class="opt-label">French</span>
+        </div>
+        <div class="option-card" data-value="german" onclick="selectOption(this,'language')">
+          <span class="opt-emoji">🇩🇪</span>
+          <span class="opt-label">German</span>
+        </div>
+        <div class="option-card" data-value="sanskrit" onclick="selectOption(this,'language')">
+          <span class="opt-emoji">🕉️</span>
+          <span class="opt-label">Sanskrit</span>
+        </div>
+        <div class="option-card" data-value="spanish" onclick="selectOption(this,'language')">
+          <span class="opt-emoji">🇪🇸</span>
+          <span class="opt-label">Spanish</span>
+        </div>
+        <div class="option-card" data-value="japanese" onclick="selectOption(this,'language')">
+          <span class="opt-emoji">🇯🇵</span>
+          <span class="opt-label">Japanese</span>
+        </div>
+        <div class="option-card" data-value="korean" onclick="selectOption(this,'language')">
+          <span class="opt-emoji">🇰🇷</span>
+          <span class="opt-label">Korean</span>
+        </div>
+        <div class="option-card" data-value="mandarin" onclick="selectOption(this,'language')">
+          <span class="opt-emoji">🇨🇳</span>
+          <span class="opt-label">Mandarin</span>
+        </div>
+        <div class="option-card" data-value="russian" onclick="selectOption(this,'language')">
+          <span class="opt-emoji">🇷🇺</span>
+          <span class="opt-label">Russian</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(1)">Back</button>
+        <button class="btn-next" id="btn2" disabled onclick="goStep(3)">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Textbook & Level -->
+    <div class="step" id="step3">
+      <h2>Your textbook & level</h2>
+      <p class="sub">This helps us align lessons to your school's chapters.</p>
+      <div class="form-group">
+        <label>Your School's Textbook</label>
+        <input type="text" id="obTextbook" placeholder="e.g. Apprenons le Francais, Ruchira, Antworten Bitte..." />
+      </div>
+      <div class="form-group">
+        <label>Your current level in this language</label>
+        <div class="option-grid cols-3" id="levelOptions">
+          <div class="option-card" data-value="beginner" onclick="selectOption(this,'level')">
+            <span class="opt-emoji">🌱</span>
+            <span class="opt-label">Beginner</span>
+            <span class="opt-desc">Just started</span>
+          </div>
+          <div class="option-card" data-value="intermediate" onclick="selectOption(this,'level')">
+            <span class="opt-emoji">📚</span>
+            <span class="opt-label">Intermediate</span>
+            <span class="opt-desc">Know basics</span>
+          </div>
+          <div class="option-card" data-value="advanced" onclick="selectOption(this,'level')">
+            <span class="opt-emoji">🏆</span>
+            <span class="opt-label">Advanced</span>
+            <span class="opt-desc">Quite fluent</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(2)">Back</button>
+        <button class="btn-next" id="btn3" disabled onclick="goStep(4)">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Goals -->
+    <div class="step" id="step4">
+      <h2>What do you want to achieve?</h2>
+      <p class="sub">Pick all that apply. We'll personalise your dashboard.</p>
+      <div id="goalOptions">
+        <label class="goal-check" onclick="toggleGoal(this)">
+          <input type="checkbox" value="exam_prep" />
+          <div class="check-box"></div>
+          <span class="goal-text">📝 Score 90%+ in board exams</span>
+        </label>
+        <label class="goal-check" onclick="toggleGoal(this)">
+          <input type="checkbox" value="homework" />
+          <div class="check-box"></div>
+          <span class="goal-text">📖 Get help with daily homework</span>
+        </label>
+        <label class="goal-check" onclick="toggleGoal(this)">
+          <input type="checkbox" value="vocab" />
+          <div class="check-box"></div>
+          <span class="goal-text">🗣️ Build vocabulary & speaking skills</span>
+        </label>
+        <label class="goal-check" onclick="toggleGoal(this)">
+          <input type="checkbox" value="writing" />
+          <div class="check-box"></div>
+          <span class="goal-text">✍️ Improve writing & grammar</span>
+        </label>
+        <label class="goal-check" onclick="toggleGoal(this)">
+          <input type="checkbox" value="mock_tests" />
+          <div class="check-box"></div>
+          <span class="goal-text">📋 Practice with mock tests</span>
+        </label>
+        <label class="goal-check" onclick="toggleGoal(this)">
+          <input type="checkbox" value="fun" />
+          <div class="check-box"></div>
+          <span class="goal-text">🎮 Learn in a fun, gamified way</span>
+        </label>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(3)">Back</button>
+        <button class="btn-next" id="btn4" disabled onclick="goStep(5)">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Ready! -->
+    <div class="step" id="step5">
+      <div class="ready-screen">
+        <div class="big-emoji">🚀</div>
+        <h2>You're all set!</h2>
+        <p>Here's what you can do on LinguaLearn:</p>
+        <div class="ready-features">
+          <div class="ready-feat">🤖 Chat with AI Tutor Gyani</div>
+          <div class="ready-feat">📋 Take CBSE Mock Tests</div>
+          <div class="ready-feat">📝 Submit & Grade Homework</div>
+          <div class="ready-feat">🎤 Practice in Voice Lab</div>
+          <div class="ready-feat">✍️ Writing Tests with AI grading</div>
+          <div class="ready-feat">⚔️ Quiz Battle with friends</div>
+          <div class="ready-feat">📊 Track your weaknesses</div>
+          <div class="ready-feat">📅 Exam countdown & prep</div>
+        </div>
+      </div>
+      <div class="btn-row" style="padding:0 2rem 2rem">
+        <button class="btn-next" onclick="finishOnboarding()" style="font-size:1rem;padding:0.85rem">Go to My Dashboard →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const answers = { class:'', language:'', textbook:'', level:'', goals:[] };
+
+    function selectOption(el, key) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      answers[key] = el.dataset.value;
+      updateButtons();
+    }
+
+    function toggleGoal(el) {
+      el.classList.toggle('selected');
+      const cb = el.querySelector('input');
+      cb.checked = el.classList.contains('selected');
+      answers.goals = Array.from(document.querySelectorAll('#goalOptions input:checked')).map(i => i.value);
+      updateButtons();
+    }
+
+    function updateButtons() {
+      document.getElementById('btn1').disabled = !answers.class;
+      document.getElementById('btn2').disabled = !answers.language;
+      document.getElementById('btn3').disabled = !answers.level;
+      document.getElementById('btn4').disabled = answers.goals.length === 0;
+    }
+
+    function goStep(n) {
+      if (n === 4) answers.textbook = document.getElementById('obTextbook').value.trim();
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + n).classList.add('active');
+      for (let i = 1; i <= 5; i++) {
+        const dot = document.getElementById('dot' + i);
+        dot.classList.remove('active','done');
+        if (i < n) dot.classList.add('done');
+        else if (i === n) dot.classList.add('active');
+      }
+    }
+
+    function finishOnboarding() {
+      localStorage.setItem('ll_onboarded', '1');
+      localStorage.setItem('ll_preferences', JSON.stringify(answers));
+
+      const student = localStorage.getItem('ll_student');
+      if (student) {
+        try {
+          const s = JSON.parse(student);
+          if (answers.class) s.class = parseInt(answers.class);
+          if (answers.language) s.language = answers.language;
+          localStorage.setItem('ll_student', JSON.stringify(s));
+        } catch(e) {}
+      }
+
+      window.location.href = '/dashboard';
+    }
+
+    // Pre-fill from signup data if available
+    (function prefill() {
+      const student = localStorage.getItem('ll_student');
+      if (!student) return;
+      try {
+        const s = JSON.parse(student);
+        if (s.class) {
+          const card = document.querySelector('#classOptions .option-card[data-value="'+s.class+'"]');
+          if (card) { selectOption(card, 'class'); }
+        }
+        if (s.language) {
+          const card = document.querySelector('#langOptions .option-card[data-value="'+s.language+'"]');
+          if (card) { selectOption(card, 'language'); }
+        }
+      } catch(e) {}
+    })();
+  </script>
+</body>
+</html>

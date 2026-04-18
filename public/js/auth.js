@@ -68,7 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (res.ok) {
           localStorage.setItem('ll_token', data.token);
           localStorage.setItem('ll_student', JSON.stringify(data.student));
-          window.location.href = '/dashboard';
+          if (!localStorage.getItem('ll_onboarded')) {
+            window.location.href = '/onboarding';
+          } else {
+            window.location.href = '/dashboard';
+          }
         } else {
           msg.style.color = '#dc2626';
           msg.textContent = data.error || 'Login failed';

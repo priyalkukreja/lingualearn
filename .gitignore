@@ -7,3 +7,5 @@ uploads/*
 .vscode/
 .ssh/
 .config/
+
+.vercel

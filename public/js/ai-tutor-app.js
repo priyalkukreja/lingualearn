@@ -1,19 +1,20 @@
 let chatHistory = [];
+let comboCount = 0;
+let bestCombo = 0;
+let sessionXP = 0;
+let correctCount = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!requireAuth()) return;
 
   const student = getStudent();
   if (student) {
-    document.getElementById('tsInfo').textContent =
-      `Class ${student.class} · ${student.language.charAt(0).toUpperCase() + student.language.slice(1)}`;
     document.getElementById('navXP').textContent = (student.total_xp || 0) + ' XP';
     loadQuickTopics(student);
   }
 
-  // Initialize Robot Tutor
   if (typeof RobotTutor !== 'undefined') {
-    RobotTutor.init('chatRobot');
+    RobotTutor.init('sidebarRobot');
     RobotTutor.onGreet(student?.name?.split(' ')[0]);
   }
 
@@ -24,6 +25,77 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
 });
+
+function setMethod(btn) {
+  document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('methodSelect').value = btn.dataset.method;
+}
+
+function reactToMessage(btn, emoji) {
+  btn.classList.toggle('reacted');
+  btn.textContent = btn.classList.contains('reacted') ? emoji + ' 1' : emoji;
+}
+
+function updateSessionStats() {
+  const xpEl = document.getElementById('sessionXP');
+  const correctEl = document.getElementById('sessionCorrect');
+  const comboEl = document.getElementById('sessionCombo');
+  const headerXP = document.getElementById('headerXP');
+  if (xpEl) xpEl.textContent = sessionXP;
+  if (correctEl) correctEl.textContent = correctCount;
+  if (comboEl) comboEl.textContent = bestCombo;
+  if (headerXP) headerXP.textContent = sessionXP + ' XP';
+}
+
+function showXPPopup(amount) {
+  const popup = document.getElementById('xpPopup');
+  popup.textContent = `+${amount} XP`;
+  popup.classList.remove('show');
+  void popup.offsetWidth;
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 1200);
+}
+
+function updateCombo(correct) {
+  const counter = document.getElementById('comboCounter');
+  const numEl = document.getElementById('comboNumber');
+  const fireEl = document.getElementById('comboFire');
+
+  if (correct) {
+    comboCount++;
+    if (comboCount > bestCombo) bestCombo = comboCount;
+    if (comboCount >= 2) {
+      counter.classList.add('show');
+      numEl.textContent = comboCount;
+      fireEl.textContent = '🔥'.repeat(Math.min(comboCount, 5));
+    }
+  } else {
+    comboCount = 0;
+    counter.classList.remove('show');
+  }
+  updateSessionStats();
+}
+
+function updateGyaniMood(mood) {
+  const moodEl = document.getElementById('gyaniMood');
+  const statusEl = document.getElementById('gyaniStatus');
+  if (!moodEl) return;
+
+  const moods = {
+    happy: { emoji: '😊', text: 'Feeling great!' },
+    excited: { emoji: '🤩', text: 'You\'re on fire!' },
+    thinking: { emoji: '🤔', text: 'Thinking...' },
+    proud: { emoji: '🥳', text: 'So proud of you!' },
+    encouraging: { emoji: '💪', text: 'You got this!' },
+    neutral: { emoji: '😊', text: 'Ready to teach!' },
+  };
+  const m = moods[mood] || moods.neutral;
+  moodEl.textContent = m.emoji;
+  if (statusEl) {
+    statusEl.innerHTML = `<span class="status-dot"></span> ${m.text}`;
+  }
+}
 
 function loadQuickTopics(student) {
   const topics = {
@@ -49,25 +121,38 @@ async function loadWeakAreas() {
   const container = document.getElementById('weakAreas');
   if (data?.weaknesses?.length) {
     container.innerHTML = data.weaknesses.slice(0, 5).map(w =>
-      `<div class="ts-weak-item" onclick="quickSend('Help me improve: ${w.skill_name.replace(/_/g, ' ')}')">
+      `<div class="ts-weak-item-v2" onclick="quickSend('Help me improve: ${w.skill_name.replace(/_/g, ' ')}')">
         <span>${w.skill_name.replace(/_/g, ' ')}</span>
         <span class="ts-weak-pct">${Math.round(w.accuracy)}%</span>
       </div>`
     ).join('');
   } else {
-    container.innerHTML = '<div style="font-size:0.82rem;color:#64748b">No weak areas yet!</div>';
+    container.innerHTML = '<div style="font-size:0.82rem;color:#64748b;text-align:center;padding:0.5rem">No weak areas yet! Keep learning 🚀</div>';
   }
 }
 
 function addBubble(role, content) {
   const container = document.getElementById('chatMessages');
   const icon = role === 'ai' ? '🤖' : '👤';
+  const name = role === 'ai' ? 'Gyani' : 'You';
 
   const bubble = document.createElement('div');
   bubble.className = `chat-bubble ${role}`;
+
+  const reactionsHTML = role === 'ai' ? `
+    <div class="cb-reactions">
+      <button class="reaction-btn" onclick="reactToMessage(this, '👍')">👍</button>
+      <button class="reaction-btn" onclick="reactToMessage(this, '❤️')">❤️</button>
+      <button class="reaction-btn" onclick="reactToMessage(this, '🔥')">🔥</button>
+    </div>` : '';
+
   bubble.innerHTML = `
-    <div class="cb-icon">${icon}</div>
-    <div class="cb-content">${formatContent(content)}</div>
+    <div class="cb-avatar">${icon}</div>
+    <div class="cb-content-v2">
+      <div class="cb-name">${name}</div>
+      ${formatContent(content)}
+      ${reactionsHTML}
+    </div>
   `;
   container.appendChild(bubble);
   container.scrollTop = container.scrollHeight;
@@ -80,17 +165,25 @@ function addLoading() {
   bubble.className = 'chat-bubble ai';
   bubble.id = 'loadingBubble';
   bubble.innerHTML = `
-    <div class="cb-icon">🤖</div>
-    <div class="cb-content">
+    <div class="cb-avatar">🤖</div>
+    <div class="cb-content-v2">
+      <div class="cb-name">Gyani</div>
       <div class="cb-loading"><span></span><span></span><span></span></div>
     </div>
   `;
   container.appendChild(bubble);
   container.scrollTop = container.scrollHeight;
+
+  updateGyaniMood('thinking');
+  const typingEl = document.getElementById('gyaniTypingStatus');
+  if (typingEl) typingEl.textContent = 'Gyani is typing...';
 }
 
 function removeLoading() {
   document.getElementById('loadingBubble')?.remove();
+  const typingEl = document.getElementById('gyaniTypingStatus');
+  if (typingEl) typingEl.textContent = 'Your AI study buddy — always ready!';
+  updateGyaniMood('neutral');
 }
 
 function formatContent(text) {
@@ -127,6 +220,7 @@ async function sendMessage() {
         count: 5
       });
       removeLoading();
+      updateGyaniMood('excited');
       if (typeof RobotTutor !== 'undefined') RobotTutor.onQuiz();
       if (data?.questions?.length) {
         renderQuiz(data.questions);
@@ -146,11 +240,13 @@ async function sendMessage() {
       const reply = data?.reply || 'Sorry, I could not process that. Please try again.';
       addBubble('ai', reply);
       chatHistory.push({ role: 'assistant', content: reply });
+      updateGyaniMood('happy');
       if (typeof RobotTutor !== 'undefined') RobotTutor.onTalking();
     }
   } catch (err) {
     removeLoading();
     addBubble('ai', 'Oops! Something went wrong. Please try again.');
+    updateGyaniMood('encouraging');
     if (typeof RobotTutor !== 'undefined') RobotTutor.onWrongAnswer('Oops! Let me try again...');
   }
 
@@ -169,8 +265,9 @@ function renderQuiz(questions) {
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble ai';
     bubble.innerHTML = `
-      <div class="cb-icon">🧩</div>
-      <div class="cb-content">
+      <div class="cb-avatar">🧩</div>
+      <div class="cb-content-v2">
+        <div class="cb-name">Quiz</div>
         <p><strong>Q${qi + 1}:</strong> ${q.q}</p>
         <div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.5rem">
           ${q.options.map((opt, i) =>
@@ -193,19 +290,37 @@ async function checkQuizAnswer(btn, qi, selected, correct, explanation, skill) {
     if (oi === correct) {
       b.style.background = '#ecfdf5';
       b.style.borderColor = '#34d399';
+      b.style.color = '#059669';
     }
     if (oi === selected && oi !== correct) {
       b.style.background = '#fef2f2';
       b.style.borderColor = '#f87171';
+      b.style.color = '#ef4444';
     }
   });
 
   const isCorrect = selected === correct;
+  const xpGain = isCorrect ? 10 : 5;
+  sessionXP += xpGain;
+  if (isCorrect) correctCount++;
+
+  updateCombo(isCorrect);
+
+  const comboBonus = isCorrect && comboCount >= 3 ? ` (🔥 ${comboCount}x combo!)` : '';
   const feedback = isCorrect
-    ? `✅ Correct! ${explanation} (+10 XP)`
-    : `❌ Not quite. ${explanation} (+5 XP)`;
+    ? `✅ Correct! ${explanation} (+${xpGain} XP)${comboBonus}`
+    : `❌ Not quite. ${explanation} (+${xpGain} XP for trying!)`;
 
   addBubble('ai', feedback);
+  showXPPopup(xpGain);
+  updateSessionStats();
+
+  if (isCorrect) {
+    updateGyaniMood(comboCount >= 3 ? 'excited' : 'proud');
+  } else {
+    updateGyaniMood('encouraging');
+  }
+
   if (typeof RobotTutor !== 'undefined') {
     if (isCorrect) RobotTutor.onCorrectAnswer('Brilliant! 🎉');
     else RobotTutor.onWrongAnswer("No worries, you'll get the next one! 💪");
