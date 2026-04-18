@@ -1386,3 +1386,96 @@ updatePomoDisplay();
   // Dashboard
   updateDashboard();
 })();
+
+// ================================================================
+// ENHANCED UI — INTERACTIVE EFFECTS
+// ================================================================
+
+// Scroll progress bar
+(function scrollProgress() {
+  const bar = document.createElement('div');
+  bar.className = 'scroll-progress';
+  bar.style.width = '0%';
+  document.body.prepend(bar);
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = h > 0 ? (window.scrollY / h * 100) + '%' : '0%';
+  }, { passive: true });
+})();
+
+// Card glow follows mouse
+document.querySelectorAll('.bento-card, .lang-card, .resource-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mouse-x', ((e.clientX - r.left) / r.width * 100) + '%');
+    card.style.setProperty('--mouse-y', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+});
+
+// Scroll reveal with stagger
+(function betterReveal() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+})();
+
+// Animate numbers on scroll
+(function animateNumbers() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.textContent) || 0;
+      if (target <= 0 || target > 10000) return;
+      let current = 0;
+      const step = Math.ceil(target / 30);
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(timer); }
+        el.textContent = current;
+      }, 30);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.dash-card-value, .grade-num').forEach(el => obs.observe(el));
+})();
+
+// Tilt effect on hero cards
+document.querySelectorAll('.hero-lang-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width / 2) / r.width * 10;
+    const y = (e.clientY - r.top - r.height / 2) / r.height * 10;
+    card.style.transform = `perspective(500px) rotateY(${x}deg) rotateX(${-y}deg) scale(1.05)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+// Mobile nav toggle
+function toggleNav() {
+  const links = document.querySelector('.nav-links');
+  if (!links) return;
+  if (links.style.display === 'flex') {
+    links.style.display = 'none';
+  } else {
+    links.style.display = 'flex';
+    links.style.position = 'absolute';
+    links.style.top = '64px';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.background = 'var(--surface)';
+    links.style.flexDirection = 'column';
+    links.style.padding = '1rem';
+    links.style.borderBottom = '1px solid var(--border)';
+    links.style.boxShadow = 'var(--shadow-lg)';
+    links.style.zIndex = '50';
+  }
+}

@@ -132,3 +132,58 @@ body.auth-page::after {
   .auth-card { padding: 1.8rem 1.4rem; }
   .form-row { grid-template-columns: 1fr; }
 }
+
+/* Enhanced auth animations */
+.auth-card {
+  position: relative;
+  overflow: hidden;
+}
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  background: linear-gradient(135deg, #6366f1, #ec4899, #06d6a0, #6366f1);
+  background-size: 300% 300%;
+  border-radius: 30px;
+  z-index: -1;
+  animation: authBorder 6s ease infinite;
+  opacity: 0.5;
+}
+@keyframes authBorder {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.auth-submit {
+  position: relative;
+  overflow: hidden;
+}
+.auth-submit::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  transform: rotate(45deg) translateX(-100%);
+}
+.auth-submit:hover::after {
+  animation: submitShine 0.6s ease forwards;
+}
+@keyframes submitShine {
+  to { transform: rotate(45deg) translateX(100%); }
+}
+
+.form-group input, .form-group select {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.form-group input:focus, .form-group select:focus {
+  transform: scale(1.01);
+}
+
+.trial-badge {
+  animation: badgePulse 3s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(6,214,160,0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(6,214,160,0); }
+}
