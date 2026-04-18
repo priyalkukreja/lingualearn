@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { askGemini } = require('../services/gemini');
+const { askGroq } = require('../services/groq');
 const supabase = require('../services/supabase');
 const authMiddleware = require('../middleware/auth');
 const planGuard = require('../middleware/planGuard');
@@ -39,7 +39,7 @@ router.post('/explain', authMiddleware, planGuard, async (req, res) => {
 
     const systemPrompt = buildSystemPrompt(req.student, method || 'default');
 
-    const response = await askGemini([
+    const response = await askGroq([
       { role: 'system', content: systemPrompt },
       { role: 'user', content: `Explain this topic: ${topic}` }
     ]);
@@ -58,7 +58,7 @@ router.post('/quiz', authMiddleware, planGuard, async (req, res) => {
   try {
     const { topic, difficulty, count } = req.body;
 
-    const response = await askGemini([
+    const response = await askGroq([
       { role: 'system', content: buildSystemPrompt(req.student, 'default') },
       { role: 'user', content: `Generate ${count || 5} ${difficulty || 'medium'} difficulty quiz questions about "${topic}" for CBSE Class ${req.student.class} ${req.student.language}.
 
@@ -171,7 +171,7 @@ router.post('/chat', authMiddleware, planGuard, async (req, res) => {
       { role: 'user', content: message }
     ];
 
-    const response = await askGemini(messages);
+    const response = await askGroq(messages);
     res.json({ reply: response, usage: req.usage });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -182,7 +182,7 @@ router.post('/revision', authMiddleware, planGuard, async (req, res) => {
   try {
     const { lastTopics } = req.body;
 
-    const response = await askGemini([
+    const response = await askGroq([
       { role: 'system', content: buildSystemPrompt(req.student, 'default') },
       { role: 'user', content: `Give a quick 2-minute revision summary of these topics the student covered in their last class: ${(lastTopics || []).join(', ')}.
 
