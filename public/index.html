@@ -56,7 +56,7 @@
     </div>
   </div>
 
-  <!-- HERO -->
+  <!-- ========== HERO ========== -->
   <section id="home" class="hero">
     <div class="hero-bg">
       <div class="hero-orb hero-orb-1"></div>
@@ -113,9 +113,105 @@
         </div>
       </div>
     </div>
+    <div class="hero-scroll-indicator">
+      <span>Scroll to explore</span>
+      <div class="scroll-arrow-wrap"><div class="scroll-arrow"></div></div>
+    </div>
   </section>
 
-  <!-- FEATURES BENTO -->
+  <!-- ========== ANIMATED STATS BAR ========== -->
+  <section class="stats-bar-section">
+    <div class="stats-bar-inner">
+      <div class="stat-item reveal-scale">
+        <div class="stat-number" data-target="8">0</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal-scale">
+        <div class="stat-number" data-target="150">0</div>
+        <div class="stat-label">Chapters</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal-scale">
+        <div class="stat-number" data-target="2000">0</div>
+        <div class="stat-label">Students</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal-scale">
+        <div class="stat-number" data-target="500">0</div>
+        <div class="stat-label">Quiz Questions</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal-scale">
+        <div class="stat-number" data-target="95">0</div>
+        <div class="stat-label">Avg Score %</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TRUST / LOGO BAR ========== -->
+  <section class="trust-section">
+    <p class="trust-label">Trusted by students from top CBSE schools across India</p>
+    <div class="trust-bar">
+      <div class="trust-bar-scroll">
+        <div class="trust-item">🏫 DPS</div>
+        <div class="trust-item">🏫 Ryan International</div>
+        <div class="trust-item">🏫 DAV Public School</div>
+        <div class="trust-item">🏫 Kendriya Vidyalaya</div>
+        <div class="trust-item">🏫 Amity International</div>
+        <div class="trust-item">🏫 Modern School</div>
+        <div class="trust-item">🏫 Sanskriti School</div>
+        <div class="trust-item">🏫 The Heritage School</div>
+        <div class="trust-item">🏫 DPS</div>
+        <div class="trust-item">🏫 Ryan International</div>
+        <div class="trust-item">🏫 DAV Public School</div>
+        <div class="trust-item">🏫 Kendriya Vidyalaya</div>
+        <div class="trust-item">🏫 Amity International</div>
+        <div class="trust-item">🏫 Modern School</div>
+        <div class="trust-item">🏫 Sanskriti School</div>
+        <div class="trust-item">🏫 The Heritage School</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section class="section how-it-works-section">
+    <div class="section-header">
+      <span class="section-tag">How It Works</span>
+      <h2>Start scoring higher in 3 simple steps</h2>
+      <p class="section-desc">No complicated setup. Just pick your language, start learning, and watch your grades improve.</p>
+    </div>
+    <div class="hiw-steps">
+      <div class="hiw-step reveal-left">
+        <div class="hiw-num">1</div>
+        <div class="hiw-icon">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="20" cy="20" r="16"/><path d="M14 20l4 4 8-8"/></svg>
+        </div>
+        <h3>Pick Your Language & Class</h3>
+        <p>Choose from 8 CBSE languages. We auto-load your exact textbook chapters and syllabus.</p>
+      </div>
+      <div class="hiw-connector"><div class="hiw-connector-line"></div></div>
+      <div class="hiw-step reveal-scale">
+        <div class="hiw-num">2</div>
+        <div class="hiw-icon">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="5" y="5" width="30" height="30" rx="5"/><path d="M12 15h16m-16 5h10m-10 5h14"/></svg>
+        </div>
+        <h3>Learn with AI + Practice</h3>
+        <p>Study notes, flashcards, voice lab, and AI tutor Gyani. Practice with mock tests and quizzes.</p>
+      </div>
+      <div class="hiw-connector"><div class="hiw-connector-line"></div></div>
+      <div class="hiw-step reveal-right">
+        <div class="hiw-num">3</div>
+        <div class="hiw-icon">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20 4l4 8h9l-7 5 3 9-9-6-9 6 3-9-7-5h9z"/></svg>
+        </div>
+        <h3>Score 90%+ in Boards</h3>
+        <p>Our weakness engine targets your gaps. Students using LinguaLearn see 15-25% score improvement.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FEATURES BENTO ========== -->
   <section id="features" class="section features-section">
     <div class="section-header">
       <span class="section-tag">Why LinguaLearn</span>
@@ -123,40 +219,74 @@
       <p class="section-desc">Built for CBSE students who want real results, not just another study app.</p>
     </div>
     <div class="bento-grid">
-      <div class="bento-card bento-lg reveal">
+      <div class="bento-card bento-lg reveal" onclick="window.location.href='/pages/ai-tutor.html'">
         <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a6 6 0 016 6c0 4-6 10-6 10S6 12 6 8a6 6 0 016-6z"/><circle cx="12" cy="8" r="2"/></svg></div>
         <h3>AI Tutor "Gyani"</h3>
         <p>Ask any question in any language. Gyani adapts to your class level and explains in simple Hindi/English.</p>
+        <span class="bento-cta">Try Gyani &rarr;</span>
       </div>
-      <div class="bento-card reveal">
+      <div class="bento-card reveal" onclick="window.location.href='/pages/mock-test.html'">
         <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M7 22h10"/><path d="M12 18v4"/></svg></div>
         <h3>Mock Tests</h3>
         <p>CBSE-pattern papers with real timing &mdash; UT, Half-Yearly, Annual.</p>
+        <span class="bento-cta">Take a Test &rarr;</span>
       </div>
-      <div class="bento-card reveal">
+      <div class="bento-card reveal" onclick="window.location.href='/pages/voice-lab.html'">
         <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4m0 16v-4m10-6h-4M6 12H2m15.07-5.07l-2.83 2.83M9.76 14.24l-2.83 2.83m0-10.14l2.83 2.83m4.48 4.48l2.83 2.83"/></svg></div>
         <h3>Voice Lab</h3>
         <p>Practice pronunciation with instant AI feedback on accent and clarity.</p>
+        <span class="bento-cta">Open Voice Lab &rarr;</span>
       </div>
-      <div class="bento-card reveal">
+      <div class="bento-card reveal" onclick="window.location.href='/pages/writing-test.html'">
         <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></div>
         <h3>Writing Tests</h3>
         <p>Type or upload handwritten answers. AI grades with CBSE marking scheme.</p>
+        <span class="bento-cta">Start Writing &rarr;</span>
       </div>
-      <div class="bento-card reveal">
+      <div class="bento-card reveal" onclick="window.location.href='/pages/weakness-dashboard.html'">
         <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
         <h3>Weakness Engine</h3>
         <p>Detects your weak areas, generates targeted drills, tracks improvement over time.</p>
+        <span class="bento-cta">Find Weak Spots &rarr;</span>
       </div>
-      <div class="bento-card bento-lg reveal">
+      <div class="bento-card bento-lg reveal" onclick="window.location.href='/pages/quiz-battle.html'">
         <div class="bento-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
         <h3>Quiz Battle</h3>
         <p>Challenge friends or AI bots. Compete on the leaderboard. Learn through play &mdash; not pressure.</p>
+        <span class="bento-cta">Start Battle &rarr;</span>
       </div>
     </div>
   </section>
 
-  <!-- LANGUAGES -->
+  <!-- ========== INTERACTIVE DEMO ========== -->
+  <section class="section demo-section">
+    <div class="section-header">
+      <span class="section-tag section-tag-accent">Try It Now</span>
+      <h2>Experience LinguaLearn in 10 seconds</h2>
+      <p class="section-desc">No signup needed. Pick a language and test yourself right here.</p>
+    </div>
+    <div class="demo-container">
+      <div class="demo-lang-picker">
+        <button class="demo-lang-btn active" onclick="setDemoLang(this,'french')">🇫🇷 French</button>
+        <button class="demo-lang-btn" onclick="setDemoLang(this,'german')">🇩🇪 German</button>
+        <button class="demo-lang-btn" onclick="setDemoLang(this,'spanish')">🇪🇸 Spanish</button>
+        <button class="demo-lang-btn" onclick="setDemoLang(this,'sanskrit')">🕉️ Sanskrit</button>
+      </div>
+      <div class="demo-card" id="demoCard">
+        <div class="demo-q-label">Translate this:</div>
+        <div class="demo-question" id="demoQuestion">What is "Hello" in French?</div>
+        <div class="demo-options" id="demoOptions"></div>
+        <div class="demo-feedback" id="demoFeedback"></div>
+        <button class="btn btn-primary demo-next-btn" id="demoNextBtn" onclick="nextDemoQ()" style="display:none">Next Question &rarr;</button>
+      </div>
+      <div class="demo-score-bar">
+        <span id="demoScoreText">Answer to see your score!</span>
+        <div class="demo-score-fill" id="demoScoreFill"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== LANGUAGES ========== -->
   <section id="languages" class="section languages-section">
     <div class="section-header">
       <span class="section-tag">Choose Your Language</span>
@@ -169,53 +299,95 @@
         <h3>French</h3>
         <p>Most popular choice. Great for Europe & Canada.</p>
         <span class="lang-badge">Most Popular</span>
+        <span class="lang-card-cta">Explore French &rarr;</span>
       </div>
       <div class="lang-card reveal" style="--accent:#ec4899" onclick="selectLanguage('German')">
         <div class="lang-flag-wrap"><span>DE</span></div>
         <h3>German</h3>
         <p>Top pick for engineering. Free education in Germany!</p>
         <span class="lang-badge">High Value</span>
+        <span class="lang-card-cta">Explore German &rarr;</span>
       </div>
       <div class="lang-card reveal" style="--accent:#8b5cf6" onclick="selectLanguage('Japanese')">
         <div class="lang-flag-wrap"><span>JA</span></div>
         <h3>Japanese</h3>
         <p>Newly added! Anime culture & top tech careers.</p>
         <span class="lang-badge">New</span>
+        <span class="lang-card-cta">Explore Japanese &rarr;</span>
       </div>
       <div class="lang-card reveal" style="--accent:#f97316" onclick="selectLanguage('Spanish')">
         <div class="lang-flag-wrap"><span>ES</span></div>
         <h3>Spanish</h3>
         <p>500M+ speakers. Easy for Hindi speakers!</p>
         <span class="lang-badge">Easy to Learn</span>
+        <span class="lang-card-cta">Explore Spanish &rarr;</span>
       </div>
       <div class="lang-card reveal" style="--accent:#14b8a6" onclick="selectLanguage('Sanskrit')">
         <div class="lang-flag-wrap"><span>SA</span></div>
         <h3>Sanskrit</h3>
         <p>Classical Indian language. Consistently high scoring.</p>
         <span class="lang-badge">High Scoring</span>
+        <span class="lang-card-cta">Explore Sanskrit &rarr;</span>
       </div>
       <div class="lang-card reveal" style="--accent:#06b6d4" onclick="selectLanguage('Korean')">
         <div class="lang-flag-wrap"><span>KO</span></div>
         <h3>Korean</h3>
         <p>Newly added by CBSE! K-pop, K-drama, booming economy.</p>
         <span class="lang-badge">Trending</span>
+        <span class="lang-card-cta">Explore Korean &rarr;</span>
       </div>
       <div class="lang-card reveal" style="--accent:#ef4444" onclick="selectLanguage('Mandarin')">
         <div class="lang-flag-wrap"><span>ZH</span></div>
         <h3>Mandarin</h3>
         <p>World's most spoken language. Future of business.</p>
         <span class="lang-badge">Future-Ready</span>
+        <span class="lang-card-cta">Explore Mandarin &rarr;</span>
       </div>
       <div class="lang-card reveal" style="--accent:#7c3aed" onclick="selectLanguage('Russian')">
         <div class="lang-flag-wrap"><span>RU</span></div>
         <h3>Russian</h3>
         <p>Select CBSE schools. Strong in science & literature.</p>
         <span class="lang-badge">Select Schools</span>
+        <span class="lang-card-cta">Explore Russian &rarr;</span>
       </div>
     </div>
   </section>
 
-  <!-- DASHBOARD -->
+  <!-- ========== BEFORE / AFTER ========== -->
+  <section class="section comparison-section">
+    <div class="section-header">
+      <span class="section-tag section-tag-accent">The Difference</span>
+      <h2>Before vs After LinguaLearn</h2>
+      <p class="section-desc">See how students transform their language scores.</p>
+    </div>
+    <div class="comparison-grid">
+      <div class="comparison-card comparison-before reveal-left">
+        <div class="comparison-label">😩 Before LinguaLearn</div>
+        <ul>
+          <li><span class="comp-x">✗</span> Memorizing without understanding</li>
+          <li><span class="comp-x">✗</span> No exam-pattern practice papers</li>
+          <li><span class="comp-x">✗</span> Can't pronounce words correctly</li>
+          <li><span class="comp-x">✗</span> No idea which topics are weak</li>
+          <li><span class="comp-x">✗</span> Boring textbook reading only</li>
+          <li><span class="comp-x">✗</span> Scoring 50-65% in languages</li>
+        </ul>
+      </div>
+      <div class="comparison-vs reveal-scale">VS</div>
+      <div class="comparison-card comparison-after reveal-right">
+        <div class="comparison-label">🚀 After LinguaLearn</div>
+        <ul>
+          <li><span class="comp-check">✓</span> AI explains concepts in Hindi/English</li>
+          <li><span class="comp-check">✓</span> UT, Half-Yearly & Annual mock tests</li>
+          <li><span class="comp-check">✓</span> Voice Lab perfects pronunciation</li>
+          <li><span class="comp-check">✓</span> Weakness Engine targets your gaps</li>
+          <li><span class="comp-check">✓</span> Gamified learning with XP & streaks</li>
+          <li><span class="comp-check">✓</span> Scoring 85-95%+ consistently</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DASHBOARD PREVIEW ========== -->
   <section id="dashboard" class="section dashboard-section">
     <div class="section-header">
       <span class="section-tag">Your Progress</span>
@@ -260,7 +432,7 @@
     </div>
   </section>
 
-  <!-- GRADES -->
+  <!-- ========== GRADES ========== -->
   <section id="grades" class="section grades-section">
     <div class="section-header">
       <span class="section-tag">Browse by Grade</span>
@@ -296,7 +468,7 @@
     </div>
   </section>
 
-  <!-- RESOURCES -->
+  <!-- ========== RESOURCES ========== -->
   <section id="resources" class="section resources-section">
     <div class="section-header">
       <span class="section-tag">Study Material</span>
@@ -439,7 +611,74 @@
     </div>
   </section>
 
-  <!-- FLASHCARDS -->
+  <!-- ========== TESTIMONIALS ========== -->
+  <section class="section testimonials-section">
+    <div class="section-header">
+      <span class="section-tag section-tag-accent">Student Stories</span>
+      <h2>What our students say</h2>
+      <p class="section-desc">Real results from real CBSE students across India.</p>
+    </div>
+    <div class="testimonial-carousel" id="testimonialCarousel">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"I went from 58% to 91% in French in just one term. The AI tutor explains grammar in Hindi which really helps me understand."</p>
+        <div class="testimonial-author-row">
+          <div class="testimonial-avatar" style="background:#a78bfa">P</div>
+          <div>
+            <div class="testimonial-author">Priya Sharma</div>
+            <div class="testimonial-school">Class 10 &middot; DPS Noida</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"The mock tests are exactly like CBSE papers. I practiced 5 mock tests before Half-Yearly and scored 95% in German!"</p>
+        <div class="testimonial-author-row">
+          <div class="testimonial-avatar" style="background:#60a5fa">R</div>
+          <div>
+            <div class="testimonial-author">Rohan Mehta</div>
+            <div class="testimonial-school">Class 9 &middot; Ryan International</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Voice Lab fixed my French pronunciation. My teacher was shocked! I got full marks in the oral exam for the first time."</p>
+        <div class="testimonial-author-row">
+          <div class="testimonial-avatar" style="background:#f472b6">S</div>
+          <div>
+            <div class="testimonial-author">Sneha Iyer</div>
+            <div class="testimonial-school">Class 8 &middot; DAV Public School</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Sanskrit was my weakest subject. The weakness engine found my gaps in Dhatu Roop and I practiced until I mastered it. Got 88%!"</p>
+        <div class="testimonial-author-row">
+          <div class="testimonial-avatar" style="background:#34d399">A</div>
+          <div>
+            <div class="testimonial-author">Arjun Patel</div>
+            <div class="testimonial-school">Class 9 &middot; Kendriya Vidyalaya</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"The quiz battles with my friends made studying fun. We compete every day after school. My Japanese improved so much!"</p>
+        <div class="testimonial-author-row">
+          <div class="testimonial-avatar" style="background:#fbbf24">K</div>
+          <div>
+            <div class="testimonial-author">Kavya Reddy</div>
+            <div class="testimonial-school">Class 7 &middot; Amity International</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </section>
+
+  <!-- ========== FLASHCARDS ========== -->
   <section id="flashcards" class="section flashcards-section">
     <div class="section-header">
       <span class="section-tag">Flashcards</span>
@@ -481,7 +720,7 @@
     </div>
   </section>
 
-  <!-- QUIZ -->
+  <!-- ========== QUIZ ========== -->
   <section id="quiz" class="section quiz-section">
     <div class="section-header">
       <span class="section-tag section-tag-light">Quick Quiz</span>
@@ -501,21 +740,115 @@
     <div class="quiz-score">Score: <span id="score">0</span> / <span id="total">0</span></div>
   </section>
 
-  <!-- CTA BANNER -->
-  <section class="cta-section">
-    <div class="cta-inner">
-      <h2>Ready to master your CBSE language?</h2>
-      <p>Join thousands of students scoring 90%+ with AI-powered learning.</p>
-      <a href="/pages/signup.html" class="btn btn-primary btn-lg">Get Started Free <span class="btn-arrow">&rarr;</span></a>
+  <!-- ========== FAQ ========== -->
+  <section class="section faq-section">
+    <div class="section-header">
+      <span class="section-tag">FAQ</span>
+      <h2>Common questions from parents & students</h2>
+      <p class="section-desc">Everything you need to know before getting started.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Is LinguaLearn free to use? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Yes! You get a 30-day free trial with full access to all features — AI tutor, mock tests, voice lab, everything. No credit card needed. After the trial, we have affordable plans starting at ₹99/month.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Which languages and classes are supported? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">We support 8 CBSE languages — French, German, Japanese, Spanish, Sanskrit, Korean, Mandarin, and Russian — for Classes 6 through 10. All content is aligned to the latest CBSE syllabus and textbooks.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">How does the AI tutor work? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Our AI tutor "Gyani" understands your class level and textbook. You can ask any question in Hindi or English, and Gyani explains it simply with examples. It's like having a private tutor available 24/7.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Are the mock tests based on actual CBSE patterns? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Absolutely. Our mock tests follow exact CBSE exam patterns — Unit Tests (40 min), Half-Yearly (90 min), and Annual exams (3 hours). Questions are designed to match the difficulty and format of real CBSE papers.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Can my child use this on a phone? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Yes! LinguaLearn works beautifully on phones, tablets, and computers. No app download needed — just open padhlo.life in any browser and start learning.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">How quickly will I see results? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Most students see a 15-25% improvement within the first term. Our weakness engine identifies gaps early and targets them with drills, so you improve faster than traditional studying.</div>
+      </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ========== PRICING PREVIEW ========== -->
+  <section class="section pricing-preview-section">
+    <div class="section-header">
+      <span class="section-tag section-tag-accent">Pricing</span>
+      <h2>Plans that fit every family</h2>
+      <p class="section-desc">Start free. Upgrade when you're ready.</p>
+    </div>
+    <div class="pricing-cards">
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Free Trial</div>
+        <div class="pricing-price">₹0</div>
+        <div class="pricing-period">for 30 days</div>
+        <ul class="pricing-features">
+          <li>All 8 languages</li>
+          <li>AI Tutor (10 questions/day)</li>
+          <li>Basic mock tests</li>
+          <li>Flashcards & quiz</li>
+        </ul>
+        <a href="/pages/signup.html" class="btn btn-glass pricing-btn">Start Free Trial</a>
+      </div>
+      <div class="pricing-card pricing-card-popular reveal">
+        <div class="pricing-popular-badge">Most Popular</div>
+        <div class="pricing-name">Pro Student</div>
+        <div class="pricing-price">₹199</div>
+        <div class="pricing-period">per month</div>
+        <ul class="pricing-features">
+          <li>Everything in Free +</li>
+          <li>Unlimited AI Tutor</li>
+          <li>All mock tests & papers</li>
+          <li>Voice Lab + Writing Tests</li>
+          <li>Weakness Engine</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="/pages/signup.html" class="btn btn-primary pricing-btn">Get Pro &rarr;</a>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Family Pack</div>
+        <div class="pricing-price">₹349</div>
+        <div class="pricing-period">per month &middot; up to 3 kids</div>
+        <ul class="pricing-features">
+          <li>Everything in Pro +</li>
+          <li>3 student accounts</li>
+          <li>Parent dashboard</li>
+          <li>Progress reports</li>
+        </ul>
+        <a href="/pages/signup.html" class="btn btn-glass pricing-btn">Get Family Pack</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FINAL CTA ========== -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <div class="cta-badge">Join 2,000+ students scoring 90%+</div>
+      <h2>Ready to master your CBSE language?</h2>
+      <p>Join thousands of students scoring 90%+ with AI-powered learning. Start your free trial today — no credit card needed.</p>
+      <div class="cta-buttons">
+        <a href="/pages/signup.html" class="btn btn-primary btn-lg">Get Started Free <span class="btn-arrow">&rarr;</span></a>
+        <a href="#features" class="btn btn-glass btn-lg">Explore Features</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
         <div class="footer-logo"><div class="brand-logo brand-logo-sm">L</div><span>LinguaLearn</span></div>
         <p>AI-powered language learning for CBSE students in Classes 6-10.</p>
+        <div class="footer-social">
+          <a href="#" class="footer-social-link" title="Instagram">IG</a>
+          <a href="#" class="footer-social-link" title="YouTube">YT</a>
+          <a href="#" class="footer-social-link" title="Twitter">X</a>
+        </div>
       </div>
       <div class="footer-links">
         <h4>Product</h4>

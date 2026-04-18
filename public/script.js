@@ -1502,3 +1502,169 @@ function toggleNav() {
     links.style.zIndex = '50';
   }
 }
+
+// ===== ANIMATED STATS COUNTER =====
+(function animateStatsBar() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.target) || 0;
+      if (el.dataset.animated) return;
+      el.dataset.animated = '1';
+      const duration = 2000;
+      const start = performance.now();
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target + '+';
+      }
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-number[data-target]').forEach(el => obs.observe(el));
+})();
+
+// ===== INTERACTIVE DEMO =====
+const demoQuestions = {
+  french: [
+    { q: 'What is "Hello" in French?', opts: ['Bonjour', 'Hola', 'Hallo', 'Ciao'], ans: 0 },
+    { q: 'What does "Merci" mean?', opts: ['Sorry', 'Please', 'Thank you', 'Goodbye'], ans: 2 },
+    { q: 'How do you say "Book" in French?', opts: ['Buch', 'Livre', 'Libro', 'Kitab'], ans: 1 },
+    { q: '"Je m\'appelle" means...', opts: ['I want', 'I like', 'My name is', 'I have'], ans: 2 },
+  ],
+  german: [
+    { q: 'What is "Thank you" in German?', opts: ['Merci', 'Gracias', 'Danke', 'Arigato'], ans: 2 },
+    { q: 'How do you say "Water" in German?', opts: ['Agua', 'Eau', 'Wasser', 'Mizu'], ans: 2 },
+    { q: '"Guten Morgen" means...', opts: ['Good night', 'Good morning', 'Good evening', 'Goodbye'], ans: 1 },
+    { q: 'What is "School" in German?', opts: ['Ecole', 'Escuela', 'Schule', 'Gakko'], ans: 2 },
+  ],
+  spanish: [
+    { q: 'What is "Hello" in Spanish?', opts: ['Bonjour', 'Hola', 'Ciao', 'Oi'], ans: 1 },
+    { q: '"Gracias" means...', opts: ['Please', 'Sorry', 'Thank you', 'Hello'], ans: 2 },
+    { q: 'How do you say "Friend" in Spanish?', opts: ['Ami', 'Freund', 'Amigo', 'Tomodachi'], ans: 2 },
+    { q: 'What is "Water" in Spanish?', opts: ['Eau', 'Wasser', 'Mizu', 'Agua'], ans: 3 },
+  ],
+  sanskrit: [
+    { q: '"Namaste" is a greeting in Sanskrit meaning...', opts: ['Goodbye', 'I bow to you', 'Thank you', 'Welcome'], ans: 1 },
+    { q: 'What is "Book" in Sanskrit?', opts: ['Pustakam', 'Vidyalaya', 'Pathshala', 'Lekhani'], ans: 0 },
+    { q: '"Aham" means...', opts: ['You', 'He', 'I', 'They'], ans: 2 },
+    { q: '"Vidyalaya" means...', opts: ['Library', 'School', 'Temple', 'Home'], ans: 1 },
+  ]
+};
+let demoLang = 'french';
+let demoIdx = 0;
+let demoScore = 0;
+let demoTotal = 0;
+let demoAnswered = false;
+
+function setDemoLang(btn, lang) {
+  document.querySelectorAll('.demo-lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  demoLang = lang;
+  demoIdx = 0;
+  demoScore = 0;
+  demoTotal = 0;
+  demoAnswered = false;
+  document.getElementById('demoScoreText').textContent = 'Answer to see your score!';
+  document.getElementById('demoScoreFill').style.width = '0%';
+  renderDemoQ();
+}
+
+function renderDemoQ() {
+  const qs = demoQuestions[demoLang];
+  const q = qs[demoIdx % qs.length];
+  document.getElementById('demoQuestion').textContent = q.q;
+  document.getElementById('demoFeedback').textContent = '';
+  document.getElementById('demoFeedback').style.color = '';
+  document.getElementById('demoNextBtn').style.display = 'none';
+  demoAnswered = false;
+  const optsDiv = document.getElementById('demoOptions');
+  optsDiv.innerHTML = q.opts.map((o, i) => `<button class="demo-opt" onclick="checkDemoAns(${i})">${o}</button>`).join('');
+}
+
+function checkDemoAns(idx) {
+  if (demoAnswered) return;
+  demoAnswered = true;
+  demoTotal++;
+  const qs = demoQuestions[demoLang];
+  const q = qs[demoIdx % qs.length];
+  const btns = document.querySelectorAll('.demo-opt');
+  btns.forEach((b, i) => {
+    if (i === q.ans) b.classList.add('correct');
+    else if (i === idx) b.classList.add('wrong');
+    if (i !== idx && i !== q.ans) b.classList.add('disabled');
+  });
+  const fb = document.getElementById('demoFeedback');
+  if (idx === q.ans) {
+    demoScore++;
+    fb.textContent = 'Correct! Great job!';
+    fb.style.color = '#34d399';
+  } else {
+    fb.textContent = 'Not quite — the answer is ' + q.opts[q.ans];
+    fb.style.color = '#f87171';
+  }
+  document.getElementById('demoScoreText').textContent = `Score: ${demoScore}/${demoTotal}`;
+  document.getElementById('demoScoreFill').style.width = (demoScore / demoTotal * 100) + '%';
+  if (demoIdx < qs.length - 1) {
+    document.getElementById('demoNextBtn').style.display = 'inline-flex';
+  } else {
+    setTimeout(() => {
+      document.getElementById('demoFeedback').textContent += ' — You completed the demo! Sign up for full access.';
+    }, 600);
+  }
+}
+
+function nextDemoQ() {
+  demoIdx++;
+  renderDemoQ();
+}
+
+// Init demo
+renderDemoQ();
+
+// ===== FAQ ACCORDION =====
+function toggleFaq(el) {
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('open'));
+  if (!wasOpen) el.classList.add('open');
+}
+
+// ===== TESTIMONIAL CAROUSEL DOTS =====
+(function initCarouselDots() {
+  const carousel = document.getElementById('testimonialCarousel');
+  const dotsContainer = document.getElementById('carouselDots');
+  if (!carousel || !dotsContainer) return;
+  const cards = carousel.querySelectorAll('.testimonial-card');
+  cards.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => {
+      cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    };
+    dotsContainer.appendChild(dot);
+  });
+  carousel.addEventListener('scroll', () => {
+    const scrollLeft = carousel.scrollLeft;
+    const cardWidth = cards[0].offsetWidth + 24;
+    const activeIdx = Math.round(scrollLeft / cardWidth);
+    dotsContainer.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === activeIdx);
+    });
+  }, { passive: true });
+})();
+
+// ===== ENHANCED SCROLL REVEAL FOR NEW ELEMENTS =====
+(function enhancedReveal() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal-left, .reveal-right, .reveal-scale').forEach(el => obs.observe(el));
+})();
