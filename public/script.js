@@ -729,6 +729,25 @@ const gradeData = {
   }
 };
 
+function handleGradeResource(grade, resource) {
+  closeModal();
+  const label = resource.label.toLowerCase();
+  if (label.includes('notes') || label.includes('study')) {
+    document.getElementById('resources').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => switchTab(document.querySelector('.tab[onclick*="notes"]'), 'notes'), 400);
+  } else if (label.includes('worksheet') || label.includes('exercise') || label.includes('comprehension') || label.includes('sample paper') || label.includes('board paper') || label.includes('previous year') || label.includes('template') || label.includes('marking scheme')) {
+    document.getElementById('resources').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => switchTab(document.querySelector('.tab[onclick*="worksheets"]'), 'worksheets'), 400);
+  } else if (label.includes('video')) {
+    document.getElementById('resources').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => switchTab(document.querySelector('.tab[onclick*="videos"]'), 'videos'), 400);
+  } else if (label.includes('quiz') || label.includes('activity')) {
+    document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+  } else {
+    document.getElementById('resources').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
 function showGradeModal(grade) {
   const data = gradeData[grade];
   const colors = { 6: '#4361ee', 7: '#f72585', 8: '#7209b7', 9: '#e85d04', 10: '#06d6a0' };
@@ -749,8 +768,8 @@ function showGradeModal(grade) {
     </div>
     <div class="modal-links-title">Available Resources</div>
     <div class="modal-links">
-      ${data.resources.map(r => `
-        <div class="modal-link">
+      ${data.resources.map((r, i) => `
+        <div class="modal-link" onclick="handleGradeResource(${grade}, gradeData[${grade}].resources[${i}])">
           <span>${r.icon}</span>
           <span>${r.label}</span>
           <span class="ml-arrow">→</span>
@@ -760,6 +779,10 @@ function showGradeModal(grade) {
   `;
   document.getElementById('modalContent').innerHTML = html;
   document.getElementById('modalOverlay').classList.add('open');
+}
+
+function selectLanguage(lang) {
+  document.getElementById('grades').scrollIntoView({ behavior: 'smooth' });
 }
 
 function closeModal() {
