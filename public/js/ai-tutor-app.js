@@ -3,6 +3,7 @@ let comboCount = 0;
 let bestCombo = 0;
 let sessionXP = 0;
 let correctCount = 0;
+let weeklyMessageCount = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!requireAuth()) return;
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await startSession();
   loadWeakAreas();
+  initWeeklyUsage();
 
   document.getElementById('chatInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -206,6 +208,7 @@ async function sendMessage() {
   addBubble('user', message);
 
   chatHistory.push({ role: 'user', content: message });
+  trackWeeklyMessage();
   addLoading();
   if (typeof RobotTutor !== 'undefined') RobotTutor.onThinking();
 
@@ -280,6 +283,91 @@ function renderQuiz(questions) {
   });
   container.scrollTop = container.scrollHeight;
 }
+
+function getWeekKey() {
+  const now = new Date();
+  const day = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((day + 6) % 7));
+  return 'wu_' + monday.toISOString().slice(0, 10);
+}
+
+function getWeeklyData() {
+  const key = getWeekKey();
+  const stored = localStorage.getItem(key);
+  if (stored) return JSON.parse(stored);
+  return { sessions: 0, messages: 0, startTime: null, totalMinutes: 0, days: [false, false, false, false, false, false, false] };
+}
+
+function saveWeeklyData(data) {
+  localStorage.setItem(getWeekKey(), JSON.stringify(data));
+}
+
+function initWeeklyUsage() {
+  const data = getWeeklyData();
+  const today = (new Date().getDay() + 6) % 7;
+  if (!data.days[today]) {
+    data.days[today] = true;
+    data.sessions++;
+    data.startTime = Date.now();
+    saveWeeklyData(data);
+  } else if (!data.startTime) {
+    data.startTime = Date.now();
+    saveWeeklyData(data);
+  }
+  updateWeeklyUI(data);
+
+  setInterval(function () {
+    const d = getWeeklyData();
+    if (d.startTime) {
+      const elapsed = Math.round((Date.now() - d.startTime) / 60000);
+      document.getElementById('wuMinutes').textContent = d.totalMinutes + elapsed;
+    }
+  }, 30000);
+}
+
+function trackWeeklyMessage() {
+  const data = getWeeklyData();
+  data.messages++;
+  saveWeeklyData(data);
+  weeklyMessageCount = data.messages;
+  updateWeeklyUI(data);
+}
+
+function updateWeeklyUI(data) {
+  const sessEl = document.getElementById('wuSessions');
+  const msgEl = document.getElementById('wuMessages');
+  const minEl = document.getElementById('wuMinutes');
+  const goalEl = document.getElementById('wuGoalText');
+  const fillEl = document.getElementById('wuProgressFill');
+
+  if (sessEl) sessEl.textContent = data.sessions;
+  if (msgEl) msgEl.textContent = data.messages;
+  if (minEl) {
+    let mins = data.totalMinutes;
+    if (data.startTime) mins += Math.round((Date.now() - data.startTime) / 60000);
+    minEl.textContent = mins;
+  }
+  if (goalEl) goalEl.textContent = data.sessions + ' / 7 sessions';
+  if (fillEl) fillEl.style.width = Math.min(100, (data.sessions / 7) * 100) + '%';
+
+  for (let i = 0; i < 7; i++) {
+    const dayEl = document.getElementById('wuDay' + i);
+    if (dayEl) {
+      if (data.days[i]) dayEl.classList.add('active');
+      else dayEl.classList.remove('active');
+    }
+  }
+}
+
+window.addEventListener('beforeunload', function () {
+  const data = getWeeklyData();
+  if (data.startTime) {
+    data.totalMinutes += Math.round((Date.now() - data.startTime) / 60000);
+    data.startTime = null;
+    saveWeeklyData(data);
+  }
+});
 
 async function checkQuizAnswer(btn, qi, selected, correct, explanation, skill) {
   const allBtns = document.querySelectorAll(`[data-qi="${qi}"]`);
