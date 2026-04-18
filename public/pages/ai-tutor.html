@@ -218,6 +218,24 @@
         </button>
       </div>
 
+      <!-- Daily Limit Banner (hidden by default) -->
+      <div class="daily-limit-banner" id="dailyLimitBanner" style="display:none">
+        <div class="dlb-icon">🔒</div>
+        <div class="dlb-text">
+          <strong id="dlbTitle">Daily limit reached!</strong>
+          <p id="dlbDesc">You've used all your messages for today. Come back tomorrow or upgrade for more!</p>
+        </div>
+        <a href="/pages/pricing.html" class="btn btn-primary dlb-btn">Upgrade</a>
+      </div>
+
+      <!-- Usage Counter -->
+      <div class="usage-counter" id="usageCounter">
+        <div class="uc-bar">
+          <div class="uc-fill" id="ucFill" style="width:0%"></div>
+        </div>
+        <span class="uc-text" id="ucText">0 / 20 messages today</span>
+      </div>
+
       <!-- Chat Input -->
       <div class="chat-input-v2">
         <div class="ci-wrap">

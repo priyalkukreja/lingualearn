@@ -216,8 +216,9 @@ async function sendMessage() {
     const method = document.getElementById('methodSelect')?.value || 'default';
 
     let data;
+    let rawRes;
     if (message.toLowerCase().includes('quiz') || message.toLowerCase().includes('test me')) {
-      data = await apiPost('/api/ai/quiz', {
+      data = await apiPostWithLimit('/api/ai/quiz', {
         topic: message,
         difficulty: 'medium',
         count: 5
@@ -231,11 +232,11 @@ async function sendMessage() {
         addBubble('ai', data?.raw || 'Here are some practice questions for you!');
       }
     } else if (message.toLowerCase().includes('revis')) {
-      data = await apiPost('/api/ai/revision', { lastTopics: [message] });
+      data = await apiPostWithLimit('/api/ai/revision', { lastTopics: [message] });
       removeLoading();
       addBubble('ai', data?.revision || 'Could not generate revision.');
     } else {
-      data = await apiPost('/api/ai/chat', {
+      data = await apiPostWithLimit('/api/ai/chat', {
         message,
         history: chatHistory.slice(-10)
       });
@@ -248,9 +249,13 @@ async function sendMessage() {
     }
   } catch (err) {
     removeLoading();
-    addBubble('ai', 'Oops! Something went wrong. Please try again.');
-    updateGyaniMood('encouraging');
-    if (typeof RobotTutor !== 'undefined') RobotTutor.onWrongAnswer('Oops! Let me try again...');
+    if (err.limitReached) {
+      showLimitBanner(err.used, err.limit);
+    } else {
+      addBubble('ai', 'Oops! Something went wrong. Please try again.');
+      updateGyaniMood('encouraging');
+      if (typeof RobotTutor !== 'undefined') RobotTutor.onWrongAnswer('Oops! Let me try again...');
+    }
   }
 
   btn.disabled = false;
@@ -389,6 +394,55 @@ function updateWeeklyUI(data) {
       tipEl.classList.remove('show');
     }
   }
+}
+
+async function apiPostWithLimit(url, body) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(body)
+  });
+  if (res.status === 401) { logout(); return null; }
+  const data = await res.json();
+  if (res.status === 429) {
+    const err = new Error(data.message);
+    err.limitReached = true;
+    err.used = data.used;
+    err.limit = data.limit;
+    throw err;
+  }
+  if (data.usage) updateUsageCounter(data.usage);
+  return data;
+}
+
+function updateUsageCounter(usage) {
+  const fill = document.getElementById('ucFill');
+  const text = document.getElementById('ucText');
+  const counter = document.getElementById('usageCounter');
+  if (!fill || !text) return;
+
+  const pct = Math.min(100, (usage.used / usage.limit) * 100);
+  fill.style.width = pct + '%';
+  text.textContent = usage.used + ' / ' + usage.limit + ' messages today';
+
+  if (pct >= 80) fill.style.background = 'linear-gradient(90deg, #f97316, #ef4444)';
+  else if (pct >= 50) fill.style.background = 'linear-gradient(90deg, #fbbf24, #f97316)';
+  else fill.style.background = 'linear-gradient(90deg, #818cf8, #c084fc)';
+
+  if (counter) counter.style.display = 'flex';
+}
+
+function showLimitBanner(used, limit) {
+  const banner = document.getElementById('dailyLimitBanner');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  if (banner) banner.style.display = 'flex';
+  if (input) { input.disabled = true; input.placeholder = 'Daily limit reached — come back tomorrow!'; }
+  if (sendBtn) sendBtn.disabled = true;
+
+  removeLoading();
+  addBubble('ai', '⏰ You\'ve used all ' + limit + ' messages for today! Great effort though — come back tomorrow or upgrade your plan for more daily messages. Keep up the amazing work! 🌟');
+  updateGyaniMood('encouraging');
 }
 
 window.addEventListener('beforeunload', function () {
