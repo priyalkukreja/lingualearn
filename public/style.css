@@ -2945,6 +2945,172 @@ body { animation: pageLoad 0.4s ease; }
   border-color: transparent;
 }
 
+/* ===== CHAPTER BROWSER ===== */
+.chapter-browser-section {
+  background: linear-gradient(180deg, #050510 0%, #0c0c2a 50%, #050510 100%);
+  padding: 8rem 2rem;
+}
+.browser-lang-picker {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.browser-lang-btn {
+  padding: 0.55rem 1.25rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+}
+.browser-lang-btn:hover { border-color: rgba(99,102,241,0.3); color: white; }
+.browser-lang-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+}
+.browser-class-picker {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.browser-class-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+}
+.browser-class-btn:hover { border-color: rgba(99,102,241,0.3); color: white; }
+.browser-class-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: transparent;
+}
+.browser-textbook {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+.browser-textbook-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(99,102,241,0.06);
+  border: 1px solid rgba(99,102,241,0.15);
+  border-radius: var(--radius);
+}
+.browser-textbook-icon { font-size: 2rem; }
+.browser-textbook-name {
+  font-weight: 700;
+  color: #fff;
+  font-size: 1rem;
+}
+.browser-textbook-pub {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.15rem;
+}
+.browser-chapter-list {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.browser-chapter-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  transition: all 0.3s;
+  animation: chapterSlideIn 0.4s ease backwards;
+}
+@keyframes chapterSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.browser-chapter-card:hover {
+  border-color: rgba(99,102,241,0.3);
+  background: rgba(99,102,241,0.05);
+  transform: translateX(4px);
+}
+.browser-ch-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(236,72,153,0.15));
+  color: #a78bfa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.browser-ch-info { flex: 1; min-width: 0; }
+.browser-ch-title {
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.92rem;
+  margin-bottom: 0.2rem;
+}
+.browser-ch-topics {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.browser-ch-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.browser-ch-btn {
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.browser-ch-notes {
+  background: rgba(99,102,241,0.12);
+  color: #818cf8;
+}
+.browser-ch-notes:hover { background: rgba(99,102,241,0.25); }
+.browser-ch-ws {
+  background: rgba(236,72,153,0.1);
+  color: #f472b6;
+}
+.browser-ch-ws:hover { background: rgba(236,72,153,0.2); }
+
+@media (max-width: 768px) {
+  .browser-chapter-card { flex-wrap: wrap; }
+  .browser-ch-actions { width: 100%; justify-content: flex-end; margin-top: 0.5rem; }
+  .browser-ch-topics { white-space: normal; }
+}
+
 /* ===== RESPONSIVE — NEW SECTIONS ===== */
 @media (max-width: 768px) {
   .stats-bar-inner { gap: 1rem; }

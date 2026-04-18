@@ -468,6 +468,26 @@
     </div>
   </section>
 
+  <!-- ========== CHAPTER BROWSER ========== -->
+  <section id="chapter-browser" class="section chapter-browser-section">
+    <div class="section-header">
+      <span class="section-tag section-tag-accent">Textbook Chapters</span>
+      <h2>Chapter-wise Notes & Worksheets</h2>
+      <p class="section-desc">Select your language and class to browse real CBSE textbook chapters with notes and practice worksheets.</p>
+    </div>
+    <div class="browser-lang-picker">
+      <button class="browser-lang-btn active" onclick="setBrowserLang('french', this)">🇫🇷 French</button>
+      <button class="browser-lang-btn" onclick="setBrowserLang('german', this)">🇩🇪 German</button>
+      <button class="browser-lang-btn" onclick="setBrowserLang('sanskrit', this)">🕉️ Sanskrit</button>
+      <button class="browser-lang-btn" onclick="setBrowserLang('spanish', this)">🇪🇸 Spanish</button>
+      <button class="browser-lang-btn" onclick="setBrowserLang('japanese', this)">🇯🇵 Japanese</button>
+    </div>
+    <div class="browser-class-picker" id="browserClassPicker"></div>
+    <div class="browser-textbook" id="browserTextbook"></div>
+    <div class="browser-chapter-list" id="browserChapterList"></div>
+    <div id="chapterBrowser"></div>
+  </section>
+
   <!-- ========== RESOURCES ========== -->
   <section id="resources" class="section resources-section">
     <div class="section-header">
@@ -935,6 +955,7 @@
   </div>
 
   <script src="script.js"></script>
+  <script src="js/syllabus-browser.js"></script>
   <script>
     (function checkAuth() {
       const token = localStorage.getItem('ll_token');

@@ -750,7 +750,6 @@ function handleGradeResource(grade, resource) {
 
 function showGradeModal(grade) {
   const data = gradeData[grade];
-  const colors = { 6: '#4361ee', 7: '#f72585', 8: '#7209b7', 9: '#e85d04', 10: '#06d6a0' };
   const gradients = {
     6: 'linear-gradient(135deg,#4361ee,#7209b7)',
     7: 'linear-gradient(135deg,#f72585,#7209b7)',
@@ -758,6 +757,17 @@ function showGradeModal(grade) {
     9: 'linear-gradient(135deg,#e85d04,#f72585)',
     10: 'linear-gradient(135deg,#06d6a0,#0ea5e9)',
   };
+
+  const langList = typeof syllabusData !== 'undefined'
+    ? Object.entries(syllabusData).filter(([k, v]) => v.classes[grade]).map(([k, v]) =>
+        `<div class="modal-link" onclick="closeModal();scrollToChapterBrowser('${k}',${grade})">
+          <span>${v.flag}</span>
+          <span>${v.name} — ${v.classes[grade].textbook}</span>
+          <span class="ml-arrow">→</span>
+        </div>`
+      ).join('')
+    : '';
+
   const html = `
     <div class="modal-grade-banner" style="background:${gradients[grade]}">
       <div class="modal-grade">${grade}</div>
@@ -766,7 +776,11 @@ function showGradeModal(grade) {
     <div class="modal-chips">
       ${data.topics.map(t => `<span class="chip">${t}</span>`).join('')}
     </div>
-    <div class="modal-links-title">Available Resources</div>
+    ${langList ? `
+      <div class="modal-links-title">Browse Textbook Chapters</div>
+      <div class="modal-links">${langList}</div>
+    ` : ''}
+    <div class="modal-links-title" style="margin-top:1.25rem">Quick Links</div>
     <div class="modal-links">
       ${data.resources.map((r, i) => `
         <div class="modal-link" onclick="handleGradeResource(${grade}, gradeData[${grade}].resources[${i}])">
@@ -781,8 +795,24 @@ function showGradeModal(grade) {
   document.getElementById('modalOverlay').classList.add('open');
 }
 
+function scrollToChapterBrowser(lang, cls) {
+  browserLang = lang;
+  browserClass = cls;
+  const langBtns = document.querySelectorAll('.browser-lang-btn');
+  const langKeys = ['french','german','sanskrit','spanish','japanese'];
+  langBtns.forEach((b, i) => b.classList.toggle('active', langKeys[i] === lang));
+  renderChapterBrowser();
+  document.getElementById('chapter-browser').scrollIntoView({ behavior: 'smooth' });
+}
+
 function selectLanguage(lang) {
-  document.getElementById('grades').scrollIntoView({ behavior: 'smooth' });
+  const langMap = { 'French':'french','German':'german','Sanskrit':'sanskrit','Spanish':'spanish','Japanese':'japanese','Korean':'korean','Mandarin':'mandarin','Russian':'russian' };
+  const key = langMap[lang];
+  if (key && typeof syllabusData !== 'undefined' && syllabusData[key]) {
+    scrollToChapterBrowser(key, Object.keys(syllabusData[key].classes).map(Number)[0]);
+  } else {
+    document.getElementById('grades').scrollIntoView({ behavior: 'smooth' });
+  }
 }
 
 function closeModal() {
