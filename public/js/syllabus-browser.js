@@ -437,8 +437,9 @@ function renderChapterList() {
         <div class="browser-ch-topics">${ch.topics.join(' &middot; ')}</div>
       </div>
       <div class="browser-ch-actions">
-        <button class="browser-ch-btn browser-ch-notes" onclick="openChapterNotes('${browserLang}', ${browserClass}, ${i})">📘 Notes</button>
+        <button class="browser-ch-btn browser-ch-notes" onclick="previewChapterPDF('${browserLang}', ${browserClass}, ${i})">📘 Notes</button>
         <button class="browser-ch-btn browser-ch-ws" onclick="openChapterWorksheet('${browserLang}', ${browserClass}, ${i})">📝 Worksheet</button>
+        <button class="browser-ch-btn browser-ch-pdf" onclick="downloadChapterPDF('${browserLang}', ${browserClass}, ${i})">⬇️ PDF</button>
       </div>
     </div>
   `).join('');

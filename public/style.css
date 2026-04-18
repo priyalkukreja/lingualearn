@@ -3104,6 +3104,11 @@ body { animation: pageLoad 0.4s ease; }
   color: #f472b6;
 }
 .browser-ch-ws:hover { background: rgba(236,72,153,0.2); }
+.browser-ch-pdf {
+  background: rgba(6,214,160,0.1);
+  color: #06d6a0;
+}
+.browser-ch-pdf:hover { background: rgba(6,214,160,0.2); }
 
 @media (max-width: 768px) {
   .browser-chapter-card { flex-wrap: wrap; }
