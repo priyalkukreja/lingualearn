@@ -123,6 +123,25 @@ async function sendWeeklyReport(studentId) {
   const langName = student.language.charAt(0).toUpperCase() + student.language.slice(1);
   const studentName = student.name.split(' ')[0];
 
+  // Get chapter progress from chapter_progress table
+  let chaptersCompleted = 0, chaptersTotal = 0, recentChapters = [];
+  try {
+    const { data: chapterData } = await supabase
+      .from('chapter_progress')
+      .select('*')
+      .eq('student_id', studentId)
+      .order('completed_at', { ascending: false })
+      .limit(20);
+
+    if (chapterData?.length) {
+      chaptersCompleted = chapterData.length;
+      const thisWeekChapters = chapterData.filter(c => c.completed_at >= weekStart + 'T00:00:00');
+      recentChapters = thisWeekChapters.slice(0, 5).map(c => c.chapter_name);
+    }
+  } catch (e) {
+    // chapter_progress table may not exist yet — graceful fallback
+  }
+
   const html = buildWeeklyHTML({
     studentName,
     langName,
@@ -137,6 +156,8 @@ async function sendWeeklyReport(studentId) {
     strongAreas,
     criticalAreas: criticalAreas.map(s => ({ name: s.skill_name.replace(/_/g, ' '), accuracy: s.accuracy, attempts: s.total_questions })),
     weaknessImprovedCount,
+    chaptersCompleted,
+    recentChapters,
     weekStart: monday.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }),
     weekEnd: now.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })
   });
@@ -238,7 +259,7 @@ function buildDailyHTML({ studentName, langName, cls, totalMinutes, sessionCount
   </div>`;
 }
 
-function buildWeeklyHTML({ studentName, langName, cls, totalMinutes, totalSessions, avgDaily, daysActive, streak, xp, weakAreas, strongAreas, criticalAreas, weaknessImprovedCount, weekStart, weekEnd }) {
+function buildWeeklyHTML({ studentName, langName, cls, totalMinutes, totalSessions, avgDaily, daysActive, streak, xp, weakAreas, strongAreas, criticalAreas, weaknessImprovedCount, chaptersCompleted, recentChapters, weekStart, weekEnd }) {
   const hours = Math.floor(totalMinutes / 60);
   const mins = totalMinutes % 60;
   const timeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins} minutes`;
@@ -316,6 +337,18 @@ function buildWeeklyHTML({ studentName, langName, cls, totalMinutes, totalSessio
         <div style="font-size:0.85rem;font-weight:800;color:#16a34a">
           📈 Good news! ${weaknessImprovedCount} weak area(s) showed improvement this week!
         </div>
+      </div>` : ''}
+
+      ${chaptersCompleted > 0 || (recentChapters && recentChapters.length) ? `
+      <div style="background:white;border-radius:14px;padding:1rem;margin-top:1rem;border:2px solid #eeeeff">
+        <div style="font-size:0.75rem;font-weight:900;color:#5b5ef4;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem">📖 Chapter Progress</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1e293b;margin-bottom:0.4rem">
+          ${chaptersCompleted} chapter${chaptersCompleted !== 1 ? 's' : ''} completed overall
+        </div>
+        ${recentChapters && recentChapters.length ? `
+          <div style="font-size:0.78rem;font-weight:700;color:#64748b;margin-bottom:0.3rem">Completed this week:</div>
+          ${recentChapters.map(ch => `<div style="font-size:0.82rem;color:#059669;font-weight:700;padding:0.15rem 0">✓ ${ch}</div>`).join('')}
+        ` : `<div style="font-size:0.82rem;color:#94a3b8">No new chapters completed this week.</div>`}
       </div>` : ''}
 
       <div style="background:#f5f6ff;border-radius:14px;padding:1rem;text-align:center;margin-top:1rem">

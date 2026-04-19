@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadHomework();
   loadDashboardWeakness();
   loadDashboardChallenges();
+  loadChapterProgress();
 });
 
 function showDailyReward(student) {
@@ -360,6 +361,169 @@ document.addEventListener('click', (e) => {
     document.getElementById('profileMenu')?.classList.remove('open');
   }
 });
+
+// ===== CHAPTER PROGRESS TRACKER =====
+function loadChapterProgress() {
+  const section = document.getElementById('chapterProgressSection');
+  if (!section) return;
+
+  const student = getStudent();
+  if (!student?.language || !student?.class) {
+    section.style.display = 'none';
+    return;
+  }
+
+  if (typeof CBSE_SYLLABUS === 'undefined') {
+    section.style.display = 'none';
+    return;
+  }
+
+  const syllabus = CBSE_SYLLABUS[student.language]?.[student.class];
+  if (!syllabus?.sections) {
+    section.style.display = 'none';
+    return;
+  }
+
+  const completedChapters = JSON.parse(localStorage.getItem('ll_chapter_progress') || '{}');
+  const key = `${student.language}_${student.class}`;
+  const completed = completedChapters[key] || [];
+
+  let totalTopics = 0;
+  let completedCount = 0;
+  const sectionIcons = {
+    'Comprehension': '📖', 'Reading': '📖', 'Writing': '✍️',
+    'Grammar': '📐', 'Literature': '📚', 'Textbook': '📚',
+    'Culture': '🌍'
+  };
+
+  const sectionsHTML = syllabus.sections.map(sec => {
+    const icon = Object.entries(sectionIcons).find(([k]) => sec.name.includes(k))?.[1] || '📄';
+    const topics = sec.topics || [];
+    totalTopics += topics.length;
+
+    const sectionCompleted = topics.filter(t => completed.includes(t.name)).length;
+    completedCount += sectionCompleted;
+    const sectionPct = topics.length ? Math.round(sectionCompleted / topics.length * 100) : 0;
+
+    const pctColor = sectionPct >= 80 ? '#059669' : sectionPct >= 40 ? '#d97706' : '#6b7280';
+
+    const topicsHTML = topics.map(t => {
+      const isDone = completed.includes(t.name);
+      const examTags = (t.exam || '').split(',').filter(e => e.trim()).slice(0, 2);
+      return `
+        <div class="cp-topic${isDone ? ' completed' : ''}" onclick="toggleChapter('${student.language}', ${student.class}, '${t.name.replace(/'/g, "\\'")}', this)">
+          <div class="cp-check">${isDone ? '✓' : ''}</div>
+          <span class="cp-topic-name">${t.name}</span>
+          <span class="cp-topic-marks">${t.marks}m</span>
+          ${examTags.map(e => `<span class="cp-topic-exam">${e.trim().toUpperCase()}</span>`).join('')}
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="cp-section-card">
+        <div class="cp-section-title">
+          ${icon} ${sec.name}
+          <span class="cp-section-pct" style="background:${pctColor}15;color:${pctColor}">${sectionPct}%</span>
+        </div>
+        <div class="cp-topics">${topicsHTML}</div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('cpSections').innerHTML = sectionsHTML;
+  document.getElementById('cpDone').textContent = completedCount;
+  document.getElementById('cpTotal').textContent = totalTopics;
+  const overallPct = totalTopics ? Math.round(completedCount / totalTopics * 100) : 0;
+  document.getElementById('cpBarFill').style.width = overallPct + '%';
+}
+
+window.toggleChapter = function(lang, cls, topicName, el) {
+  const completedChapters = JSON.parse(localStorage.getItem('ll_chapter_progress') || '{}');
+  const key = `${lang}_${cls}`;
+  if (!completedChapters[key]) completedChapters[key] = [];
+
+  const idx = completedChapters[key].indexOf(topicName);
+  if (idx >= 0) {
+    completedChapters[key].splice(idx, 1);
+    el.classList.remove('completed');
+    el.querySelector('.cp-check').textContent = '';
+  } else {
+    completedChapters[key].push(topicName);
+    el.classList.add('completed');
+    el.querySelector('.cp-check').textContent = '✓';
+  }
+
+  localStorage.setItem('ll_chapter_progress', JSON.stringify(completedChapters));
+
+  // Update summary counts
+  const student = getStudent();
+  const syllabus = CBSE_SYLLABUS[student.language]?.[student.class];
+  if (!syllabus) return;
+
+  let total = 0, done = 0;
+  syllabus.sections.forEach(sec => {
+    (sec.topics || []).forEach(t => {
+      total++;
+      if (completedChapters[key].includes(t.name)) done++;
+    });
+  });
+
+  document.getElementById('cpDone').textContent = done;
+  document.getElementById('cpTotal').textContent = total;
+  document.getElementById('cpBarFill').style.width = (total ? Math.round(done / total * 100) : 0) + '%';
+
+  // Update section percentages
+  document.querySelectorAll('.cp-section-card').forEach((card, i) => {
+    const sec = syllabus.sections[i];
+    if (!sec) return;
+    const topics = sec.topics || [];
+    const secDone = topics.filter(t => completedChapters[key].includes(t.name)).length;
+    const pct = topics.length ? Math.round(secDone / topics.length * 100) : 0;
+    const pctEl = card.querySelector('.cp-section-pct');
+    const pctColor = pct >= 80 ? '#059669' : pct >= 40 ? '#d97706' : '#6b7280';
+    pctEl.textContent = pct + '%';
+    pctEl.style.background = pctColor + '15';
+    pctEl.style.color = pctColor;
+  });
+};
+
+// ===== PARENT REPORT =====
+window.sendParentReport = async function() {
+  const btn = document.getElementById('sendParentReport');
+  const status = document.getElementById('parentReportStatus');
+  btn.disabled = true;
+  btn.textContent = '📨 Sending...';
+  status.style.display = 'none';
+
+  try {
+    const data = await apiPost('/api/notifications/send-weekly', {});
+    if (data?.success) {
+      status.style.display = '';
+      status.style.background = '#ecfdf5';
+      status.style.color = '#059669';
+      status.style.border = '1px solid #a7f3d0';
+      status.textContent = 'Report sent to your parent\'s email!';
+    } else if (data?.skipped) {
+      status.style.display = '';
+      status.style.background = '#fef3c7';
+      status.style.color = '#92400e';
+      status.style.border = '1px solid #fde68a';
+      status.textContent = 'No parent email on file. Add one in your profile.';
+    } else {
+      throw new Error('failed');
+    }
+  } catch {
+    status.style.display = '';
+    status.style.background = '#fef2f2';
+    status.style.color = '#dc2626';
+    status.style.border = '1px solid #fecaca';
+    status.textContent = 'Could not send report. Try again later.';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '📨 Send Weekly Report Now';
+};
 
 function showWeeklyBanner() {
   const day = new Date().getDay(); // 0=Sun, 1=Mon...6=Sat

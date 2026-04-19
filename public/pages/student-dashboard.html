@@ -289,6 +289,18 @@
     </div>
   </section>
 
+  <!-- Chapter Progress Tracker -->
+  <section class="dash-chapter-progress" id="chapterProgressSection">
+    <div class="cp-header">
+      <h3>📖 Chapter Progress</h3>
+      <div class="cp-summary">
+        <span class="cp-done" id="cpDone">0</span>/<span id="cpTotal">0</span> chapters completed
+        <div class="cp-bar"><div class="cp-bar-fill" id="cpBarFill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="cp-sections" id="cpSections"></div>
+  </section>
+
   <!-- Main Content Grid -->
   <section class="dash-body">
     <div class="dash-main">
@@ -391,6 +403,18 @@
           <button class="revision-btn" onclick="loadRevision()">⚡ Generate revision of last class</button>
         </div>
       </div>
+
+      <!-- Parent Report -->
+      <div class="dash-section game-section">
+        <div class="ds-header-row">
+          <h3>📧 Parent Report</h3>
+        </div>
+        <p class="ds-sub" style="margin-bottom:0.75rem">Send your progress report to your parent's email.</p>
+        <div id="parentReportStatus" style="display:none;margin-bottom:0.5rem;font-size:0.82rem;font-weight:700;padding:0.5rem;border-radius:8px"></div>
+        <button class="btn btn-primary" id="sendParentReport" onclick="sendParentReport()" style="width:100%;font-size:0.88rem">
+          📨 Send Weekly Report Now
+        </button>
+      </div>
     </div>
   </section>
 
@@ -418,6 +442,7 @@
   </script>
   <script src="/js/api.js"></script>
   <script src="/js/shared-nav.js"></script>
+  <script src="/js/cbse-syllabus-data.js"></script>
   <script src="/js/weakness-engine.js"></script>
   <script src="/js/streak-rewards.js"></script>
   <script src="/js/stats-bar.js"></script>
