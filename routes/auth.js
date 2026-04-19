@@ -130,6 +130,26 @@ router.post('/update-profile', authMiddleware, async (req, res) => {
   }
 });
 
+router.post('/fix-account', async (req, res) => {
+  try {
+    const { email, password, adminKey } = req.body;
+    if (adminKey !== process.env.ADMIN_KEY) return res.status(403).json({ error: 'Unauthorized' });
+    const { data: { users } } = await supabase.auth.admin.listUsers();
+    const existing = users.find(u => u.email === email);
+    if (existing) {
+      await supabase.from('students').delete().eq('id', existing.id);
+      await supabase.auth.admin.deleteUser(existing.id);
+    }
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email, password, email_confirm: true
+    });
+    if (authError) return res.status(400).json({ error: authError.message });
+    res.json({ message: 'Account fixed', userId: authData.user.id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.post('/logout', authMiddleware, async (req, res) => {
   await supabase.auth.signOut();
   res.json({ message: 'Logged out' });
