@@ -12,8 +12,9 @@ const {
   generateBoardPaper
 } = require('../services/textbookExtractor');
 
+const uploadDir = process.env.VERCEL ? '/tmp/textbook-uploads' : path.join(__dirname, '..', 'uploads', 'textbooks');
 const upload = multer({
-  dest: path.join(__dirname, '..', 'uploads', 'textbooks'),
+  dest: uploadDir,
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf', 'text/plain'];
