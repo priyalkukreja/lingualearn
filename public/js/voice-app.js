@@ -38,29 +38,117 @@
   const oralResult   = document.getElementById('oralResult');
   const oralFinal    = document.getElementById('oralFinal');
 
-  // Pronunciation word bank
-  const wordBank = [
-    { text: 'Bonjour', lang: 'fr-FR' },
-    { text: 'Comment allez-vous', lang: 'fr-FR' },
-    { text: 'Merci beaucoup', lang: 'fr-FR' },
-    { text: 'नमस्ते', lang: 'hi-IN' },
-    { text: 'आप कैसे हैं', lang: 'hi-IN' },
-    { text: 'धन्यवाद', lang: 'hi-IN' },
-    { text: 'Buenos días', lang: 'es-ES' },
-    { text: 'Guten Morgen', lang: 'de-DE' },
-    { text: 'Je suis étudiant', lang: 'fr-FR' },
-    { text: 'मुझे हिंदी आती है', lang: 'hi-IN' },
-  ];
+  // Pronunciation word bank — filtered by student's language
+  const PRON_BANKS = {
+    french: [
+      { text: 'Bonjour', lang: 'fr-FR' },
+      { text: 'Comment allez-vous', lang: 'fr-FR' },
+      { text: 'Merci beaucoup', lang: 'fr-FR' },
+      { text: 'Je suis étudiant', lang: 'fr-FR' },
+      { text: 'S\'il vous plaît', lang: 'fr-FR' },
+      { text: 'Bonne journée', lang: 'fr-FR' },
+      { text: 'Je m\'appelle', lang: 'fr-FR' },
+      { text: 'Au revoir', lang: 'fr-FR' },
+      { text: 'Excusez-moi', lang: 'fr-FR' },
+      { text: 'Très bien', lang: 'fr-FR' },
+    ],
+    german: [
+      { text: 'Guten Morgen', lang: 'de-DE' },
+      { text: 'Wie geht es Ihnen', lang: 'de-DE' },
+      { text: 'Danke schön', lang: 'de-DE' },
+      { text: 'Ich heiße', lang: 'de-DE' },
+      { text: 'Auf Wiedersehen', lang: 'de-DE' },
+      { text: 'Bitte schön', lang: 'de-DE' },
+      { text: 'Entschuldigung', lang: 'de-DE' },
+      { text: 'Guten Abend', lang: 'de-DE' },
+      { text: 'Ich verstehe', lang: 'de-DE' },
+      { text: 'Sehr gut', lang: 'de-DE' },
+    ],
+    hindi: [
+      { text: 'नमस्ते', lang: 'hi-IN' },
+      { text: 'आप कैसे हैं', lang: 'hi-IN' },
+      { text: 'धन्यवाद', lang: 'hi-IN' },
+      { text: 'मुझे हिंदी आती है', lang: 'hi-IN' },
+      { text: 'मेरा नाम है', lang: 'hi-IN' },
+      { text: 'शुभ प्रभात', lang: 'hi-IN' },
+      { text: 'कृपया', lang: 'hi-IN' },
+      { text: 'माफ़ कीजिए', lang: 'hi-IN' },
+      { text: 'बहुत अच्छा', lang: 'hi-IN' },
+      { text: 'अलविदा', lang: 'hi-IN' },
+    ],
+    sanskrit: [
+      { text: 'नमस्ते', lang: 'hi-IN' },
+      { text: 'धन्यवादः', lang: 'hi-IN' },
+      { text: 'कथं अस्ति', lang: 'hi-IN' },
+      { text: 'मम नाम अस्ति', lang: 'hi-IN' },
+      { text: 'अहं गच्छामि', lang: 'hi-IN' },
+      { text: 'सर्वं कुशलम्', lang: 'hi-IN' },
+      { text: 'शुभं भवतु', lang: 'hi-IN' },
+      { text: 'पुनः मिलामः', lang: 'hi-IN' },
+    ],
+    spanish: [
+      { text: 'Buenos días', lang: 'es-ES' },
+      { text: 'Cómo estás', lang: 'es-ES' },
+      { text: 'Muchas gracias', lang: 'es-ES' },
+      { text: 'Me llamo', lang: 'es-ES' },
+      { text: 'Por favor', lang: 'es-ES' },
+      { text: 'Hasta luego', lang: 'es-ES' },
+      { text: 'Disculpe', lang: 'es-ES' },
+      { text: 'Buenas noches', lang: 'es-ES' },
+      { text: 'Muy bien', lang: 'es-ES' },
+      { text: 'De nada', lang: 'es-ES' },
+    ],
+  };
+  const wordBank = PRON_BANKS[studentLang] || PRON_BANKS.french;
   let wordIndex = 0;
 
-  // Oral exam questions
-  const oralQuestions = [
-    'Introduce yourself in Hindi or French.',
-    'What is your favourite subject and why?',
-    'Describe your daily routine in three sentences.',
-    'Name three things you can see in your classroom.',
-    'What do you want to become when you grow up? Answer in a full sentence.',
-  ];
+  const student = getStudent();
+  const studentLang = student?.language || 'french';
+
+  // Language-specific oral exam questions with expected keywords for real scoring
+  const ORAL_BANKS = {
+    french: [
+      { q: 'Introduce yourself in French. Say your name and age.', keywords: ['je', 'appelle', 'suis', 'ans', 'nom', 'bonjour', 'salut', 'ai', 'mon', 'moi'], minWords: 4 },
+      { q: 'Describe your family in French.', keywords: ['famille', 'père', 'mère', 'frère', 'soeur', 'parents', 'grand', 'mon', 'ma', 'mes', 'il', 'elle'], minWords: 5 },
+      { q: 'What do you like to eat? Answer in French.', keywords: ['aime', 'manger', 'adore', 'préfère', 'nourriture', 'poulet', 'riz', 'fruit', 'pain', 'fromage', 'gâteau', 'chocolat'], minWords: 4 },
+      { q: 'Describe your school in French.', keywords: ['école', 'lycée', 'collège', 'classe', 'professeur', 'élève', 'grande', 'belle', 'matière', 'aime', 'étudie'], minWords: 4 },
+      { q: 'What is your daily routine? Answer in French.', keywords: ['matin', 'lève', 'mange', 'vais', 'école', 'étudie', 'soir', 'dors', 'joue', 'heure', 'après', 'midi'], minWords: 5 },
+    ],
+    german: [
+      { q: 'Introduce yourself in German. Say your name and where you live.', keywords: ['ich', 'heiße', 'bin', 'wohne', 'name', 'jahre', 'alt', 'guten', 'tag', 'mein'], minWords: 4 },
+      { q: 'Describe your family in German.', keywords: ['familie', 'vater', 'mutter', 'bruder', 'schwester', 'eltern', 'groß', 'mein', 'meine'], minWords: 5 },
+      { q: 'What are your hobbies? Answer in German.', keywords: ['hobby', 'spiele', 'lese', 'gern', 'gerne', 'fußball', 'musik', 'sport', 'mag', 'liebe', 'schwimmen'], minWords: 4 },
+      { q: 'Describe your school in German.', keywords: ['schule', 'klasse', 'lehrer', 'fach', 'schüler', 'groß', 'lernen', 'lerne', 'deutsch', 'mathe'], minWords: 4 },
+      { q: 'What do you eat for breakfast? Answer in German.', keywords: ['frühstück', 'esse', 'trinke', 'brot', 'milch', 'ei', 'morgen', 'morgens', 'kaffee', 'saft'], minWords: 4 },
+    ],
+    sanskrit: [
+      { q: 'Introduce yourself in Sanskrit.', keywords: ['अहं', 'मम', 'नाम', 'नमस्ते', 'अस्ति', 'पठामि', 'वदामि'], minWords: 3 },
+      { q: 'Describe your family in Sanskrit.', keywords: ['परिवार', 'पिता', 'माता', 'भ्राता', 'भगिनी', 'मम', 'अस्ति', 'सन्ति'], minWords: 3 },
+      { q: 'Name things in your classroom in Sanskrit.', keywords: ['कक्षा', 'पुस्तकम्', 'लेखनी', 'पीठम्', 'फलकम्', 'शिक्षक', 'अस्ति', 'सन्ति'], minWords: 3 },
+      { q: 'What do you do daily? Answer in Sanskrit.', keywords: ['प्रतिदिनं', 'उत्तिष्ठामि', 'पठामि', 'खादामि', 'गच्छामि', 'क्रीडामि', 'विद्यालयं'], minWords: 3 },
+      { q: 'Which subject do you like? Answer in Sanskrit.', keywords: ['विषय', 'रोचते', 'मम', 'गणितम्', 'संस्कृतम्', 'विज्ञानम्', 'प्रिय'], minWords: 3 },
+    ],
+    spanish: [
+      { q: 'Introduce yourself in Spanish. Say your name and age.', keywords: ['me', 'llamo', 'soy', 'tengo', 'años', 'hola', 'nombre', 'mi'], minWords: 4 },
+      { q: 'Describe your family in Spanish.', keywords: ['familia', 'padre', 'madre', 'hermano', 'hermana', 'mi', 'mis', 'tiene', 'es'], minWords: 5 },
+      { q: 'What do you like to do? Answer in Spanish.', keywords: ['gusta', 'gustan', 'jugar', 'leer', 'comer', 'estudiar', 'música', 'deporte', 'me'], minWords: 4 },
+      { q: 'Describe your school in Spanish.', keywords: ['escuela', 'colegio', 'clase', 'profesor', 'grande', 'bonita', 'estudio', 'aprendo', 'materia'], minWords: 4 },
+      { q: 'What did you eat today? Answer in Spanish.', keywords: ['comí', 'comido', 'desayuno', 'almuerzo', 'arroz', 'pan', 'fruta', 'leche', 'como', 'hoy'], minWords: 4 },
+    ],
+    hindi: [
+      { q: 'Introduce yourself in Hindi.', keywords: ['मेरा', 'नाम', 'है', 'मैं', 'हूँ', 'हूं', 'कक्षा', 'में', 'पढ़ता', 'पढ़ती', 'नमस्ते'], minWords: 4 },
+      { q: 'Describe your family in Hindi.', keywords: ['परिवार', 'पिता', 'माता', 'भाई', 'बहन', 'मेरे', 'मेरी', 'हैं', 'है'], minWords: 5 },
+      { q: 'What is your favourite subject? Answer in Hindi.', keywords: ['विषय', 'पसंद', 'पसन्द', 'मुझे', 'अच्छा', 'लगता', 'लगती', 'गणित', 'हिंदी', 'विज्ञान', 'प्रिय'], minWords: 4 },
+      { q: 'Describe your school in Hindi.', keywords: ['विद्यालय', 'स्कूल', 'कक्षा', 'शिक्षक', 'बड़ा', 'सुंदर', 'पढ़ाई', 'छात्र', 'में'], minWords: 4 },
+      { q: 'What do you do after school? Answer in Hindi.', keywords: ['बाद', 'खेलता', 'खेलती', 'पढ़ता', 'पढ़ती', 'खाना', 'घर', 'शाम', 'दोस्त', 'करता', 'करती'], minWords: 4 },
+    ],
+  };
+
+  function getOralQuestions() {
+    return ORAL_BANKS[studentLang] || ORAL_BANKS.french;
+  }
+
+  const oralQuestions = getOralQuestions();
   let oralIdx = 0;
   let oralRecords = [];
 
@@ -78,8 +166,9 @@
 
     recognition.onresult = (e) => {
       const transcript = e.results[0][0].transcript;
+      const confidence = e.results[0][0].confidence || 0;
       stopRecording();
-      handleResult(transcript);
+      handleResult(transcript, confidence);
     };
 
     recognition.onerror = (e) => {
@@ -95,9 +184,17 @@
     };
   }
 
+  const LANG_CODES = {
+    french: 'fr-FR', german: 'de-DE', hindi: 'hi-IN', sanskrit: 'hi-IN',
+    spanish: 'es-ES', japanese: 'ja-JP', korean: 'ko-KR', mandarin: 'zh-CN', russian: 'ru-RU'
+  };
+
   function getLangForMode() {
     if (currentMode === 'pronunciation') {
       return wordBank[wordIndex]?.lang || 'en-US';
+    }
+    if (currentMode === 'oral') {
+      return LANG_CODES[studentLang] || 'en-US';
     }
     return 'en-US';
   }
@@ -134,13 +231,15 @@
   });
 
   /* ---- Handle Result ---- */
-  function handleResult(transcript) {
+  let lastConfidence = 0;
+  function handleResult(transcript, confidence) {
+    lastConfidence = confidence;
     detectedArea.style.display = '';
     detectedText.textContent = transcript;
 
     if (currentMode === 'qa') handleQA(transcript);
     else if (currentMode === 'pronunciation') handlePronunciation(transcript);
-    else if (currentMode === 'oral') handleOral(transcript);
+    else if (currentMode === 'oral') handleOral(transcript, confidence);
   }
 
   /* ---- Voice Q&A ---- */
@@ -224,39 +323,154 @@
     return dp[m][n];
   }
 
-  /* ---- Oral Exam ---- */
-  function handleOral(answer) {
-    oralRecords.push({ question: oralQuestions[oralIdx], answer });
+  /* ---- Oral Exam — Real Scoring ---- */
+
+  function scoreOralAnswer(answer, confidence, questionData) {
+    const words = answer.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+    const wordCount = words.length;
+    const keywords = questionData.keywords || [];
+    const minWords = questionData.minWords || 4;
+
+    // 1. Keyword score (0-40): how many expected keywords appeared
+    let keywordHits = 0;
+    keywords.forEach(kw => {
+      if (words.some(w => w.includes(kw.toLowerCase()) || kw.toLowerCase().includes(w))) {
+        keywordHits++;
+      }
+    });
+    const keywordRatio = Math.min(1, keywordHits / Math.max(1, Math.min(5, keywords.length)));
+    const keywordScore = Math.round(keywordRatio * 40);
+
+    // 2. Fluency / length score (0-25): did they say enough words?
+    const lengthRatio = Math.min(1, wordCount / (minWords * 1.5));
+    const lengthScore = Math.round(lengthRatio * 25);
+
+    // 3. Confidence score (0-25): how clearly the browser understood them
+    const confScore = Math.round(Math.min(1, confidence) * 25);
+
+    // 4. Attempt bonus (10): they spoke something (not empty)
+    const attemptBonus = wordCount >= 2 ? 10 : (wordCount >= 1 ? 5 : 0);
+
+    const total = Math.min(100, keywordScore + lengthScore + confScore + attemptBonus);
+
+    return {
+      total,
+      keywordScore,
+      keywordHits,
+      keywordTotal: Math.min(5, keywords.length),
+      lengthScore,
+      wordCount,
+      confScore,
+      confidence: Math.round(confidence * 100),
+      attemptBonus
+    };
+  }
+
+  function handleOral(answer, confidence) {
+    const qData = oralQuestions[oralIdx];
+    const scores = scoreOralAnswer(answer, confidence, qData);
+
+    oralRecords.push({
+      question: qData.q,
+      answer,
+      scores
+    });
+
+    const gradeColor = scores.total >= 70 ? '#059669' : scores.total >= 45 ? '#d97706' : '#dc2626';
+    const gradeLabel = scores.total >= 70 ? 'Good' : scores.total >= 45 ? 'Fair' : 'Needs Practice';
+
     const card = document.createElement('div');
     card.className = 'oral-answer-card';
-    card.innerHTML = `<div class="oa-q">Q${oralIdx + 1}: ${oralQuestions[oralIdx]}</div><div class="oa-a">${answer}</div>`;
+    card.innerHTML = `
+      <div class="oa-q">Q${oralIdx + 1}: ${qData.q}</div>
+      <div class="oa-a">${answer}</div>
+      <div class="oa-score-bar" style="display:flex;gap:0.5rem;align-items:center;margin-top:0.5rem;flex-wrap:wrap">
+        <span style="background:${gradeColor};color:white;padding:0.2rem 0.6rem;border-radius:8px;font-size:0.78rem;font-weight:800">${scores.total}% — ${gradeLabel}</span>
+        <span style="font-size:0.72rem;color:#6b7280" title="Keywords matched">🔑 ${scores.keywordHits}/${scores.keywordTotal}</span>
+        <span style="font-size:0.72rem;color:#6b7280" title="Words spoken">💬 ${scores.wordCount} words</span>
+        <span style="font-size:0.72rem;color:#6b7280" title="Speech clarity">🎯 ${scores.confidence}% clear</span>
+      </div>
+    `;
     oralAnswers.appendChild(card);
+
+    if (scores.total >= 70) speak('Good answer!');
+    else if (scores.total >= 45) speak('Fair attempt. Try using more vocabulary.');
+    else speak('Try again with more detail.');
 
     oralIdx++;
     if (oralIdx < oralQuestions.length) {
-      showOralQuestion();
+      setTimeout(() => showOralQuestion(), 1500);
     } else {
-      finishOralExam();
+      setTimeout(() => finishOralExam(), 1500);
     }
   }
 
   function showOralQuestion() {
     oralQ.style.display = '';
     oralQNum.textContent = oralIdx + 1;
-    oralQText.textContent = oralQuestions[oralIdx];
-    speak(oralQuestions[oralIdx]);
+    oralQText.textContent = oralQuestions[oralIdx].q;
+    speak(oralQuestions[oralIdx].q);
   }
 
   function finishOralExam() {
     oralQ.style.display = 'none';
     oralResult.style.display = '';
-    const score = Math.floor(60 + Math.random() * 35);
+
+    const totalScore = Math.round(oralRecords.reduce((sum, r) => sum + r.scores.total, 0) / oralRecords.length);
+    const totalKeywords = oralRecords.reduce((sum, r) => sum + r.scores.keywordHits, 0);
+    const totalWords = oralRecords.reduce((sum, r) => sum + r.scores.wordCount, 0);
+    const avgClarity = Math.round(oralRecords.reduce((sum, r) => sum + r.scores.confidence, 0) / oralRecords.length);
+
+    const grade = totalScore >= 80 ? 'Excellent' : totalScore >= 60 ? 'Good' : totalScore >= 40 ? 'Needs Improvement' : 'Keep Practicing';
+    const gradeColor = totalScore >= 80 ? '#059669' : totalScore >= 60 ? '#2563eb' : totalScore >= 40 ? '#d97706' : '#dc2626';
+    const tip = totalScore >= 80
+      ? 'Outstanding! Your vocabulary and fluency are strong.'
+      : totalScore >= 60
+        ? 'Good job! Try using more keywords and longer sentences to improve.'
+        : totalScore >= 40
+          ? 'You\'re getting there. Focus on using the target language instead of English.'
+          : 'Regular speaking practice will help. Try listening to the question carefully and using key vocabulary.';
+
     oralFinal.innerHTML = `
-      <p>You answered <strong>${oralRecords.length}</strong> questions.</p>
-      <p style="font-size:2rem;font-weight:900;color:var(--primary);margin:0.5rem 0">${score}%</p>
-      <p>Great effort! Regular speaking practice will boost your confidence.</p>
+      <div style="text-align:center">
+        <p style="font-size:2.5rem;font-weight:900;color:${gradeColor};margin:0.5rem 0">${totalScore}%</p>
+        <p style="font-size:1.1rem;font-weight:800;color:${gradeColor};margin-bottom:1rem">${grade}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem;margin:1rem 0">
+        <div style="text-align:center;padding:0.6rem;background:#f3f4f6;border-radius:10px">
+          <div style="font-size:1.2rem;font-weight:900;color:#1a1a2e">🔑 ${totalKeywords}</div>
+          <div style="font-size:0.72rem;color:#6b7280;font-weight:700">Keywords Used</div>
+        </div>
+        <div style="text-align:center;padding:0.6rem;background:#f3f4f6;border-radius:10px">
+          <div style="font-size:1.2rem;font-weight:900;color:#1a1a2e">💬 ${totalWords}</div>
+          <div style="font-size:0.72rem;color:#6b7280;font-weight:700">Total Words</div>
+        </div>
+        <div style="text-align:center;padding:0.6rem;background:#f3f4f6;border-radius:10px">
+          <div style="font-size:1.2rem;font-weight:900;color:#1a1a2e">🎯 ${avgClarity}%</div>
+          <div style="font-size:0.72rem;color:#6b7280;font-weight:700">Speech Clarity</div>
+        </div>
+        <div style="text-align:center;padding:0.6rem;background:#f3f4f6;border-radius:10px">
+          <div style="font-size:1.2rem;font-weight:900;color:#1a1a2e">📝 ${oralRecords.length}</div>
+          <div style="font-size:0.72rem;color:#6b7280;font-weight:700">Questions</div>
+        </div>
+      </div>
+      <p style="font-size:0.88rem;color:#4b5563;line-height:1.5;font-weight:600">${tip}</p>
+      <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="document.getElementById('startExam').style.display='';document.getElementById('oralResult').style.display='none';document.getElementById('oralAnswers').innerHTML=''">Try Again</button>
     `;
-    speak('Exam complete! You scored ' + score + ' percent. Great effort!');
+    speak('Exam complete! You scored ' + totalScore + ' percent. ' + grade + '!');
+
+    // Save oral exam result
+    const pastOral = JSON.parse(localStorage.getItem('ll_oral_exams') || '[]');
+    pastOral.unshift({
+      date: new Date().toLocaleDateString('en-IN'),
+      score: totalScore,
+      keywords: totalKeywords,
+      words: totalWords,
+      clarity: avgClarity,
+      lang: studentLang
+    });
+    if (pastOral.length > 20) pastOral.pop();
+    localStorage.setItem('ll_oral_exams', JSON.stringify(pastOral));
   }
 
   startExam.addEventListener('click', () => {
