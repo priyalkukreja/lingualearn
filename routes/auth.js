@@ -10,10 +10,11 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
       password,
-      options: { data: { name } }
+      email_confirm: true,
+      user_metadata: { name }
     });
 
     if (authError) return res.status(400).json({ error: authError.message });
