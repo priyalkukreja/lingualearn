@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     checkLevelUp(student);
     showDailyReward(student);
+    showWeeklyBanner();
 
     if (typeof StreakRewards !== 'undefined') {
       StreakRewards.renderStreakWidget('streakWidgetContainer');
@@ -359,3 +360,41 @@ document.addEventListener('click', (e) => {
     document.getElementById('profileMenu')?.classList.remove('open');
   }
 });
+
+function showWeeklyBanner() {
+  const day = new Date().getDay(); // 0=Sun, 1=Mon...6=Sat
+  const banner = document.getElementById('weeklyBanner');
+  if (!banner) return;
+
+  banner.style.display = '';
+
+  if (day === 6) {
+    // Saturday — Test Day
+    banner.className = 'weekly-banner test-day';
+    document.getElementById('wbIcon').textContent = '📝';
+    document.getElementById('wbTitle').textContent = 'Saturday — Test Day!';
+    document.getElementById('wbDesc').textContent = 'Your weekly mini test is ready! Complete it to update your report card and earn XP.';
+    const action = document.getElementById('wbAction');
+    action.textContent = 'Take Weekly Test';
+    action.href = '/writing-test';
+  } else if (day === 0) {
+    // Sunday — Fun Day / Review
+    banner.className = 'weekly-banner fun-day';
+    document.getElementById('wbIcon').textContent = '🎮';
+    document.getElementById('wbTitle').textContent = 'Sunday — Fun Review Day!';
+    document.getElementById('wbDesc').textContent = 'No new lessons today. Play revision games, review flashcards, or revisit completed chapters!';
+    const action = document.getElementById('wbAction');
+    action.textContent = 'Play Revision Games';
+    action.href = '/revision-games';
+  } else {
+    // Mon-Fri — Learning Days
+    const dayNames = ['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    banner.className = 'weekly-banner learning';
+    document.getElementById('wbIcon').textContent = '📚';
+    document.getElementById('wbTitle').textContent = dayNames[day] + ' — Learning Day';
+    document.getElementById('wbDesc').textContent = 'Explore chapters, practice with AI tutor, complete quizzes, and earn XP!';
+    const action = document.getElementById('wbAction');
+    action.textContent = 'Start Learning';
+    action.href = '/tutor';
+  }
+}

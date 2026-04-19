@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revision Games — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/revision-games.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/lottie-animations.css" />
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/writing-test">Writing Test</a></li>
+      <li><a href="/revision-games" style="color:var(--primary)">Games</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <section class="rg-hero" style="position:relative;overflow:hidden">
+    <dotlottie-player src="https://lottie.host/86d3f5e4-79d7-4c43-bef7-ce43f9a3fd0b/IvRCFZpnTI.json" background="transparent" speed="1" loop autoplay class="lottie-bg-decoration" style="width:250px;height:250px;right:-40px;top:-40px;opacity:0.12"></dotlottie-player>
+    <h1>🎮 Revision Games</h1>
+    <p>Have fun while revising! All games use content you've already learned — no new lessons, just play.</p>
+    <div class="rg-hero-badges">
+      <span class="rg-badge">No AI messages used</span>
+      <span class="rg-badge">Earn XP</span>
+      <span class="rg-badge">Available anytime</span>
+    </div>
+  </section>
+
+  <!-- Game Picker -->
+  <section class="rg-section">
+    <div class="rg-container">
+      <div class="rg-games-grid">
+
+        <div class="rg-game-card" data-game="vocab-match">
+          <div class="rg-game-icon">🔤</div>
+          <h3 class="rg-game-name">Vocabulary Match</h3>
+          <p class="rg-game-desc">Match words to their meanings before time runs out!</p>
+          <div class="rg-game-meta">
+            <span>⏱️ 60 sec</span>
+            <span>⭐ +10 XP</span>
+          </div>
+          <button class="btn btn-primary rg-play-btn" onclick="startGame('vocab-match')">Play</button>
+        </div>
+
+        <div class="rg-game-card" data-game="grammar-race">
+          <div class="rg-game-icon">🏎️</div>
+          <h3 class="rg-game-name">Grammar Race</h3>
+          <p class="rg-game-desc">Fill in the blanks correctly as fast as you can!</p>
+          <div class="rg-game-meta">
+            <span>⏱️ 90 sec</span>
+            <span>⭐ +15 XP</span>
+          </div>
+          <button class="btn btn-primary rg-play-btn" onclick="startGame('grammar-race')">Play</button>
+        </div>
+
+        <div class="rg-game-card" data-game="sentence-scramble">
+          <div class="rg-game-icon">🧩</div>
+          <h3 class="rg-game-name">Sentence Scramble</h3>
+          <p class="rg-game-desc">Rearrange jumbled words to form correct sentences!</p>
+          <div class="rg-game-meta">
+            <span>⏱️ 120 sec</span>
+            <span>⭐ +15 XP</span>
+          </div>
+          <button class="btn btn-primary rg-play-btn" onclick="startGame('sentence-scramble')">Play</button>
+        </div>
+
+        <div class="rg-game-card" data-game="flashcard-flip">
+          <div class="rg-game-icon">🃏</div>
+          <h3 class="rg-game-name">Flashcard Flip</h3>
+          <p class="rg-game-desc">Memory matching game — find the word-meaning pairs!</p>
+          <div class="rg-game-meta">
+            <span>🧠 8 pairs</span>
+            <span>⭐ +10 XP</span>
+          </div>
+          <button class="btn btn-primary rg-play-btn" onclick="startGame('flashcard-flip')">Play</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Arena -->
+  <section class="rg-section rg-arena-section" id="gameArena" style="display:none">
+    <div class="rg-container">
+      <div class="rg-arena-card">
+        <div class="rg-arena-header">
+          <div class="rg-arena-title" id="arenaTitle">Game</div>
+          <div class="rg-arena-stats">
+            <span class="rg-arena-timer" id="arenaTimer">60</span>
+            <span class="rg-arena-score">Score: <strong id="arenaScore">0</strong></span>
+            <span class="rg-arena-combo" id="arenaCombo" style="display:none">Combo x<strong id="comboCount">2</strong></span>
+          </div>
+          <button class="rg-arena-quit" id="arenaQuit" onclick="quitGame()">✕ Quit</button>
+        </div>
+
+        <div class="rg-arena-body" id="arenaBody"></div>
+
+        <div class="rg-arena-progress">
+          <div class="rg-arena-progress-fill" id="arenaProgress" style="width:100%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Over Screen -->
+  <div class="rg-gameover-overlay" id="gameOverlay" style="display:none">
+    <div class="rg-gameover-card">
+      <dotlottie-player src="https://lottie.host/c1c9e78d-4c3c-4083-b2dc-95e9ac2f2827/7IvuHKETPi.json" background="transparent" speed="1" autoplay class="lottie-gameover lottie-entrance" id="goLottie"></dotlottie-player>
+      <div class="rg-go-emoji" id="goEmoji" style="display:none">🎉</div>
+      <h2 class="rg-go-title" id="goTitle">Game Over!</h2>
+      <div class="rg-go-score-big" id="goScore">0</div>
+      <div class="rg-go-label">points earned</div>
+      <div class="rg-go-stats">
+        <div class="rg-go-stat">
+          <span class="rg-go-stat-val" id="goCorrect">0</span>
+          <span class="rg-go-stat-lbl">Correct</span>
+        </div>
+        <div class="rg-go-stat">
+          <span class="rg-go-stat-val" id="goWrong">0</span>
+          <span class="rg-go-stat-lbl">Wrong</span>
+        </div>
+        <div class="rg-go-stat">
+          <span class="rg-go-stat-val" id="goXP">+0 XP</span>
+          <span class="rg-go-stat-lbl">Earned</span>
+        </div>
+      </div>
+      <div class="rg-go-actions">
+        <button class="btn btn-primary" id="goPlayAgain">Play Again</button>
+        <button class="btn btn-outline" onclick="backToGames()">Choose Another Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Game Stats -->
+  <section class="rg-section">
+    <div class="rg-container">
+      <div class="rg-today-stats">
+        <div class="rg-ts-card">
+          <div class="rg-ts-icon">🎮</div>
+          <div class="rg-ts-val" id="tsGamesPlayed">0</div>
+          <div class="rg-ts-lbl">Games Today</div>
+        </div>
+        <div class="rg-ts-card">
+          <div class="rg-ts-icon">⭐</div>
+          <div class="rg-ts-val" id="tsXPEarned">0</div>
+          <div class="rg-ts-lbl">XP Earned</div>
+        </div>
+        <div class="rg-ts-card">
+          <div class="rg-ts-icon">🏆</div>
+          <div class="rg-ts-val" id="tsHighScore">0</div>
+          <div class="rg-ts-lbl">High Score</div>
+        </div>
+        <div class="rg-ts-card">
+          <div class="rg-ts-icon">🔥</div>
+          <div class="rg-ts-val" id="tsBestCombo">0</div>
+          <div class="rg-ts-lbl">Best Combo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/revision-games-app.js"></script>
+  <script src="/js/scroll-animations.js"></script>
+  <script src="/js/shared-footer.js"></script>
+</body>
+</html>

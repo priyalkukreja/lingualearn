@@ -89,6 +89,46 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: (process.env.APP_URL || 'https://padhlo.life') + '/login'
+    });
+
+    if (error) return res.status(400).json({ error: error.message });
+
+    res.json({ message: 'Password reset email sent! Check your inbox.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to send reset email: ' + err.message });
+  }
+});
+
+router.post('/update-profile', authMiddleware, async (req, res) => {
+  try {
+    const { language, studentClass, textbook, level, goals } = req.body;
+    const updates = {};
+    if (language) updates.language = language;
+    if (studentClass) updates.class = parseInt(studentClass);
+    if (textbook) updates.textbook = textbook;
+    if (level) updates.level = level;
+    if (goals) updates.goals = goals;
+
+    const { data, error } = await supabase.from('students')
+      .update(updates)
+      .eq('id', req.user.id)
+      .select()
+      .single();
+
+    if (error) return res.status(400).json({ error: error.message });
+    res.json({ student: data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.post('/logout', authMiddleware, async (req, res) => {
   await supabase.auth.signOut();
   res.json({ message: 'Logged out' });

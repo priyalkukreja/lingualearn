@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Card — LinguaLearn</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/css/report-card.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/lottie-animations.css" />
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="brand-icon">🌐</span><span>LinguaLearn</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/tutor">AI Tutor</a></li>
+      <li><a href="/writing-test">Writing Test</a></li>
+      <li><a href="/report-card" style="color:var(--primary)">Report Card</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-xp" id="navXP">0 XP</span>
+    </div>
+  </nav>
+
+  <section class="rc-hero">
+    <h1>📋 My Report Card</h1>
+    <p>Track your performance across all tests, see your strengths, and know where to improve</p>
+  </section>
+
+  <!-- Pending Tests Banner -->
+  <div class="rc-pending-banner" id="pendingBanner" style="display:none">
+    <div class="rc-pending-icon">📝</div>
+    <div class="rc-pending-info">
+      <div class="rc-pending-title" id="pendingTitle">Weekly Test Available!</div>
+      <div class="rc-pending-sub" id="pendingSub">Take your weekly mini test to keep your report card updated</div>
+    </div>
+    <button class="btn btn-primary rc-pending-btn" id="takeTestBtn">Take Test Now</button>
+  </div>
+
+  <!-- Overall Score Card -->
+  <section class="rc-section">
+    <div class="rc-container">
+      <div class="rc-overview-grid">
+        <div class="rc-card rc-score-card">
+          <div class="rc-score-ring">
+            <svg viewBox="0 0 140 140">
+              <circle class="rc-ring-bg" cx="70" cy="70" r="58" />
+              <circle class="rc-ring-fill" id="overallRing" cx="70" cy="70" r="58" />
+            </svg>
+            <div class="rc-ring-center">
+              <div class="rc-ring-pct" id="overallPct">—</div>
+              <div class="rc-ring-grade" id="overallGrade">—</div>
+            </div>
+          </div>
+          <div class="rc-score-label">Overall Average</div>
+          <div class="rc-score-tests" id="totalTestsLabel">0 tests taken</div>
+        </div>
+
+        <div class="rc-card rc-stats-card">
+          <div class="rc-mini-stats">
+            <div class="rc-mini-stat">
+              <div class="rc-mini-icon">🔥</div>
+              <div class="rc-mini-val" id="rcStreak">0</div>
+              <div class="rc-mini-lbl">Streak</div>
+            </div>
+            <div class="rc-mini-stat">
+              <div class="rc-mini-icon">⭐</div>
+              <div class="rc-mini-val" id="rcXP">0</div>
+              <div class="rc-mini-lbl">XP</div>
+            </div>
+            <div class="rc-mini-stat">
+              <div class="rc-mini-icon">📅</div>
+              <div class="rc-mini-val" id="rcAttendance">—</div>
+              <div class="rc-mini-lbl">Attendance</div>
+            </div>
+            <div class="rc-mini-stat">
+              <div class="rc-mini-icon">📈</div>
+              <div class="rc-mini-val" id="rcTrend">—</div>
+              <div class="rc-mini-lbl">Trend</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section-wise Performance -->
+  <section class="rc-section">
+    <div class="rc-container">
+      <div class="rc-card">
+        <h2 class="rc-card-title">📊 Section-wise Performance</h2>
+        <div class="rc-sections-grid" id="sectionsGrid">
+          <div class="rc-section-bar">
+            <div class="rc-sb-header">
+              <span class="rc-sb-name">Grammar</span>
+              <span class="rc-sb-pct" id="secGrammar">—</span>
+            </div>
+            <div class="rc-sb-track"><div class="rc-sb-fill" id="secGrammarBar" style="width:0%"></div></div>
+          </div>
+          <div class="rc-section-bar">
+            <div class="rc-sb-header">
+              <span class="rc-sb-name">Vocabulary</span>
+              <span class="rc-sb-pct" id="secVocab">—</span>
+            </div>
+            <div class="rc-sb-track"><div class="rc-sb-fill" id="secVocabBar" style="width:0%"></div></div>
+          </div>
+          <div class="rc-section-bar">
+            <div class="rc-sb-header">
+              <span class="rc-sb-name">Writing</span>
+              <span class="rc-sb-pct" id="secWriting">—</span>
+            </div>
+            <div class="rc-sb-track"><div class="rc-sb-fill" id="secWritingBar" style="width:0%"></div></div>
+          </div>
+          <div class="rc-section-bar">
+            <div class="rc-sb-header">
+              <span class="rc-sb-name">Comprehension</span>
+              <span class="rc-sb-pct" id="secComp">—</span>
+            </div>
+            <div class="rc-sb-track"><div class="rc-sb-fill" id="secCompBar" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Score Trend -->
+  <section class="rc-section">
+    <div class="rc-container">
+      <div class="rc-card">
+        <h2 class="rc-card-title">📈 Score Trend</h2>
+        <div class="rc-trend-chart" id="trendChart">
+          <div class="rc-trend-empty" id="trendEmpty">Take tests to see your progress trend here</div>
+          <div class="rc-trend-bars" id="trendBars"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Strengths & Weaknesses -->
+  <section class="rc-section">
+    <div class="rc-container">
+      <div class="rc-sw-grid">
+        <div class="rc-card rc-strengths-card">
+          <h2 class="rc-card-title">✅ Strong Areas</h2>
+          <div class="rc-skill-list" id="strongList">
+            <div class="rc-skill-empty">Keep practicing to discover your strengths!</div>
+          </div>
+        </div>
+        <div class="rc-card rc-weak-card">
+          <h2 class="rc-card-title">⚠️ Needs Practice</h2>
+          <div class="rc-skill-list" id="weakList">
+            <div class="rc-skill-empty">No weak areas detected yet!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Past Test Results -->
+  <section class="rc-section">
+    <div class="rc-container">
+      <div class="rc-card">
+        <div class="rc-past-header">
+          <h2 class="rc-card-title">📚 Test History</h2>
+          <button class="btn btn-outline rc-share-btn" id="shareReportBtn">📤 Share with Parent</button>
+        </div>
+        <div class="rc-past-list" id="pastTestList">
+          <div class="rc-past-empty">No tests taken yet — take your first test to start your report card!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/report-card-app.js"></script>
+  <script src="/js/shared-footer.js"></script>
+</body>
+</html>

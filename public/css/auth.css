@@ -216,6 +216,37 @@ body.auth-page ::selection {
   background: rgba(91,94,244,0.2);
 }
 
+.auth-submit-btn {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #5b5ef4, #7c3aed);
+  color: white; font-weight: 800; font-size: 1rem;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 28px rgba(91,94,244,0.3);
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.auth-submit-btn:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 40px rgba(91,94,244,0.4);
+}
+.auth-submit-btn:disabled {
+  opacity: 0.6; cursor: wait; transform: none;
+}
+
+.auth-message {
+  text-align: center; font-size: 0.85rem; font-weight: 700;
+  padding: 0.75rem 1rem; border-radius: 12px; margin-top: 0.75rem;
+}
+.auth-message.success {
+  background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;
+}
+.auth-message.error {
+  background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;
+}
+
 @media (max-width: 480px) {
   .auth-card { padding: 1.8rem 1.4rem; border-radius: 22px; }
   .form-row { grid-template-columns: 1fr; }

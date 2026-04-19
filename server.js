@@ -24,6 +24,7 @@ app.use('/api/writing', require('./routes/writing'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/weakness', require('./routes/weakness'));
 app.use('/api/textbook', require('./routes/textbook'));
+app.use('/api/scheduled-tests', require('./routes/scheduled-tests'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -35,6 +36,10 @@ app.get('/login', (req, res) => {
 
 app.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'pages', 'signup.html'));
+});
+
+app.get('/forgot-password', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pages', 'forgot-password.html'));
 });
 
 app.get('/dashboard', (req, res) => {
@@ -69,10 +74,6 @@ app.get('/weakness', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'pages', 'weakness-dashboard.html'));
 });
 
-app.get('/signup', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'pages', 'signup.html'));
-});
-
 app.get('/quiz-battle', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'pages', 'quiz-battle.html'));
 });
@@ -83,6 +84,14 @@ app.get('/mock-test', (req, res) => {
 
 app.get('/onboarding', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'pages', 'onboarding.html'));
+});
+
+app.get('/report-card', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pages', 'report-card.html'));
+});
+
+app.get('/revision-games', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pages', 'revision-games.html'));
 });
 
 if (process.env.VERCEL !== '1') {

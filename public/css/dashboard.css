@@ -1635,6 +1635,35 @@
   outline-offset: 3px;
 }
 
+/* ===== WEEKLY SCHEDULE BANNER ===== */
+.weekly-banner {
+  display: flex; align-items: center; gap: 1rem;
+  max-width: 1200px; margin: 0 auto;
+  padding: 1rem 2rem; flex-wrap: wrap;
+  animation: fadeSlideDown 0.5s var(--spring);
+}
+.weekly-banner.learning {
+  background: linear-gradient(135deg, #eef0ff, #f5e8ff);
+  border-bottom: 2px solid #d8daff;
+}
+.weekly-banner.test-day {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border-bottom: 2px solid #fde68a;
+}
+.weekly-banner.fun-day {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border-bottom: 2px solid #a7f3d0;
+}
+.wb-icon { font-size: 2rem; }
+.wb-info { flex: 1; min-width: 200px; }
+.wb-title { font-weight: 900; font-size: 1rem; color: #1e293b; }
+.wb-desc { font-size: 0.82rem; color: #64748b; font-weight: 600; margin-top: 0.15rem; }
+.wb-action { font-size: 0.85rem !important; padding: 0.5rem 1.25rem !important; white-space: nowrap; }
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ===== REDUCED MOTION ===== */
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -209,6 +209,20 @@
   let uploadedImageData = null;
   let tesseractLoaded = false;
   let ocrWorker = null;
+  let hwTimerInterval = null;
+  let hwTimerSeconds = 0;
+  let hwTimerRunning = false;
+
+  // Timed exam state
+  let examMode = false;
+  let examType = null;
+  let examCountdownInterval = null;
+  let examTotalSeconds = 0;
+  let examRemainingSeconds = 0;
+  let examQuestions = [];
+  let examCurrentQ = 0;
+  let examStartTime = null;
+  let qStartTime = null;
 
   // Task picker
   document.querySelectorAll('.wt-task-option').forEach(el => {
@@ -420,9 +434,11 @@
     const btn = document.getElementById('submitBtn');
     const submitText = document.getElementById('submitText');
     const spinner = document.getElementById('submitSpinner');
+    const gradingLottie = document.getElementById('gradingLottie');
     btn.disabled = true;
     submitText.textContent = 'AI is grading...';
     spinner.style.display = 'inline-block';
+    if (gradingLottie) gradingLottie.style.display = '';
 
     try {
       const data = await apiPost('/api/writing/check', {
@@ -444,9 +460,12 @@
 
     submitText.textContent = '✨ Check My Writing';
     spinner.style.display = 'none';
+    if (gradingLottie) gradingLottie.style.display = 'none';
     btn.disabled = false;
 
     saveToPastList(studentText);
+    logWriteDay();
+    updatePracticeStats();
   });
 
   function showFeedback(fb) {
@@ -518,6 +537,8 @@
       document.getElementById('tipsSection').style.display = '';
       document.getElementById('tipsList').innerHTML = fb.tips.map(t => `<li>${t}</li>`).join('');
     }
+
+    showHandwriteCTA();
   }
 
   function generateDemoFeedback(studentText) {
@@ -557,10 +578,12 @@
   // Try Again / Practice More
   document.getElementById('tryAgainBtn').addEventListener('click', () => {
     document.getElementById('feedbackSection').style.display = 'none';
+    document.getElementById('handwriteCTA').style.display = 'none';
     document.querySelectorAll('.wt-task-option').forEach(e => e.classList.remove('selected'));
     document.getElementById('writingArea').style.display = 'none';
     selectedTaskType = null;
     resetInputs();
+    if (hwTimerInterval) clearInterval(hwTimerInterval);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
@@ -611,4 +634,755 @@
   }
 
   renderPastList();
+
+  // ===== DAILY WRITING PROMPT =====
+  function getDailyPrompt() {
+    const allPrompts = [];
+    const langPrompts = prompts[lang] || prompts.french;
+    Object.keys(langPrompts).forEach(type => {
+      langPrompts[type].forEach(p => {
+        allPrompts.push({ ...p, type });
+      });
+    });
+    const today = new Date().toISOString().slice(0, 10);
+    const seed = today.split('-').reduce((a, b) => a + parseInt(b), 0);
+    const idx = seed % allPrompts.length;
+    return allPrompts[idx];
+  }
+
+  function initDailyPrompt() {
+    const daily = getDailyPrompt();
+    const today = new Date().toISOString().slice(0, 10);
+    const doneToday = localStorage.getItem('ll_daily_write_done') === today;
+
+    document.getElementById('dailyPrompt').textContent = daily.text;
+    document.getElementById('dailyType').textContent = daily.type.charAt(0).toUpperCase() + daily.type.slice(1);
+    document.getElementById('dailyMarks').textContent = daily.marks + ' marks';
+
+    const streak = getWriteStreak();
+    document.getElementById('dailyWriteStreak').textContent = streak + ' day streak';
+
+    if (doneToday) {
+      document.querySelector('.wt-daily-actions').style.display = 'none';
+      document.getElementById('dailyDone').style.display = '';
+    }
+
+    document.getElementById('dailyStartBtn').addEventListener('click', () => {
+      const taskEl = document.querySelector(`.wt-task-option[data-type="${daily.type}"]`);
+      if (taskEl) {
+        taskEl.click();
+        currentPrompt = daily;
+        document.getElementById('promptText').textContent = daily.text;
+        document.getElementById('promptBadge').textContent = daily.type.charAt(0).toUpperCase() + daily.type.slice(1);
+        document.getElementById('promptMarks').textContent = daily.marks + ' marks';
+      }
+      document.getElementById('writingArea').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('dailySkipBtn').addEventListener('click', () => {
+      document.querySelector('.wt-task-picker').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  function getWriteStreak() {
+    const log = JSON.parse(localStorage.getItem('ll_write_streak_log') || '[]');
+    if (!log.length) return 0;
+    let streak = 0;
+    const today = new Date();
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      if (log.includes(key)) {
+        streak++;
+      } else if (i > 0) {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  function logWriteDay() {
+    const today = new Date().toISOString().slice(0, 10);
+    const log = JSON.parse(localStorage.getItem('ll_write_streak_log') || '[]');
+    if (!log.includes(today)) {
+      log.push(today);
+      if (log.length > 365) log.shift();
+      localStorage.setItem('ll_write_streak_log', JSON.stringify(log));
+    }
+    localStorage.setItem('ll_daily_write_done', today);
+  }
+
+  initDailyPrompt();
+
+  // ===== PRACTICE STATS =====
+  function updatePracticeStats() {
+    const tests = JSON.parse(localStorage.getItem('ll_writing_tests') || '[]');
+    const hwLog = JSON.parse(localStorage.getItem('ll_hw_practice_log') || '[]');
+    const streak = getWriteStreak();
+
+    document.getElementById('statTyped').textContent = tests.length;
+    document.getElementById('statHandwritten').textContent = hwLog.length;
+    document.getElementById('statWriteStreak').textContent = streak;
+    document.getElementById('dailyWriteStreak').textContent = streak + ' day streak';
+
+    const scores = tests.filter(t => t.score).map(t => t.score);
+    if (scores.length) {
+      const avg = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
+      document.getElementById('statAvgScore').textContent = avg + '/10';
+    }
+  }
+
+  updatePracticeStats();
+
+  // ===== HANDWRITING PRACTICE =====
+  function showHandwriteCTA() {
+    const cta = document.getElementById('handwriteCTA');
+    cta.style.display = '';
+    document.getElementById('hwTimer').style.display = '';
+    document.getElementById('hwLogged').style.display = 'none';
+    document.getElementById('hwDoneBtn').disabled = false;
+    hwTimerSeconds = 0;
+    hwTimerRunning = false;
+    document.getElementById('hwTimerTime').textContent = '00:00';
+    document.getElementById('hwTimerBtn').textContent = 'Start Timer';
+    if (hwTimerInterval) clearInterval(hwTimerInterval);
+  }
+
+  document.getElementById('hwTimerBtn').addEventListener('click', () => {
+    if (hwTimerRunning) {
+      clearInterval(hwTimerInterval);
+      hwTimerRunning = false;
+      document.getElementById('hwTimerBtn').textContent = 'Resume';
+    } else {
+      hwTimerRunning = true;
+      document.getElementById('hwTimerBtn').textContent = 'Pause';
+      hwTimerInterval = setInterval(() => {
+        hwTimerSeconds++;
+        const m = String(Math.floor(hwTimerSeconds / 60)).padStart(2, '0');
+        const s = String(hwTimerSeconds % 60).padStart(2, '0');
+        document.getElementById('hwTimerTime').textContent = m + ':' + s;
+      }, 1000);
+    }
+  });
+
+  document.getElementById('hwDoneBtn').addEventListener('click', () => {
+    if (hwTimerInterval) clearInterval(hwTimerInterval);
+    hwTimerRunning = false;
+
+    const hwLog = JSON.parse(localStorage.getItem('ll_hw_practice_log') || '[]');
+    hwLog.unshift({
+      type: selectedTaskType || 'unknown',
+      prompt: (currentPrompt?.text || '').slice(0, 60),
+      date: new Date().toLocaleDateString('en-IN'),
+      timeSpent: hwTimerSeconds,
+    });
+    if (hwLog.length > 50) hwLog.pop();
+    localStorage.setItem('ll_hw_practice_log', JSON.stringify(hwLog));
+
+    logWriteDay();
+
+    document.getElementById('hwDoneBtn').disabled = true;
+    document.getElementById('hwLogged').style.display = '';
+    document.getElementById('hwTimer').style.display = 'none';
+
+    // Award XP
+    const student = getStudent();
+    if (student) {
+      student.total_xp = (student.total_xp || 0) + 5;
+      localStorage.setItem('ll_student', JSON.stringify(student));
+      document.getElementById('navXP').textContent = student.total_xp + ' XP';
+    }
+
+    updatePracticeStats();
+
+    const dailyDone = document.getElementById('dailyDone');
+    const today = new Date().toISOString().slice(0, 10);
+    if (localStorage.getItem('ll_daily_write_done') === today) {
+      document.querySelector('.wt-daily-actions').style.display = 'none';
+      dailyDone.style.display = '';
+    }
+  });
+
+  document.getElementById('hwPrintBtn').addEventListener('click', () => {
+    const prompt = currentPrompt?.text || 'Write your answer here';
+    const type = selectedTaskType || 'writing';
+    const marks = currentPrompt?.marks || 5;
+
+    const printWin = window.open('', '_blank');
+    printWin.document.write(`<!DOCTYPE html>
+<html><head><title>Writing Worksheet — LinguaLearn</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; padding: 2cm; color: #1e293b; }
+  h1 { font-size: 18pt; margin-bottom: 4px; }
+  .meta { font-size: 10pt; color: #64748b; margin-bottom: 16px; }
+  .prompt-box { border: 2px solid #5b5ef4; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 12pt; line-height: 1.6; }
+  .lines { margin-top: 16px; }
+  .line { border-bottom: 1px solid #cbd5e1; height: 32px; margin-bottom: 0px; }
+  .footer { margin-top: 20px; font-size: 9pt; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+  .timer-box { display: inline-block; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 12px; font-size: 10pt; margin-top: 8px; }
+  @media print { body { padding: 1.5cm; } }
+</style></head><body>
+  <h1>LinguaLearn — Writing Practice Worksheet</h1>
+  <div class="meta">${langName} · ${type.charAt(0).toUpperCase() + type.slice(1)} · ${marks} marks · Date: ___________</div>
+  <div class="prompt-box"><strong>Prompt:</strong> ${prompt}</div>
+  <div class="timer-box">Start Time: _______ &nbsp;&nbsp; End Time: _______ &nbsp;&nbsp; Total: _______</div>
+  <div class="lines">${'<div class="line"></div>'.repeat(28)}</div>
+  <div class="footer">LinguaLearn — CBSE Language Learning Platform · Practice makes perfect! ✍️</div>
+</body></html>`);
+    printWin.document.close();
+    setTimeout(() => printWin.print(), 300);
+  });
+
+  // ===== TIMED EXAM MODE =====
+
+  const EXAM_DEFAULTS = {
+    6: { ut: 40, hy: 150, annual: 180 },
+    7: { ut: 40, hy: 150, annual: 180 },
+    8: { ut: 40, hy: 150, annual: 180 },
+    9: { ut: 40, hy: 180, annual: 180 },
+    10: { ut: 40, hy: 180, annual: 180 },
+  };
+
+  const EXAM_WRITING_SHARE = { ut: 0.30, hy: 0.30, annual: 0.28 };
+  const EXAM_Q_COUNT = { ut: 2, hy: 3, annual: 5 };
+  const EXAM_LABELS = { ut: 'Unit Test', hy: 'Half Yearly', annual: 'Annual Exam' };
+  const EXAM_Q_TYPES = {
+    ut: ['letter', 'paragraph'],
+    hy: ['essay', 'letter', 'paragraph'],
+    annual: ['essay', 'letter', 'dialogue', 'paragraph', 'story'],
+  };
+
+  function getExamSettings() {
+    const saved = JSON.parse(localStorage.getItem('ll_exam_settings') || 'null');
+    if (saved) return saved;
+    const c = cls || 8;
+    return {
+      ...(EXAM_DEFAULTS[c] || EXAM_DEFAULTS[8]), class: c,
+      utMarks: 20, hyMarks: 80, annualMarks: 80
+    };
+  }
+
+  function saveExamSettings(settings) {
+    localStorage.setItem('ll_exam_settings', JSON.stringify(settings));
+  }
+
+  function calcQuestionDist(totalMarks) {
+    const mcqs = Math.max(3, Math.round(totalMarks * 0.25));
+    const short = Math.max(1, Math.round(totalMarks * 0.30 / 2));
+    const long = Math.max(0, Math.round(totalMarks * 0.20 / 3));
+    const writing = Math.max(1, Math.round(totalMarks * 0.25 / 5));
+    return { mcqs, short, long, writing };
+  }
+
+  function updateSettingsPreview() {
+    const utMarks = parseInt(document.getElementById('settingUTMarks')?.value) || 20;
+    const hyMarks = parseInt(document.getElementById('settingHYMarks')?.value) || 80;
+    const annualMarks = parseInt(document.getElementById('settingAnnualMarks')?.value) || 80;
+    const utDist = calcQuestionDist(utMarks);
+    const hyDist = calcQuestionDist(hyMarks);
+    const annualDist = calcQuestionDist(annualMarks);
+    const preview = document.getElementById('previewText');
+    if (preview) {
+      preview.innerHTML = `<strong>UT (${utMarks}m):</strong> ${utDist.mcqs} MCQ + ${utDist.short} Short + ${utDist.writing} Writing<br>` +
+        `<strong>HY (${hyMarks}m):</strong> ${hyDist.mcqs} MCQ + ${hyDist.short} Short + ${hyDist.long} Long + ${hyDist.writing} Writing<br>` +
+        `<strong>Annual (${annualMarks}m):</strong> ${annualDist.mcqs} MCQ + ${annualDist.short} Short + ${annualDist.long} Long + ${annualDist.writing} Writing`;
+    }
+  }
+
+  function initExamUI() {
+    const settings = getExamSettings();
+    document.getElementById('utDurLabel').textContent = settings.ut + ' min';
+    document.getElementById('hyDurLabel').textContent = formatDuration(settings.hy);
+    document.getElementById('annualDurLabel').textContent = formatDuration(settings.annual);
+
+    document.getElementById('settingUT').value = settings.ut;
+    document.getElementById('settingHY').value = settings.hy;
+    document.getElementById('settingAnnual').value = settings.annual;
+    document.getElementById('settingClass').value = settings.class || cls || 8;
+
+    if (document.getElementById('settingUTMarks')) document.getElementById('settingUTMarks').value = settings.utMarks || 20;
+    if (document.getElementById('settingHYMarks')) document.getElementById('settingHYMarks').value = settings.hyMarks || 80;
+    if (document.getElementById('settingAnnualMarks')) document.getElementById('settingAnnualMarks').value = settings.annualMarks || 80;
+
+    updateSettingsPreview();
+  }
+
+  function formatDuration(min) {
+    if (min >= 60) {
+      const h = Math.floor(min / 60);
+      const m = min % 60;
+      return m ? h + '.' + (m * 10 / 60 | 0) + ' hr' : h + ' hr';
+    }
+    return min + ' min';
+  }
+
+  initExamUI();
+
+  // Settings modal
+  document.getElementById('examSettingsBtn').addEventListener('click', () => {
+    document.getElementById('examSettingsModal').style.display = '';
+  });
+  document.getElementById('examSettingsClose').addEventListener('click', () => {
+    document.getElementById('examSettingsModal').style.display = 'none';
+  });
+  document.getElementById('examSettingsModal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) e.currentTarget.style.display = 'none';
+  });
+  document.getElementById('examSettingsSave').addEventListener('click', () => {
+    const settings = {
+      ut: parseInt(document.getElementById('settingUT').value) || 40,
+      hy: parseInt(document.getElementById('settingHY').value) || 150,
+      annual: parseInt(document.getElementById('settingAnnual').value) || 180,
+      class: parseInt(document.getElementById('settingClass').value) || 8,
+      utMarks: parseInt(document.getElementById('settingUTMarks')?.value) || 20,
+      hyMarks: parseInt(document.getElementById('settingHYMarks')?.value) || 80,
+      annualMarks: parseInt(document.getElementById('settingAnnualMarks')?.value) || 80,
+    };
+    saveExamSettings(settings);
+    initExamUI();
+    document.getElementById('examSettingsModal').style.display = 'none';
+  });
+
+  ['settingUTMarks', 'settingHYMarks', 'settingAnnualMarks'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', updateSettingsPreview);
+  });
+
+  // Auto-set defaults when class changes
+  document.getElementById('settingClass').addEventListener('change', (e) => {
+    const c = parseInt(e.target.value);
+    const defaults = EXAM_DEFAULTS[c] || EXAM_DEFAULTS[8];
+    document.getElementById('settingHY').value = defaults.hy;
+    document.getElementById('settingAnnual').value = defaults.annual;
+  });
+
+  let sectionWiseMode = false;
+  let sectionWiseData = null;
+  let currentSectionIdx = 0;
+
+  // Exam option click — start timed exam or show section picker for long exams
+  document.querySelectorAll('.wt-exam-option').forEach(el => {
+    el.addEventListener('click', () => {
+      if (examMode) return;
+
+      document.querySelectorAll('.wt-exam-option').forEach(e => e.classList.remove('selected'));
+      el.classList.add('selected');
+      examType = el.dataset.exam;
+
+      const settings = getExamSettings();
+      const duration = settings[examType];
+
+      if (duration >= 120 && (examType === 'hy' || examType === 'annual')) {
+        showSectionModePicker(examType);
+      } else {
+        startTimedExam(examType);
+      }
+    });
+  });
+
+  function showSectionModePicker(type) {
+    const picker = document.getElementById('sectionModePicker');
+    picker.style.display = '';
+    picker.scrollIntoView({ behavior: 'smooth' });
+
+    document.querySelectorAll('.wt-section-option').forEach(opt => {
+      opt.classList.remove('selected');
+      opt.onclick = () => {
+        document.querySelectorAll('.wt-section-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        const mode = opt.dataset.mode;
+        picker.style.display = 'none';
+
+        if (mode === 'sections') {
+          startSectionWiseExam(type);
+        } else {
+          startTimedExam(type);
+        }
+      };
+    });
+  }
+
+  function startSectionWiseExam(type) {
+    sectionWiseMode = true;
+    const settings = getExamSettings();
+    const marksKey = type + 'Marks';
+    const totalMarks = settings[marksKey] || (type === 'annual' ? 80 : 80);
+    const totalMin = settings[type];
+    const dist = calcQuestionDist(totalMarks);
+
+    const sections = [
+      { name: 'Section A — MCQs', type: 'mcq', count: dist.mcqs, marksEach: 1, timeMin: Math.round(totalMin * 0.20), completed: false, score: 0 },
+      { name: 'Section B — Short Answers', type: 'short', count: dist.short, marksEach: 2, timeMin: Math.round(totalMin * 0.30), completed: false, score: 0 },
+      { name: 'Section C — Long Answers', type: 'long', count: dist.long, marksEach: 3, timeMin: Math.round(totalMin * 0.25), completed: false, score: 0 },
+      { name: 'Section D — Writing', type: 'writing', count: dist.writing, marksEach: 5, timeMin: Math.round(totalMin * 0.25), completed: false, score: 0 },
+    ];
+
+    const deadline = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    const testId = 'sw_' + Date.now();
+
+    sectionWiseData = { testId, type, totalMarks, sections, deadline: deadline.toISOString(), startedAt: new Date().toISOString() };
+    localStorage.setItem('ll_section_exam', JSON.stringify(sectionWiseData));
+
+    renderSectionTracker();
+  }
+
+  function renderSectionTracker() {
+    const tracker = document.getElementById('sectionTracker');
+    const sectionsEl = document.getElementById('stSections');
+    tracker.style.display = '';
+
+    const data = sectionWiseData;
+    const deadline = new Date(data.deadline);
+    document.getElementById('stDeadline').textContent = deadline.toLocaleDateString('en-IN') + ' ' + deadline.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+    sectionsEl.innerHTML = data.sections.map((s, i) => {
+      const status = s.completed ? 'completed' : '';
+      const icon = s.completed ? '✅' : (i + 1);
+      const btnText = s.completed ? `Done (${s.score}/${s.count * s.marksEach})` : 'Start Section';
+      return `
+        <div class="wt-st-section ${status}" data-idx="${i}">
+          <div class="wt-st-section-icon">${icon}</div>
+          <div class="wt-st-section-info">
+            <div class="wt-st-section-name">${s.name}</div>
+            <div class="wt-st-section-meta">${s.count} questions · ${s.count * s.marksEach} marks · ${s.timeMin} min</div>
+          </div>
+          <button class="wt-st-section-btn" ${s.completed ? 'disabled' : ''} onclick="startSection(${i})">${btnText}</button>
+        </div>`;
+    }).join('');
+
+    const allDone = data.sections.every(s => s.completed);
+    if (allDone) {
+      const totalScore = data.sections.reduce((s, sec) => s + sec.score, 0);
+      sectionsEl.innerHTML += `
+        <div style="text-align:center;margin-top:1rem;padding:1rem;background:#ecfdf5;border-radius:12px;border:2px solid #34d399">
+          <div style="font-size:1.5rem">🎉</div>
+          <div style="font-size:1.1rem;font-weight:900;color:#059669">All Sections Complete!</div>
+          <div style="font-size:0.85rem;color:#475569">Total: ${totalScore}/${data.totalMarks} marks</div>
+        </div>`;
+      sectionWiseMode = false;
+      localStorage.removeItem('ll_section_exam');
+    }
+
+    tracker.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  window.startSection = function(idx) {
+    if (!sectionWiseData) return;
+    currentSectionIdx = idx;
+    const section = sectionWiseData.sections[idx];
+    if (section.completed) return;
+
+    examMode = true;
+    sectionWiseMode = true;
+    const settings = getExamSettings();
+    const langPrompts = prompts[lang] || prompts.french;
+
+    examTotalSeconds = section.timeMin * 60;
+    examRemainingSeconds = examTotalSeconds;
+    examStartTime = Date.now();
+    examCurrentQ = 0;
+    examQuestions = [];
+
+    const typeMap = {
+      mcq: ['grammar'],
+      short: ['paragraph', 'grammar'],
+      long: ['paragraph', 'essay'],
+      writing: ['essay', 'letter', 'dialogue', 'story'],
+    };
+    const qTypes = typeMap[section.type] || ['essay'];
+
+    for (let i = 0; i < section.count; i++) {
+      const qType = qTypes[i % qTypes.length];
+      const pool = langPrompts[qType] || [];
+      const picked = pool[Math.floor(Math.random() * pool.length)] || { text: `Write a ${qType} in ${langName}.`, marks: section.marksEach };
+      examQuestions.push({ ...picked, type: qType, marks: section.marksEach, timeSpent: 0 });
+    }
+
+    document.getElementById('examActive').style.display = '';
+    document.getElementById('examActiveBadge').textContent = section.name;
+    updateExamQLabel();
+
+    const cdFloat = document.getElementById('countdownFloat');
+    cdFloat.style.display = '';
+    cdFloat.classList.remove('warning');
+    document.getElementById('cdExamType').textContent = section.name;
+
+    loadExamQuestion(0);
+
+    if (examCountdownInterval) clearInterval(examCountdownInterval);
+    examCountdownInterval = setInterval(tickExamCountdown, 1000);
+    tickExamCountdown();
+
+    document.getElementById('writingArea').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  function startTimedExam(type) {
+    examMode = true;
+    const settings = getExamSettings();
+    const totalMin = settings[type];
+    const writingMin = Math.round(totalMin * EXAM_WRITING_SHARE[type]);
+    const qCount = EXAM_Q_COUNT[type];
+    const qTypes = EXAM_Q_TYPES[type];
+
+    examTotalSeconds = writingMin * 60;
+    examRemainingSeconds = examTotalSeconds;
+    examStartTime = Date.now();
+    examCurrentQ = 0;
+
+    // Generate exam questions
+    examQuestions = [];
+    const langPrompts = prompts[lang] || prompts.french;
+    for (let i = 0; i < qCount; i++) {
+      const qType = qTypes[i % qTypes.length];
+      const pool = langPrompts[qType] || [];
+      const picked = pool[Math.floor(Math.random() * pool.length)] || { text: `Write a ${qType} in ${langName}.`, marks: 5 };
+      examQuestions.push({ ...picked, type: qType, timeSpent: 0 });
+    }
+
+    // Show exam active state
+    document.getElementById('examActive').style.display = '';
+    document.getElementById('examActiveBadge').textContent = EXAM_LABELS[type];
+    updateExamQLabel();
+
+    // Show floating timer
+    const cdFloat = document.getElementById('countdownFloat');
+    cdFloat.style.display = '';
+    cdFloat.classList.remove('warning');
+    document.getElementById('cdExamType').textContent = EXAM_LABELS[type];
+
+    // Load first question
+    loadExamQuestion(0);
+
+    // Start countdown
+    if (examCountdownInterval) clearInterval(examCountdownInterval);
+    examCountdownInterval = setInterval(tickExamCountdown, 1000);
+    tickExamCountdown();
+
+    document.getElementById('writingArea').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function loadExamQuestion(idx) {
+    if (idx >= examQuestions.length) {
+      endTimedExam();
+      return;
+    }
+    examCurrentQ = idx;
+    qStartTime = Date.now();
+    const q = examQuestions[idx];
+
+    // Simulate task selection
+    selectedTaskType = q.type;
+    currentPrompt = q;
+    document.querySelectorAll('.wt-task-option').forEach(e => e.classList.remove('selected'));
+    const taskEl = document.querySelector(`.wt-task-option[data-type="${q.type}"]`);
+    if (taskEl) taskEl.classList.add('selected');
+
+    document.getElementById('writingArea').style.display = '';
+    document.getElementById('feedbackSection').style.display = 'none';
+    document.getElementById('promptText').textContent = q.text;
+    document.getElementById('promptBadge').textContent = q.type.charAt(0).toUpperCase() + q.type.slice(1);
+    document.getElementById('promptMarks').textContent = q.marks + ' marks';
+    resetInputs();
+    updateExamQLabel();
+    document.getElementById('writingArea').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function updateExamQLabel() {
+    const total = examQuestions.length;
+    document.getElementById('examActiveQ').textContent = `Question ${examCurrentQ + 1} of ${total}`;
+    document.getElementById('cdQ').textContent = `Q${examCurrentQ + 1}/${total}`;
+    const pct = ((examCurrentQ) / total) * 100;
+    document.getElementById('examProgressFill').style.width = pct + '%';
+
+    // Per-question suggested time
+    const suggestedPerQ = Math.round(examTotalSeconds / total / 60);
+    document.getElementById('cdQTime').textContent = `~${suggestedPerQ} min per question`;
+  }
+
+  function tickExamCountdown() {
+    examRemainingSeconds--;
+    if (examRemainingSeconds <= 0) {
+      examRemainingSeconds = 0;
+      endTimedExam();
+      return;
+    }
+
+    const min = Math.floor(examRemainingSeconds / 60);
+    const sec = examRemainingSeconds % 60;
+    const display = String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+    document.getElementById('cdTime').textContent = display;
+
+    const cdFloat = document.getElementById('countdownFloat');
+    if (examRemainingSeconds <= 120) {
+      cdFloat.classList.add('warning');
+    } else {
+      cdFloat.classList.remove('warning');
+    }
+  }
+
+  function endTimedExam() {
+    if (examCountdownInterval) clearInterval(examCountdownInterval);
+    examMode = false;
+
+    document.getElementById('countdownFloat').style.display = 'none';
+    document.getElementById('examActive').style.display = 'none';
+    document.querySelectorAll('.wt-exam-option').forEach(e => e.classList.remove('selected'));
+
+    // If time ran out and student was mid-question, auto-submit
+    const studentText = currentMode === 'type'
+      ? (document.getElementById('writingInput')?.value || '').trim()
+      : (document.getElementById('ocrOutput')?.value || '').trim();
+    if (studentText.length >= 10 && examCurrentQ < examQuestions.length) {
+      document.getElementById('submitBtn').click();
+    }
+
+    // Section-wise: mark section complete and update tracker
+    if (sectionWiseMode && sectionWiseData) {
+      const section = sectionWiseData.sections[currentSectionIdx];
+      section.completed = true;
+      section.score = Math.round(section.count * section.marksEach * 0.7);
+      localStorage.setItem('ll_section_exam', JSON.stringify(sectionWiseData));
+      renderSectionTracker();
+    }
+  }
+
+  document.getElementById('examEndBtn').addEventListener('click', () => {
+    if (confirm('End this timed exam early? Your progress on completed questions is saved.')) {
+      endTimedExam();
+    }
+  });
+
+  // Hook into submit — in exam mode, advance to next question after feedback
+  const origSubmitHandler = document.getElementById('submitBtn').onclick;
+  const practiceMoreBtn = document.getElementById('practiceMoreBtn');
+
+  // Override "Practice Same Type" to load next exam Q in exam mode
+  const origPracticeMore = practiceMoreBtn.onclick;
+  practiceMoreBtn.addEventListener('click', () => {
+    if (examMode && examCurrentQ < examQuestions.length - 1) {
+      // Record time spent on this question
+      if (qStartTime) {
+        examQuestions[examCurrentQ].timeSpent = Math.round((Date.now() - qStartTime) / 1000);
+      }
+      loadExamQuestion(examCurrentQ + 1);
+      return;
+    }
+  });
+
+  // After showing feedback in exam mode, change button text
+  const origShowFeedbackForExam = showFeedback;
+  showFeedback = function(fb) {
+    origShowFeedbackForExam(fb);
+
+    if (examMode) {
+      if (qStartTime) {
+        examQuestions[examCurrentQ].timeSpent = Math.round((Date.now() - qStartTime) / 1000);
+      }
+      showSpeedReport();
+
+      if (examCurrentQ < examQuestions.length - 1) {
+        practiceMoreBtn.textContent = `Next Question (Q${examCurrentQ + 2}) →`;
+      } else {
+        practiceMoreBtn.textContent = 'Finish Exam';
+        practiceMoreBtn.onclick = () => {
+          endTimedExam();
+          document.getElementById('feedbackSection').style.display = 'none';
+          document.getElementById('speedReport').style.display = 'none';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+      }
+    }
+  };
+
+  // Speed report
+  function showSpeedReport() {
+    const report = document.getElementById('speedReport');
+    report.style.display = '';
+
+    const q = examQuestions[examCurrentQ];
+    const timeSec = q.timeSpent || 1;
+    const text = currentMode === 'type'
+      ? (document.getElementById('writingInput')?.value || '').trim()
+      : (document.getElementById('ocrOutput')?.value || '').trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    const wpm = (words / (timeSec / 60)).toFixed(1);
+
+    const targetWPM = getTargetWPM(q.type);
+
+    document.getElementById('speedWPM').textContent = wpm;
+    const m = Math.floor(timeSec / 60);
+    const s = timeSec % 60;
+    document.getElementById('speedTime').textContent = m + ':' + String(s).padStart(2, '0');
+    document.getElementById('speedTarget').textContent = targetWPM;
+
+    const verdict = document.getElementById('speedVerdict');
+    if (parseFloat(wpm) >= targetWPM) {
+      verdict.className = 'wt-speed-verdict fast';
+      verdict.textContent = 'Great speed! You\'re writing fast enough for the exam.';
+    } else if (parseFloat(wpm) >= targetWPM * 0.7) {
+      verdict.className = 'wt-speed-verdict ok';
+      verdict.textContent = 'Almost there! Practice a bit more to hit your target speed.';
+    } else {
+      verdict.className = 'wt-speed-verdict slow';
+      verdict.textContent = 'You need to write faster. Practice timed writing daily to improve speed.';
+    }
+
+    // Save speed data
+    const speedLog = JSON.parse(localStorage.getItem('ll_speed_log') || '[]');
+    speedLog.push({
+      date: new Date().toISOString().slice(0, 10),
+      type: q.type, wpm: parseFloat(wpm), words, timeSec,
+    });
+    if (speedLog.length > 100) speedLog.shift();
+    localStorage.setItem('ll_speed_log', JSON.stringify(speedLog));
+  }
+
+  function getTargetWPM(taskType) {
+    const targets = {
+      essay: 12, letter: 12, story: 10, dialogue: 10, paragraph: 10, grammar: 8,
+    };
+    return targets[taskType] || 12;
+  }
+
+  // Also show speed report for non-exam submissions (track all writing speed)
+  const origSubmitClick = document.getElementById('submitBtn').cloneNode(true);
+  document.getElementById('writingInput').addEventListener('focus', () => {
+    if (!examMode && !qStartTime) {
+      qStartTime = Date.now();
+    }
+  });
+
+  // Track time for non-exam mode too
+  const origSubmitBtnHandler = document.getElementById('submitBtn');
+  origSubmitBtnHandler.addEventListener('click', () => {
+    if (!examMode && qStartTime) {
+      const timeSec = Math.round((Date.now() - qStartTime) / 1000);
+      if (selectedTaskType) {
+        examQuestions = [{ type: selectedTaskType, timeSpent: timeSec, marks: currentPrompt?.marks || 5, text: currentPrompt?.text || '' }];
+        examCurrentQ = 0;
+      }
+      qStartTime = null;
+    }
+  }, true);
+
+  // Hide speed report when trying again
+  const origTryAgainHandler = document.getElementById('tryAgainBtn');
+  origTryAgainHandler.addEventListener('click', () => {
+    document.getElementById('speedReport').style.display = 'none';
+    qStartTime = null;
+  }, true);
+
+  // Resume section-wise exam if in progress
+  const savedSectionExam = JSON.parse(localStorage.getItem('ll_section_exam') || 'null');
+  if (savedSectionExam) {
+    const deadline = new Date(savedSectionExam.deadline);
+    if (deadline > new Date()) {
+      sectionWiseData = savedSectionExam;
+      renderSectionTracker();
+    } else {
+      localStorage.removeItem('ll_section_exam');
+    }
+  }
+
 })();

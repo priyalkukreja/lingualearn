@@ -4,7 +4,6 @@ const DAILY_LIMITS = {
   free: 10,
   explorer_trial: 10,
   explorer: 20,
-  topper: 20,
 };
 
 function getTodayKey() {
@@ -41,10 +40,9 @@ async function planGuard(req, res, next) {
   const used = count || 0;
 
   if (used >= limit) {
-    const upgradePlan = (plan === 'free' || plan === 'explorer_trial') ? 'Pro' : 'Family';
     return res.status(429).json({
       error: 'daily_limit',
-      message: `You've used all ${limit} messages for today! Come back tomorrow or upgrade to ${upgradePlan} for more.`,
+      message: `You've used all ${limit} messages for today! Come back tomorrow or upgrade to Pro Student for more.`,
       used,
       limit,
       plan,

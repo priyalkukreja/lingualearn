@@ -330,10 +330,150 @@ function buildWeeklyHTML({ studentName, langName, cls, totalMinutes, totalSessio
   </div>`;
 }
 
+// ===== TRIAL CONVERSION EMAILS =====
+// Sent at Day 7, 14, 21, 25, 28 of free trial
+async function sendTrialConversionEmails() {
+  const { data: trialStudents } = await supabase
+    .from('students')
+    .select('*')
+    .in('plan', ['explorer_trial', 'free'])
+    .not('parent_email', 'is', null);
+
+  let sent = 0;
+  for (const student of (trialStudents || [])) {
+    if (!student.trial_ends_at) continue;
+
+    const trialStart = new Date(student.trial_ends_at);
+    trialStart.setDate(trialStart.getDate() - 30);
+    const daysSinceStart = Math.floor((Date.now() - trialStart.getTime()) / 86400000);
+
+    const triggerDays = [7, 14, 21, 25, 28];
+    if (!triggerDays.includes(daysSinceStart)) continue;
+
+    const sentKey = `trial_email_day_${daysSinceStart}`;
+    if (student[sentKey]) continue;
+
+    const studentName = student.name.split(' ')[0];
+    const langName = student.language.charAt(0).toUpperCase() + student.language.slice(1);
+    const daysLeft = 30 - daysSinceStart;
+
+    const html = buildTrialEmail(studentName, langName, student.class, daysSinceStart, daysLeft, student);
+    const subject = getTrialEmailSubject(studentName, daysSinceStart, daysLeft);
+
+    const result = await sendEmail(student.parent_email, subject, html);
+    if (result?.success) sent++;
+    await new Promise(r => setTimeout(r, 200));
+  }
+  return { sent };
+}
+
+function getTrialEmailSubject(name, day, daysLeft) {
+  if (day === 7) return `${name} improved in just 7 days! See their progress 📈`;
+  if (day === 14) return `${name}'s 2-week progress report — impressive growth! ⭐`;
+  if (day === 21) return `Only ${daysLeft} days left in ${name}'s free trial ⏰`;
+  if (day === 25) return `⚠️ ${name}'s trial ends in ${daysLeft} days — don't lose progress!`;
+  return `🚨 Last day! ${name}'s LinguaLearn trial ends tomorrow`;
+}
+
+function buildTrialEmail(studentName, langName, cls, day, daysLeft, student) {
+  const xp = student.total_xp || 0;
+  const streak = student.current_streak || student.streak_days || 0;
+
+  const urgencyColor = daysLeft <= 5 ? '#ef4444' : daysLeft <= 10 ? '#f59e0b' : '#5b5ef4';
+  const urgencyBg = daysLeft <= 5 ? '#fef2f2' : daysLeft <= 10 ? '#fffbeb' : '#f0f2ff';
+
+  let mainMessage = '';
+  let ctaText = '';
+
+  if (day === 7) {
+    mainMessage = `In just 7 days, ${studentName} has earned <strong>${xp} XP</strong> and maintained a <strong>${streak}-day streak</strong>! They've been practicing ${langName} consistently and building strong foundations in grammar and vocabulary.`;
+    ctaText = 'See Full Progress Report';
+  } else if (day === 14) {
+    mainMessage = `Two weeks in and ${studentName} is showing real improvement! With <strong>${xp} XP earned</strong> and chapters 1-4 mastered, they're ready for more advanced content. Chapters 5-16 cover the topics that appear most in exams.`;
+    ctaText = 'Unlock All 16 Chapters — ₹350/mo';
+  } else if (day === 21) {
+    mainMessage = `${studentName} has been learning ${langName} for 3 weeks now! Their progress will pause in ${daysLeft} days when the trial ends. The chapters they haven't accessed yet (5-16) contain <strong>70% of exam content</strong>.`;
+    ctaText = 'Upgrade Before Trial Ends';
+  } else if (day === 25) {
+    mainMessage = `⏰ Only <strong>${daysLeft} days left</strong> in ${studentName}'s free trial. After that, their streak will freeze, daily AI messages will stop, and they'll lose access to practice tools. Upgrade now to keep their momentum going!`;
+    ctaText = 'Upgrade Now — Keep Progress';
+  } else {
+    mainMessage = `🚨 <strong>Tomorrow is the last day</strong> of ${studentName}'s free trial! All their progress — ${xp} XP, ${streak}-day streak, and learning history — will be preserved if you upgrade today. Don't let their hard work go to waste!`;
+    ctaText = 'Upgrade Today — ₹350/month';
+  }
+
+  return `
+  <div style="font-family:'Nunito',Arial,sans-serif;max-width:520px;margin:0 auto;background:#fafbff;border-radius:20px;overflow:hidden;border:2px solid #eeeeff">
+    <div style="background:linear-gradient(135deg,#5b5ef4,#7209b7);padding:1.5rem 2rem;color:white;text-align:center">
+      <h1 style="margin:0;font-size:1.3rem">${studentName}'s ${langName} Journey — Day ${day}</h1>
+      <p style="margin:0.3rem 0 0;opacity:0.85;font-size:0.82rem">Class ${cls} · CBSE Curriculum</p>
+    </div>
+
+    <div style="padding:1.5rem 2rem">
+      <p style="font-size:0.95rem;color:#334155">Dear Parent,</p>
+      <p style="font-size:0.88rem;color:#475569;line-height:1.8">${mainMessage}</p>
+
+      <div style="display:flex;gap:0.75rem;margin:1.25rem 0;flex-wrap:wrap">
+        <div style="flex:1;min-width:80px;background:white;border-radius:14px;padding:0.85rem;text-align:center;border:2px solid #eeeeff">
+          <div style="font-size:1.5rem">⭐</div>
+          <div style="font-size:1.2rem;font-weight:900;color:#5b5ef4">${xp}</div>
+          <div style="font-size:0.68rem;color:#94a3b8;font-weight:700">XP Earned</div>
+        </div>
+        <div style="flex:1;min-width:80px;background:white;border-radius:14px;padding:0.85rem;text-align:center;border:2px solid #eeeeff">
+          <div style="font-size:1.5rem">🔥</div>
+          <div style="font-size:1.2rem;font-weight:900;color:#f97316">${streak}</div>
+          <div style="font-size:0.68rem;color:#94a3b8;font-weight:700">Day Streak</div>
+        </div>
+        <div style="flex:1;min-width:80px;background:white;border-radius:14px;padding:0.85rem;text-align:center;border:2px solid #eeeeff">
+          <div style="font-size:1.5rem">📅</div>
+          <div style="font-size:1.2rem;font-weight:900;color:${urgencyColor}">${daysLeft}</div>
+          <div style="font-size:0.68rem;color:#94a3b8;font-weight:700">Days Left</div>
+        </div>
+      </div>
+
+      ${daysLeft <= 7 ? `
+      <div style="background:${urgencyBg};border:2px solid ${urgencyColor}22;border-radius:14px;padding:1rem;margin-bottom:1rem">
+        <div style="font-size:0.85rem;font-weight:800;color:${urgencyColor}">
+          ${daysLeft <= 2 ? '🚨' : '⏰'} Trial ends in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}
+        </div>
+        <div style="font-size:0.78rem;color:#64748b;margin-top:0.3rem">
+          After trial: No AI tutor, no quizzes, no practice tools. Progress is saved but paused.
+        </div>
+      </div>` : ''}
+
+      <div style="background:linear-gradient(135deg,#5b5ef4,#7209b7);border-radius:14px;padding:1rem;text-align:center;margin:1rem 0">
+        <div style="font-size:0.88rem;font-weight:800;color:white">Pro Student — ₹350/month</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);margin:0.3rem 0">= ₹12/day · All 16 chapters · 20 AI messages/day · Mock tests</div>
+        <div style="margin-top:0.5rem">
+          <span style="background:white;color:#5b5ef4;font-weight:900;font-size:0.82rem;padding:0.45rem 1.2rem;border-radius:50px;display:inline-block">${ctaText}</span>
+        </div>
+      </div>
+
+      <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:14px;padding:1rem;margin-top:0.75rem">
+        <div style="font-size:0.82rem;font-weight:800;color:#059669;margin-bottom:0.3rem">What Pro Students Get:</div>
+        <div style="font-size:0.78rem;color:#065f46;line-height:1.8">
+          ✓ All 16 chapters (exam covers chapters 5-16 heavily)<br>
+          ✓ 20 AI tutor messages/day (vs 10 in trial)<br>
+          ✓ Full mock tests + previous board papers<br>
+          ✓ Voice Lab for pronunciation practice<br>
+          ✓ AI-powered weakness detection + smart drills<br>
+          ✓ Personalized revision plans before exams
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#f0f2ff;padding:1rem 2rem;text-align:center;font-size:0.75rem;color:#94a3b8">
+      Sent by LinguaLearn — AI Language Tutor for CBSE Students<br>
+      <span style="font-size:0.68rem">You received this because your child is using LinguaLearn</span>
+    </div>
+  </div>`;
+}
+
 module.exports = {
   sendEmail,
   sendDailyReport,
   sendWeeklyReport,
   sendDailyReportsToAll,
   sendWeeklyReportsToAll,
+  sendTrialConversionEmails,
 };

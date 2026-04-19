@@ -68,6 +68,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (res.ok) {
           localStorage.setItem('ll_token', data.token);
           localStorage.setItem('ll_student', JSON.stringify(data.student));
+
+          // Sync local XP with server on login
+          const localStudent = data.student;
+          const localXP = parseInt(localStorage.getItem('ll_local_xp') || '0');
+          if (localXP > 0 && localXP > (localStudent.total_xp || 0)) {
+            fetch('/api/auth/update-profile', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + data.token },
+              body: JSON.stringify({})
+            }).catch(() => {});
+          }
+
           if (!localStorage.getItem('ll_onboarded')) {
             window.location.href = '/onboarding';
           } else {

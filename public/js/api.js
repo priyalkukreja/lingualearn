@@ -16,28 +16,58 @@ function getHeaders() {
 }
 
 async function apiGet(url) {
-  const res = await fetch(API_BASE + url, { headers: getHeaders() });
-  if (res.status === 401) { logout(); return null; }
-  return res.json();
+  try {
+    const res = await fetch(API_BASE + url, { headers: getHeaders() });
+    if (res.status === 401) { logout(); return null; }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Request failed' }));
+      console.error('[API GET]', url, err);
+      return { error: err.error || 'Something went wrong' };
+    }
+    return res.json();
+  } catch (err) {
+    console.error('[API GET]', url, err);
+    return { error: 'Network error — check your connection' };
+  }
 }
 
 async function apiPost(url, body) {
-  const res = await fetch(API_BASE + url, {
-    method: 'POST',
-    headers: getHeaders(),
-    body: JSON.stringify(body)
-  });
-  if (res.status === 401) { logout(); return null; }
-  return res.json();
+  try {
+    const res = await fetch(API_BASE + url, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(body)
+    });
+    if (res.status === 401) { logout(); return null; }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Request failed' }));
+      console.error('[API POST]', url, err);
+      return { error: err.error || 'Something went wrong' };
+    }
+    return res.json();
+  } catch (err) {
+    console.error('[API POST]', url, err);
+    return { error: 'Network error — check your connection' };
+  }
 }
 
 async function apiUpload(url, formData) {
-  const headers = {};
-  const token = getToken();
-  if (token) headers['Authorization'] = 'Bearer ' + token;
-  const res = await fetch(API_BASE + url, { method: 'POST', headers, body: formData });
-  if (res.status === 401) { logout(); return null; }
-  return res.json();
+  try {
+    const headers = {};
+    const token = getToken();
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const res = await fetch(API_BASE + url, { method: 'POST', headers, body: formData });
+    if (res.status === 401) { logout(); return null; }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Upload failed' }));
+      console.error('[API UPLOAD]', url, err);
+      return { error: err.error || 'Upload failed' };
+    }
+    return res.json();
+  } catch (err) {
+    console.error('[API UPLOAD]', url, err);
+    return { error: 'Network error — check your connection' };
+  }
 }
 
 function logout() {
@@ -74,7 +104,7 @@ async function startSession() {
         lastChapter: document.title,
         lastPosition: { page: window.location.pathname, scroll: window.scrollY }
       });
-    }, 60000);
+    }, 30000);
   }
 }
 

@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/css/stats-bar.css" />
   <link rel="stylesheet" href="/css/push-notifications.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/lottie-animations.css" />
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -28,10 +30,262 @@
     </div>
   </nav>
 
-  <section class="wt-hero">
+  <section class="wt-hero" style="position:relative;overflow:hidden">
+    <dotlottie-player src="https://lottie.host/a63ab4ab-ab7c-4ef5-be84-78dbc0382082/dTKK3pMw2x.json" background="transparent" speed="1" loop autoplay class="lottie-bg-decoration" style="width:200px;height:200px;right:-30px;top:-30px;opacity:0.15"></dotlottie-player>
     <h1>✍️ Writing Test</h1>
     <p>Practice essays, letters, dialogues & more — type directly or snap a photo of your handwriting!</p>
   </section>
+
+  <!-- Daily Writing Prompt -->
+  <section class="wt-section wt-daily-section">
+    <div class="wt-container">
+      <div class="wt-card wt-daily-card">
+        <div class="wt-daily-header">
+          <div class="wt-daily-badge">📅 Today's Writing Challenge</div>
+          <div class="wt-daily-streak" id="dailyWriteStreak">0 day streak</div>
+        </div>
+        <div class="wt-daily-prompt" id="dailyPrompt">Loading today's prompt...</div>
+        <div class="wt-daily-meta">
+          <span class="wt-daily-type" id="dailyType">Essay</span>
+          <span class="wt-daily-marks" id="dailyMarks">5 marks</span>
+          <span class="wt-daily-time">~15 min</span>
+        </div>
+        <div class="wt-daily-actions">
+          <button class="btn btn-primary" id="dailyStartBtn">Start This Prompt</button>
+          <button class="btn btn-outline" id="dailySkipBtn">Skip — Choose My Own</button>
+        </div>
+        <div class="wt-daily-done" id="dailyDone" style="display:none">
+          <span>✅ You completed today's challenge! Come back tomorrow for a new one.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Writing Practice Stats -->
+  <section class="wt-section wt-stats-section">
+    <div class="wt-container">
+      <div class="wt-stats-grid">
+        <div class="wt-stat-card">
+          <div class="wt-stat-icon">⌨️</div>
+          <div class="wt-stat-value" id="statTyped">0</div>
+          <div class="wt-stat-label">Typed Online</div>
+        </div>
+        <div class="wt-stat-card">
+          <div class="wt-stat-icon">✏️</div>
+          <div class="wt-stat-value" id="statHandwritten">0</div>
+          <div class="wt-stat-label">Handwritten</div>
+        </div>
+        <div class="wt-stat-card">
+          <div class="wt-stat-icon">📊</div>
+          <div class="wt-stat-value" id="statAvgScore">—</div>
+          <div class="wt-stat-label">Avg Score</div>
+        </div>
+        <div class="wt-stat-card">
+          <div class="wt-stat-icon">🔥</div>
+          <div class="wt-stat-value" id="statWriteStreak">0</div>
+          <div class="wt-stat-label">Day Streak</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timed Exam Mode -->
+  <section class="wt-section wt-exam-section">
+    <div class="wt-container">
+      <div class="wt-card wt-exam-card">
+        <div class="wt-exam-header">
+          <h2 class="wt-card-title">⏱️ Timed Exam Practice</h2>
+          <button class="wt-settings-btn" id="examSettingsBtn" title="Customize exam durations">
+            <span>⚙️</span> My School Timings
+          </button>
+        </div>
+        <p class="wt-card-sub">Practice writing under real exam pressure — matching your school's exact timings</p>
+
+        <div class="wt-exam-picker">
+          <div class="wt-exam-option" data-exam="ut">
+            <div class="wt-exam-icon">📝</div>
+            <div class="wt-exam-name">Unit Test</div>
+            <div class="wt-exam-dur" id="utDurLabel">40 min</div>
+            <div class="wt-exam-qs">1-2 writing Qs</div>
+          </div>
+          <div class="wt-exam-option" data-exam="hy">
+            <div class="wt-exam-icon">📋</div>
+            <div class="wt-exam-name">Half Yearly</div>
+            <div class="wt-exam-dur" id="hyDurLabel">150 min</div>
+            <div class="wt-exam-qs">2-3 writing Qs</div>
+          </div>
+          <div class="wt-exam-option" data-exam="annual">
+            <div class="wt-exam-icon">🏆</div>
+            <div class="wt-exam-name">Annual Exam</div>
+            <div class="wt-exam-dur" id="annualDurLabel">180 min</div>
+            <div class="wt-exam-qs">4-5 writing Qs</div>
+          </div>
+        </div>
+
+        <!-- Section-wise mode picker (shown for long exams) -->
+        <div class="wt-section-mode" id="sectionModePicker" style="display:none">
+          <div class="wt-section-mode-title">This is a long exam — choose how to take it:</div>
+          <div class="wt-section-mode-options">
+            <div class="wt-section-option" data-mode="sections">
+              <div class="wt-so-icon">📋</div>
+              <div class="wt-so-name">Section-wise Mode</div>
+              <div class="wt-so-desc">Complete 4 sections at your own pace — finish within 48 hours. Take breaks between sections.</div>
+              <div class="wt-so-tags">
+                <span>Section A: MCQs</span>
+                <span>Section B: Short Ans</span>
+                <span>Section C: Long Ans</span>
+                <span>Section D: Writing</span>
+              </div>
+            </div>
+            <div class="wt-section-option" data-mode="full">
+              <div class="wt-so-icon">🏆</div>
+              <div class="wt-so-name">Full Simulation</div>
+              <div class="wt-so-desc">Complete the entire paper in one sitting — just like the real exam. Best for serious pre-exam practice.</div>
+              <div class="wt-so-tags">
+                <span>One sitting</span>
+                <span>Real exam pressure</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section progress tracker (visible during section-wise mode) -->
+        <div class="wt-section-tracker" id="sectionTracker" style="display:none">
+          <div class="wt-st-title">Section Progress</div>
+          <div class="wt-st-deadline">Complete by: <strong id="stDeadline">—</strong></div>
+          <div class="wt-st-sections" id="stSections"></div>
+        </div>
+
+        <!-- Exam in progress indicator -->
+        <div class="wt-exam-active" id="examActive" style="display:none">
+          <div class="wt-exam-active-info">
+            <span class="wt-exam-active-badge" id="examActiveBadge">Half Yearly</span>
+            <span class="wt-exam-active-q" id="examActiveQ">Question 1 of 3</span>
+          </div>
+          <div class="wt-exam-progress-bar">
+            <div class="wt-exam-progress-fill" id="examProgressFill" style="width:0%"></div>
+          </div>
+          <button class="btn btn-outline wt-exam-end-btn" id="examEndBtn">End Exam Early</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating Countdown Timer (visible during timed mode) -->
+  <div class="wt-countdown-float" id="countdownFloat" style="display:none">
+    <div class="wt-cd-exam-type" id="cdExamType">HY</div>
+    <div class="wt-cd-time" id="cdTime">00:00</div>
+    <div class="wt-cd-q" id="cdQ">Q1</div>
+    <div class="wt-cd-q-time" id="cdQTime">~12 min left for this Q</div>
+  </div>
+
+  <!-- Exam Settings Modal -->
+  <div class="wt-modal-overlay" id="examSettingsModal" style="display:none">
+    <div class="wt-modal">
+      <div class="wt-modal-header">
+        <h3>⚙️ My School Exam Timings</h3>
+        <button class="wt-modal-close" id="examSettingsClose">&times;</button>
+      </div>
+      <div class="wt-modal-body">
+        <p class="wt-modal-desc">Set your school's exact exam durations and total marks.</p>
+
+        <div class="wt-setting-group-title">📝 Unit Test</div>
+        <div class="wt-setting-row-inline">
+          <div class="wt-setting-field">
+            <label>Duration</label>
+            <div class="wt-setting-input">
+              <input type="number" id="settingUT" min="20" max="60" value="40" />
+              <span class="wt-setting-unit">min</span>
+            </div>
+          </div>
+          <div class="wt-setting-field">
+            <label>Total Marks</label>
+            <div class="wt-setting-input">
+              <select id="settingUTMarks">
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="wt-setting-group-title">📋 Half Yearly</div>
+        <div class="wt-setting-row-inline">
+          <div class="wt-setting-field">
+            <label>Duration</label>
+            <div class="wt-setting-input">
+              <select id="settingHY">
+                <option value="120">2 hr</option>
+                <option value="150" selected>2.5 hr</option>
+                <option value="180">3 hr</option>
+              </select>
+            </div>
+          </div>
+          <div class="wt-setting-field">
+            <label>Total Marks</label>
+            <div class="wt-setting-input">
+              <select id="settingHYMarks">
+                <option value="40">40</option>
+                <option value="50">50</option>
+                <option value="80" selected>80</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="wt-setting-group-title">🏆 Annual Exam</div>
+        <div class="wt-setting-row-inline">
+          <div class="wt-setting-field">
+            <label>Duration</label>
+            <div class="wt-setting-input">
+              <select id="settingAnnual">
+                <option value="150">2.5 hr</option>
+                <option value="180" selected>3 hr</option>
+              </select>
+            </div>
+          </div>
+          <div class="wt-setting-field">
+            <label>Total Marks</label>
+            <div class="wt-setting-input">
+              <select id="settingAnnualMarks">
+                <option value="50">50</option>
+                <option value="80" selected>80</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="wt-setting-row">
+          <label class="wt-setting-label">
+            <span class="wt-setting-icon">🎓</span> Your Class
+          </label>
+          <div class="wt-setting-input">
+            <select id="settingClass">
+              <option value="6">Class 6</option>
+              <option value="7">Class 7</option>
+              <option value="8" selected>Class 8</option>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="wt-setting-preview" id="settingPreview">
+          <div class="wt-setting-preview-title">Auto Question Distribution</div>
+          <div class="wt-setting-preview-text" id="previewText">Questions are auto-distributed based on total marks</div>
+        </div>
+      </div>
+      <div class="wt-modal-footer">
+        <button class="btn btn-primary" id="examSettingsSave">Save Timings</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Step 1: Pick Writing Task -->
   <section class="wt-section">
@@ -161,6 +415,10 @@
           <span id="submitText">✨ Check My Writing</span>
           <span class="spinner" id="submitSpinner" style="display:none"></span>
         </button>
+        <div id="gradingLottie" style="display:none;text-align:center;padding:1.5rem 0">
+          <dotlottie-player src="https://lottie.host/b6fb680e-ac70-4c0d-bcdb-8f26c8c30f55/l5lK6B3JIz.json" background="transparent" speed="1" loop autoplay class="lottie-grading lottie-pulse"></dotlottie-player>
+          <div style="font-size:0.85rem;font-weight:700;color:#5b5ef4;margin-top:0.5rem">AI is analyzing your writing...</div>
+        </div>
       </div>
     </div>
   </section>
@@ -181,6 +439,28 @@
               <span class="ring-total">/10</span>
             </div>
           </div>
+        </div>
+
+        <!-- Speed Report (shown after timed exam submission) -->
+        <div class="wt-speed-report" id="speedReport" style="display:none">
+          <div class="wt-speed-header">
+            <h3>⏱️ Speed Analysis</h3>
+          </div>
+          <div class="wt-speed-grid">
+            <div class="wt-speed-stat">
+              <div class="wt-speed-val" id="speedWPM">0</div>
+              <div class="wt-speed-lbl">Words/Min</div>
+            </div>
+            <div class="wt-speed-stat">
+              <div class="wt-speed-val" id="speedTime">0:00</div>
+              <div class="wt-speed-lbl">Time Taken</div>
+            </div>
+            <div class="wt-speed-stat">
+              <div class="wt-speed-val" id="speedTarget">12</div>
+              <div class="wt-speed-lbl">Target WPM</div>
+            </div>
+          </div>
+          <div class="wt-speed-verdict" id="speedVerdict"></div>
         </div>
 
         <!-- Score breakdown -->
@@ -207,6 +487,50 @@
           <button class="btn btn-outline" id="practiceMoreBtn">📝 Practice Same Type</button>
         </div>
       </div>
+
+      <!-- Handwriting Practice CTA (appears after feedback) -->
+      <div class="wt-card wt-handwrite-cta" id="handwriteCTA" style="display:none">
+        <div class="wt-hw-header">
+          <div class="wt-hw-icon">✏️</div>
+          <div>
+            <h3 class="wt-hw-title">Now Write It By Hand!</h3>
+            <p class="wt-hw-sub">Exams are handwritten — practice the same answer on paper to build speed and neatness</p>
+          </div>
+        </div>
+        <div class="wt-hw-steps">
+          <div class="wt-hw-step">
+            <span class="wt-hw-step-num">1</span>
+            <span>Open your notebook and copy the prompt</span>
+          </div>
+          <div class="wt-hw-step">
+            <span class="wt-hw-step-num">2</span>
+            <span>Write the corrected answer by hand — time yourself</span>
+          </div>
+          <div class="wt-hw-step">
+            <span class="wt-hw-step-num">3</span>
+            <span>Click below when done to log your practice</span>
+          </div>
+        </div>
+        <div class="wt-hw-actions">
+          <button class="btn btn-primary wt-hw-done-btn" id="hwDoneBtn">
+            ✅ I Wrote It By Hand — Log Practice
+          </button>
+          <button class="btn btn-outline wt-hw-print-btn" id="hwPrintBtn">
+            🖨️ Print Worksheet
+          </button>
+        </div>
+        <div class="wt-hw-timer" id="hwTimer" style="display:none">
+          <div class="wt-hw-timer-display">
+            <span class="wt-hw-timer-icon">⏱️</span>
+            <span class="wt-hw-timer-time" id="hwTimerTime">00:00</span>
+          </div>
+          <button class="wt-hw-timer-btn" id="hwTimerBtn">Start Timer</button>
+        </div>
+        <div class="wt-hw-logged" id="hwLogged" style="display:none">
+          <span class="wt-hw-logged-icon">🎉</span>
+          <span class="wt-hw-logged-text">Handwriting practice logged! +5 XP</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -228,5 +552,7 @@
   <script src="/js/push-notifications.js"></script>
   <script src="/js/robot-tutor.js"></script>
   <script src="/js/writing-test-app.js"></script>
+  <script src="/js/scroll-animations.js"></script>
+  <script src="/js/shared-footer.js"></script>
 </body>
 </html>

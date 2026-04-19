@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/css/auth.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/lottie-animations.css" />
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
   <style>
     /* Textbook Selector Styles */
     .textbook-step {
@@ -158,7 +160,17 @@
 
         <div class="form-group">
           <label>Password</label>
-          <input type="password" id="password" placeholder="Min 6 characters" minlength="6" required />
+          <div style="position:relative">
+            <input type="password" id="password" placeholder="Min 6 characters" minlength="6" required style="padding-right:2.5rem" />
+            <button type="button" onclick="togglePwd('password', this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0.2rem" aria-label="Show password">👁️</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div style="position:relative">
+            <input type="password" id="confirmPassword" placeholder="Re-enter password" minlength="6" required style="padding-right:2.5rem" />
+            <button type="button" onclick="togglePwd('confirmPassword', this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0.2rem" aria-label="Show password">👁️</button>
+          </div>
         </div>
 
         <div class="form-row">

@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/css/pricing.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/lottie-animations.css" />
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -41,12 +43,43 @@
     <div class="pr-container">
       <div class="pr-cards">
 
-        <!-- Explorer -->
+        <!-- Free Trial -->
         <div class="pr-card">
           <div class="pr-card-header explorer">
-            <div class="pr-plan-icon">🚀</div>
-            <h3>Explorer</h3>
-            <p class="pr-plan-desc">Perfect for getting started</p>
+            <div class="pr-plan-icon">🎁</div>
+            <h3>Free Trial</h3>
+            <p class="pr-plan-desc">Try everything for 30 days</p>
+          </div>
+          <div class="pr-card-body">
+            <div class="pr-price">
+              <span class="pr-currency">₹</span>
+              <span class="pr-amount">0</span>
+              <span class="pr-period">for 30 days</span>
+            </div>
+            <div class="pr-trial-badge">🎁 No credit card needed</div>
+            <ul class="pr-features">
+              <li class="included"><span class="feat-check">✓</span> AI Tutor — 10 messages/day</li>
+              <li class="included"><span class="feat-check">✓</span> Chapters 1-4 unlocked</li>
+              <li class="included"><span class="feat-check">✓</span> Unlimited quizzes & drills</li>
+              <li class="included"><span class="feat-check">✓</span> All 8 languages</li>
+              <li class="included"><span class="feat-check">✓</span> Flashcards & vocabulary</li>
+              <li class="included"><span class="feat-check">✓</span> Weekly progress report</li>
+              <li class="excluded"><span class="feat-x">✕</span> Chapters 5-16 locked</li>
+              <li class="excluded"><span class="feat-x">✕</span> Mock tests & board papers</li>
+              <li class="excluded"><span class="feat-x">✕</span> Voice Lab & Writing Tests</li>
+              <li class="excluded"><span class="feat-x">✕</span> Weakness Engine</li>
+            </ul>
+            <a href="/pages/signup.html" class="btn btn-outline pr-buy-btn">Start Free Trial</a>
+          </div>
+        </div>
+
+        <!-- Pro Student (featured) -->
+        <div class="pr-card featured">
+          <div class="pr-popular-tag">⭐ BEST VALUE</div>
+          <div class="pr-card-header topper">
+            <div class="pr-plan-icon">👑</div>
+            <h3>Pro Student</h3>
+            <p class="pr-plan-desc">Everything you need to score 90%+</p>
           </div>
           <div class="pr-card-body">
             <div class="pr-price">
@@ -54,53 +87,20 @@
               <span class="pr-amount">350</span>
               <span class="pr-period">/month</span>
             </div>
-            <div class="pr-trial-badge">🎁 7-day free trial included</div>
-            <ul class="pr-features">
-              <li class="included"><span class="feat-check">✓</span> AI Tutor — 10 messages/day</li>
-              <li class="included"><span class="feat-check">✓</span> Homework Check — 5 uploads/month</li>
-              <li class="included"><span class="feat-check">✓</span> Voice Lab — Basic mode</li>
-              <li class="included"><span class="feat-check">✓</span> 2 Languages (Hindi + 1 more)</li>
-              <li class="included"><span class="feat-check">✓</span> Flashcards & Vocabulary</li>
-              <li class="included"><span class="feat-check">✓</span> Basic Exam Prep</li>
-              <li class="excluded"><span class="feat-x">✕</span> 20 AI messages/day (Topper only)</li>
-              <li class="excluded"><span class="feat-x">✕</span> Advanced pronunciation scoring</li>
-              <li class="excluded"><span class="feat-x">✕</span> Personalized revision plans</li>
-              <li class="excluded"><span class="feat-x">✕</span> Priority support</li>
-            </ul>
-            <button class="btn btn-outline pr-buy-btn" onclick="handleBuy('explorer')">
-              Coming Soon — Razorpay
-            </button>
-          </div>
-        </div>
-
-        <!-- Topper (featured) -->
-        <div class="pr-card featured">
-          <div class="pr-popular-tag">⭐ MOST POPULAR</div>
-          <div class="pr-card-header topper">
-            <div class="pr-plan-icon">👑</div>
-            <h3>Topper</h3>
-            <p class="pr-plan-desc">For serious board exam prep</p>
-          </div>
-          <div class="pr-card-body">
-            <div class="pr-price">
-              <span class="pr-currency">₹</span>
-              <span class="pr-amount">599</span>
-              <span class="pr-period">/month</span>
-            </div>
-            <div class="pr-trial-badge">🎁 7-day free trial included</div>
+            <div class="pr-trial-badge">= just ₹12/day — cheaper than tuition</div>
             <ul class="pr-features">
               <li class="included"><span class="feat-check">✓</span> AI Tutor — 20 messages/day</li>
-              <li class="included"><span class="feat-check">✓</span> Homework Check — Unlimited uploads</li>
-              <li class="included"><span class="feat-check">✓</span> Voice Lab — All 3 modes</li>
-              <li class="included"><span class="feat-check">✓</span> All 5 Languages</li>
-              <li class="included"><span class="feat-check">✓</span> Flashcards & Vocabulary</li>
-              <li class="included"><span class="feat-check">✓</span> Full Exam Prep + Mock Tests</li>
-              <li class="included"><span class="feat-check">✓</span> Advanced pronunciation scoring</li>
-              <li class="included"><span class="feat-check">✓</span> Personalized AI revision plans</li>
-              <li class="included"><span class="feat-check">✓</span> Oral exam practice</li>
-              <li class="included"><span class="feat-check">✓</span> Priority WhatsApp support</li>
+              <li class="included"><span class="feat-check">✓</span> All 16 chapters unlocked</li>
+              <li class="included"><span class="feat-check">✓</span> Unlimited quizzes & drills</li>
+              <li class="included"><span class="feat-check">✓</span> All 8 languages</li>
+              <li class="included"><span class="feat-check">✓</span> Full mock tests & board papers</li>
+              <li class="included"><span class="feat-check">✓</span> Voice Lab — All modes</li>
+              <li class="included"><span class="feat-check">✓</span> Writing Tests with AI grading</li>
+              <li class="included"><span class="feat-check">✓</span> Weakness Engine + Smart drills</li>
+              <li class="included"><span class="feat-check">✓</span> Personalized revision plans</li>
+              <li class="included"><span class="feat-check">✓</span> Parent progress reports</li>
             </ul>
-            <button class="btn btn-primary pr-buy-btn" onclick="handleBuy('topper')">
+            <button class="btn btn-primary pr-buy-btn" onclick="handleBuy('explorer')">
               Coming Soon — Razorpay
             </button>
           </div>
@@ -120,21 +120,22 @@
           <thead>
             <tr>
               <th>Feature</th>
-              <th>Explorer <span class="th-price">₹350/mo</span></th>
-              <th>Topper <span class="th-price">₹599/mo</span></th>
+              <th>Free Trial <span class="th-price">₹0</span></th>
+              <th>Pro Student <span class="th-price">₹350/mo</span></th>
             </tr>
           </thead>
           <tbody>
             <tr><td>AI Tutor Messages</td><td>10/day</td><td class="highlight-cell">20/day</td></tr>
-            <tr><td>Homework Uploads</td><td>5/month</td><td class="highlight-cell">Unlimited</td></tr>
-            <tr><td>Languages</td><td>2</td><td class="highlight-cell">5 (All)</td></tr>
-            <tr><td>Voice Lab</td><td>Basic Q&A</td><td class="highlight-cell">All 3 modes</td></tr>
-            <tr><td>Pronunciation Scoring</td><td>—</td><td class="highlight-cell">✓ Advanced</td></tr>
-            <tr><td>Exam Prep</td><td>Basic</td><td class="highlight-cell">Full + Mocks</td></tr>
-            <tr><td>Revision Plans</td><td>—</td><td class="highlight-cell">AI-Personalized</td></tr>
-            <tr><td>Flashcards</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Chapters Unlocked</td><td>1-4 only</td><td class="highlight-cell">All 16</td></tr>
+            <tr><td>Quizzes & Drills</td><td>✓ Unlimited</td><td>✓ Unlimited</td></tr>
+            <tr><td>Languages</td><td>All 8</td><td>All 8</td></tr>
+            <tr><td>Mock Tests</td><td>—</td><td class="highlight-cell">✓ Full + Board papers</td></tr>
+            <tr><td>Voice Lab</td><td>—</td><td class="highlight-cell">All modes</td></tr>
+            <tr><td>Writing Tests</td><td>—</td><td class="highlight-cell">✓ AI grading</td></tr>
+            <tr><td>Weakness Engine</td><td>—</td><td class="highlight-cell">✓ Smart drills</td></tr>
+            <tr><td>Revision Plans</td><td>—</td><td class="highlight-cell">AI-personalized</td></tr>
             <tr><td>Dashboard & XP</td><td>✓</td><td>✓</td></tr>
-            <tr><td>Support</td><td>Email</td><td class="highlight-cell">Priority WhatsApp</td></tr>
+            <tr><td>Parent Reports</td><td>Weekly</td><td class="highlight-cell">Daily + Weekly</td></tr>
           </tbody>
         </table>
       </div>
@@ -150,13 +151,13 @@
           <div class="faq-q" onclick="toggleFaq(this)">
             <span>Is there a free trial?</span><span class="faq-arrow">▼</span>
           </div>
-          <div class="faq-a">Yes! Both plans come with a 7-day free trial. No payment required to start. You can explore all features before deciding.</div>
+          <div class="faq-a">Yes! Every student gets a 30-day free trial with 10 AI messages/day and chapters 1-4 unlocked. No payment needed to start.</div>
         </div>
         <div class="faq-item">
           <div class="faq-q" onclick="toggleFaq(this)">
             <span>Can I switch plans later?</span><span class="faq-arrow">▼</span>
           </div>
-          <div class="faq-a">Absolutely. You can upgrade from Explorer to Topper anytime. The price difference will be prorated for the remaining days.</div>
+          <div class="faq-a">Yes! You can upgrade to Pro Student anytime during or after your free trial. Your progress, XP, and streak are all preserved.</div>
         </div>
         <div class="faq-item">
           <div class="faq-q" onclick="toggleFaq(this)">
@@ -182,10 +183,8 @@
       const planEl = document.getElementById('currentPlan');
       const planText = document.getElementById('currentPlanText');
       planEl.style.display = 'flex';
-      if (student?.plan === 'topper') {
-        planText.textContent = 'You are on the Topper plan 👑';
-      } else if (student?.plan === 'explorer') {
-        planText.textContent = 'You are on the Explorer plan 🚀';
+      if (student?.plan === 'explorer' || student?.plan === 'topper') {
+        planText.textContent = 'You are on the Pro Student plan 👑';
       } else {
         planText.textContent = 'You are on the Free Trial — upgrade anytime!';
       }
@@ -209,5 +208,6 @@
       }
     }
   </script>
+  <script src="/js/shared-footer.js"></script>
 </body>
 </html>

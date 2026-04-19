@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const supabase = require('../services/supabase');
 const authMiddleware = require('../middleware/auth');
-const { sendDailyReport, sendWeeklyReport, sendDailyReportsToAll, sendWeeklyReportsToAll } = require('../services/emailReports');
+const { sendDailyReport, sendWeeklyReport, sendDailyReportsToAll, sendWeeklyReportsToAll, sendTrialConversionEmails } = require('../services/emailReports');
 
 // Get student's notification stats (for stats bar)
 router.get('/stats', authMiddleware, async (req, res) => {
@@ -103,6 +103,20 @@ router.post('/admin/config', async (req, res) => {
   const config = req.body;
   global.statsBarConfig = { ...global.statsBarConfig, ...config };
   res.json({ success: true, config: global.statsBarConfig });
+});
+
+// Admin: send trial conversion emails (call daily via cron)
+router.post('/admin/trial-conversion', async (req, res) => {
+  const adminKey = req.headers['x-admin-key'];
+  if (adminKey !== process.env.ADMIN_KEY) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+  try {
+    const result = await sendTrialConversionEmails();
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Get current stats bar config

@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/css/push-notifications.css" />
   <link rel="stylesheet" href="/css/weakness.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/lottie-animations.css" />
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -24,6 +26,7 @@
       <li><a href="/weakness">Weak Areas</a></li>
       <li><a href="/writing-test">Writing Test</a></li>
       <li><a href="/voice-lab">Voice Lab</a></li>
+      <li><a href="/report-card">Report Card</a></li>
     </ul>
     <div class="nav-actions">
       <span class="nav-xp" id="navXP">0 XP</span>
@@ -38,10 +41,20 @@
     </div>
   </nav>
 
+  <!-- Weekly Schedule Banner -->
+  <div class="weekly-banner" id="weeklyBanner" style="display:none">
+    <div class="wb-icon" id="wbIcon">📚</div>
+    <div class="wb-info">
+      <div class="wb-title" id="wbTitle">Learning Day</div>
+      <div class="wb-desc" id="wbDesc">Today is a learning day — explore chapters, practice with AI tutor, and complete quizzes!</div>
+    </div>
+    <a class="btn btn-primary wb-action" id="wbAction" href="/tutor">Start Learning</a>
+  </div>
+
   <!-- Daily Reward Popup -->
   <div class="daily-reward-overlay" id="dailyRewardOverlay">
     <div class="daily-reward-box">
-      <div class="dr-sparkles">✨</div>
+      <dotlottie-player src="https://lottie.host/9bd6c73e-0887-4455-b5b0-59f26d2e0cb3/4Cz2o3j2Hy.json" background="transparent" speed="1" autoplay class="lottie-gameover lottie-entrance"></dotlottie-player>
       <h2 class="dr-title">Daily Reward!</h2>
       <p class="dr-subtitle">You showed up — that's what winners do!</p>
       <div class="dr-prize" id="drPrize">
@@ -384,7 +397,7 @@
   <!-- Level Up Celebration -->
   <div class="levelup-overlay" id="levelUpOverlay">
     <div class="levelup-box">
-      <div class="levelup-sparkles">🎉</div>
+      <dotlottie-player src="https://lottie.host/c1c9e78d-4c3c-4083-b2dc-95e9ac2f2827/7IvuHKETPi.json" background="transparent" speed="1" autoplay class="lottie-levelup lottie-spin-in"></dotlottie-player>
       <h2 class="levelup-title">LEVEL UP!</h2>
       <div class="levelup-emoji" id="levelUpEmoji">🎓</div>
       <div class="levelup-name" id="levelUpName">Scholar</div>
@@ -409,5 +422,7 @@
   <script src="/js/stats-bar.js"></script>
   <script src="/js/push-notifications.js"></script>
   <script src="/js/dashboard-app.js"></script>
+  <script src="/js/scroll-animations.js"></script>
+  <script src="/js/shared-footer.js"></script>
 </body>
 </html>

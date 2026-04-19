@@ -1872,6 +1872,33 @@ body.dark .flashcard-filters { background: var(--bg); border-color: var(--border
   .cta-inner h2 { font-size: 1.75rem; }
 }
 
+@media (max-width: 600px) {
+  .section { padding: 3rem 1rem; }
+  .hero-inner { padding: 3rem 1rem; }
+  .hero-content h1 { font-size: 2rem; line-height: 1.2; }
+  .hero-desc { font-size: 0.95rem; }
+  .hero-card-stack { width: 220px; height: 240px; }
+  .hero-stats-row { gap: 0.75rem; flex-wrap: wrap; }
+  .hero-stat { padding: 0.5rem 0.75rem; font-size: 0.8rem; }
+  .lang-grid { grid-template-columns: 1fr; padding: 0 0.75rem; }
+  .lang-card { padding: 1.25rem; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .bento-card { padding: 1.5rem; }
+  .quiz-box { padding: 1.25rem; }
+  .quiz-box h2 { font-size: 1.1rem; }
+  h2 { font-size: 1.5rem; }
+  .cta-inner { padding: 2.5rem 1.25rem; }
+  .cta-inner h2 { font-size: 1.5rem; }
+  .footer-inner { padding: 2rem 1rem; gap: 1.5rem; }
+  .navbar { padding: 0 0.75rem; }
+  .nav-brand span:last-child { font-size: 1rem; }
+  .floating-widget { bottom: 0.75rem; right: 0.5rem; }
+  .tip-inner { font-size: 0.75rem; padding: 0.4rem 1rem; }
+  .vrow, .vocab-header { grid-template-columns: 1fr; gap: 0.25rem; }
+  .vrow span:nth-child(3), .vocab-header span:nth-child(3),
+  .vrow span:nth-child(4), .vocab-header span:nth-child(4) { display: none; }
+}
+
 @media (max-width: 480px) {
   .hero-content h1 { font-size: 1.9rem; }
   .lang-grid { grid-template-columns: 1fr; }

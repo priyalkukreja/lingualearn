@@ -109,6 +109,8 @@
       .onboard-header h1 { font-size:1.25rem; }
     }
   </style>
+  <link rel="stylesheet" href="/css/lottie-animations.css" />
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 </head>
 <body>
   <div class="onboard-container">
@@ -337,7 +339,7 @@
       }
     }
 
-    function finishOnboarding() {
+    async function finishOnboarding() {
       localStorage.setItem('ll_onboarded', '1');
       localStorage.setItem('ll_preferences', JSON.stringify(answers));
 
@@ -347,7 +349,26 @@
           const s = JSON.parse(student);
           if (answers.class) s.class = parseInt(answers.class);
           if (answers.language) s.language = answers.language;
+          if (answers.textbook) s.textbook = answers.textbook;
+          if (answers.level) s.level = answers.level;
           localStorage.setItem('ll_student', JSON.stringify(s));
+        } catch(e) {}
+      }
+
+      const token = localStorage.getItem('ll_token');
+      if (token) {
+        try {
+          await fetch('/api/auth/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({
+              language: answers.language,
+              studentClass: answers.class,
+              textbook: answers.textbook,
+              level: answers.level,
+              goals: answers.goals
+            })
+          });
         } catch(e) {}
       }
 
