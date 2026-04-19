@@ -54,7 +54,7 @@ router.post('/explain', authMiddleware, planGuard, async (req, res) => {
   }
 });
 
-router.post('/quiz', authMiddleware, planGuard, async (req, res) => {
+router.post('/quiz', authMiddleware, async (req, res) => {
   try {
     const { topic, difficulty, count } = req.body;
 
@@ -83,7 +83,7 @@ Where "correct" is the index (0-3) of the right answer and "skill" is a category
   }
 });
 
-router.post('/check', authMiddleware, planGuard, async (req, res) => {
+router.post('/check', authMiddleware, async (req, res) => {
   try {
     const { answers } = req.body;
     if (!answers || !Array.isArray(answers)) return res.status(400).json({ error: 'Answers array required' });
