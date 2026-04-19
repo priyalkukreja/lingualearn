@@ -2,10 +2,12 @@
 
 .stats-bar {
   background: linear-gradient(135deg, #f8f9ff 0%, #fef5ff 50%, #fff8f0 100%);
-  border-bottom: 2px solid #eeeeff;
+  border-bottom: 1.5px solid rgba(91,94,244,0.08);
   padding: 0.5rem 1.5rem;
   position: sticky; top: 60px; z-index: 90;
-  animation: statsBarSlide 0.4s ease;
+  animation: statsBarSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(16px) saturate(1.6);
+  box-shadow: 0 4px 20px rgba(91,94,244,0.04);
 }
 @keyframes statsBarSlide {
   from { opacity: 0; transform: translateY(-100%); }
@@ -53,6 +55,17 @@
   height: 100%; border-radius: 50px; width: 0%;
   background: linear-gradient(90deg, #5b5ef4, #7209b7);
   transition: width 0.8s ease, background 0.5s ease;
+  position: relative;
+}
+.sb-goal-fill::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+  animation: goalShimmer 2s ease-in-out infinite;
+}
+@keyframes goalShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 .sb-goal-text {
   font-size: 0.72rem; font-weight: 900;
@@ -64,8 +77,10 @@
 .sb-message {
   font-size: 0.78rem; font-weight: 900;
   padding: 0.25rem 0.75rem; border-radius: 50px;
-  background: white; border: 1.5px solid #eeeeff;
-  box-shadow: 0 2px 8px rgba(91,94,244,0.1);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(91,94,244,0.1);
+  box-shadow: 0 2px 12px rgba(91,94,244,0.1);
   white-space: nowrap;
 }
 .sb-msg-pop {
@@ -101,4 +116,10 @@
   .sb-inner { flex-direction: column; align-items: stretch; gap: 0.3rem; }
   .sb-stats { justify-content: space-between; }
   .sb-goal { max-width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-bar { animation: none; }
+  .sb-goal-fill::after { animation: none; }
+  .sb-msg-pop { animation: none; }
 }

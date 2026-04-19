@@ -87,11 +87,13 @@
 .robot-speech-bubble {
   position: absolute; bottom: -10px;
   left: 50%; transform: translateX(-50%) translateY(100%);
-  background: white; border-radius: 16px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px) saturate(1.6);
+  border-radius: 16px;
   padding: 0.6rem 1rem; font-size: 0.82rem;
   font-weight: 800; color: var(--text, #1e293b);
-  box-shadow: 0 4px 16px rgba(91, 94, 244, 0.15);
-  border: 2px solid #e8eaff;
+  box-shadow: 0 4px 20px rgba(91, 94, 244, 0.12), 0 1px 3px rgba(0,0,0,0.04);
+  border: 1.5px solid rgba(91,94,244,0.1);
   white-space: nowrap; max-width: 250px;
   white-space: normal; text-align: center;
   z-index: 10;
@@ -228,9 +230,14 @@
 .robot-floating:hover { transform: scale(1.1); }
 .robot-floating .robot-anim { width: 80px; height: 80px; }
 .robot-floating .robot-wrapper {
-  background: white; border-radius: 50%;
-  padding: 8px; box-shadow: 0 6px 24px rgba(91, 94, 244, 0.25);
-  border: 2px solid #e8eaff;
+  background: rgba(255,255,255,0.95); border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 6px 24px rgba(91, 94, 244, 0.25), 0 0 0 3px rgba(91,94,244,0.06);
+  border: 2px solid rgba(91,94,244,0.12);
+  transition: box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.robot-floating:hover .robot-wrapper {
+  box-shadow: 0 8px 32px rgba(91, 94, 244, 0.35), 0 0 0 6px rgba(91,94,244,0.08);
 }
 .robot-floating .robot-name-tag { display: none; }
 .robot-floating .robot-speech-bubble {
@@ -315,4 +322,18 @@
   .robot-floating { bottom: 10px; right: 10px; }
   .robot-floating .robot-anim { width: 60px !important; height: 60px !important; }
   .chat-robot-header .robot-anim { width: 45px !important; height: 45px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .robot-state-idle .robot-anim,
+  .robot-state-talking .robot-anim,
+  .robot-state-happy .robot-anim,
+  .robot-state-thinking .robot-anim,
+  .robot-state-celebrate .robot-anim,
+  .robot-state-sad .robot-anim,
+  .robot-state-wave .robot-anim,
+  .robot-state-quiz .robot-anim { animation: none; }
+  .robot-css-idle .robot-head { animation: none; }
+  .robot-css-thinking .robot-head { animation: none; }
+  .robot-eye { animation: none; }
 }
