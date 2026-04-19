@@ -17,7 +17,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (typeof RobotTutor !== 'undefined') {
     RobotTutor.init('sidebarRobot');
     RobotTutor.onGreet(student?.name?.split(' ')[0]);
+
+    const profile = RobotTutor.getProfile();
+    const nameTag = document.getElementById('gyaniNameTag');
+    const titleEl = document.getElementById('gyaniTitle');
+    if (nameTag) nameTag.textContent = profile.name;
+    if (titleEl) titleEl.textContent = profile.tagline;
   }
+
+  resetIdleTimer();
+  initEyeFollow();
 
   await startSession();
   loadWeakAreas();
@@ -79,24 +88,41 @@ function updateCombo(correct) {
   updateSessionStats();
 }
 
+let idleTimer = null;
+const IDLE_NUDGE_MS = 120000;
+
+function resetIdleTimer() {
+  if (idleTimer) clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    if (typeof RobotTutor !== 'undefined') {
+      RobotTutor.setState('wave', 'Still there? Ask me anything! 👋');
+      setTimeout(() => RobotTutor.setState('idle'), 4000);
+    }
+    updateGyaniMood('encouraging');
+  }, IDLE_NUDGE_MS);
+}
+
 function updateGyaniMood(mood) {
   const moodEl = document.getElementById('gyaniMood');
-  const statusEl = document.getElementById('gyaniStatus');
+  const moodTextEl = document.getElementById('gyaniMoodText');
+  const statusTextEl = document.getElementById('gyaniStatusText');
   if (!moodEl) return;
 
   const moods = {
-    happy: { emoji: '😊', text: 'Feeling great!' },
-    excited: { emoji: '🤩', text: 'You\'re on fire!' },
-    thinking: { emoji: '🤔', text: 'Thinking...' },
-    proud: { emoji: '🥳', text: 'So proud of you!' },
-    encouraging: { emoji: '💪', text: 'You got this!' },
-    neutral: { emoji: '😊', text: 'Ready to teach!' },
+    happy:       { emoji: '😊', text: 'Happy', status: 'Feeling great!' },
+    excited:     { emoji: '🤩', text: 'Excited', status: 'You\'re on fire!' },
+    thinking:    { emoji: '🤔', text: 'Thinking', status: 'Processing your question...' },
+    proud:       { emoji: '🥳', text: 'Proud', status: 'So proud of you!' },
+    encouraging: { emoji: '💪', text: 'Motivated', status: 'You got this!' },
+    teaching:    { emoji: '📚', text: 'Teaching', status: 'Explaining...' },
+    celebrating: { emoji: '🎉', text: 'Celebrating', status: 'Amazing work!' },
+    sad:         { emoji: '😢', text: 'Worried', status: 'Let\'s try again!' },
+    neutral:     { emoji: '😊', text: 'Ready', status: 'Ready to teach!' },
   };
   const m = moods[mood] || moods.neutral;
   moodEl.textContent = m.emoji;
-  if (statusEl) {
-    statusEl.innerHTML = `<span class="status-dot"></span> ${m.text}`;
-  }
+  if (moodTextEl) moodTextEl.textContent = m.text;
+  if (statusTextEl) statusTextEl.textContent = m.status;
 }
 
 function loadQuickTopics(student) {
@@ -206,11 +232,13 @@ async function sendMessage() {
   input.value = '';
   btn.disabled = true;
   addBubble('user', message);
+  resetIdleTimer();
 
   chatHistory.push({ role: 'user', content: message });
   trackWeeklyMessage();
   addLoading();
   if (typeof RobotTutor !== 'undefined') RobotTutor.onThinking();
+  updateGyaniMood('thinking');
 
   try {
     const method = document.getElementById('methodSelect')?.value || 'default';
@@ -242,10 +270,14 @@ async function sendMessage() {
       });
       removeLoading();
       const reply = data?.reply || 'Sorry, I could not process that. Please try again.';
+      if (typeof RobotTutor !== 'undefined') RobotTutor.onTalking();
+      updateGyaniMood('teaching');
       addBubble('ai', reply);
       chatHistory.push({ role: 'assistant', content: reply });
-      updateGyaniMood('happy');
-      if (typeof RobotTutor !== 'undefined') RobotTutor.onTalking();
+      setTimeout(() => {
+        updateGyaniMood('happy');
+        if (typeof RobotTutor !== 'undefined') RobotTutor.setState('idle');
+      }, 3000);
     }
   } catch (err) {
     removeLoading();
@@ -488,6 +520,8 @@ async function checkQuizAnswer(btn, qi, selected, correct, explanation, skill) {
   showXPPopup(xpGain);
   updateSessionStats();
 
+  resetIdleTimer();
+
   if (isCorrect) {
     updateGyaniMood(comboCount >= 3 ? 'excited' : 'proud');
   } else {
@@ -495,8 +529,11 @@ async function checkQuizAnswer(btn, qi, selected, correct, explanation, skill) {
   }
 
   if (typeof RobotTutor !== 'undefined') {
-    if (isCorrect) RobotTutor.onCorrectAnswer('Brilliant! 🎉');
-    else RobotTutor.onWrongAnswer("No worries, you'll get the next one! 💪");
+    if (isCorrect) {
+      RobotTutor.onCorrectAnswer(comboCount >= 3 ? `${comboCount}x combo! Unstoppable! 🔥` : 'Brilliant! 🎉');
+    } else {
+      RobotTutor.onWrongAnswer("No worries, you'll get the next one! 💪");
+    }
   }
 
   await apiPost('/api/ai/check', {
@@ -507,5 +544,28 @@ async function checkQuizAnswer(btn, qi, selected, correct, explanation, skill) {
       explanation,
       skill
     }]
+  });
+}
+
+function initEyeFollow() {
+  document.addEventListener('mousemove', (e) => {
+    const eyes = document.querySelectorAll('.robot-eye::after, .robot-eye');
+    const avatar = document.getElementById('gyaniAvatar');
+    if (!avatar) return;
+
+    const rect = avatar.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const dx = e.clientX - centerX;
+    const dy = e.clientY - centerY;
+    const angle = Math.atan2(dy, dx);
+    const dist = Math.min(3, Math.sqrt(dx * dx + dy * dy) / 80);
+
+    const eyeEls = avatar.querySelectorAll('.robot-eye');
+    eyeEls.forEach(eye => {
+      const pupil = eye.querySelector('::after') || eye;
+      eye.style.setProperty('--eye-x', `${Math.cos(angle) * dist}px`);
+      eye.style.setProperty('--eye-y', `${Math.sin(angle) * dist}px`);
+    });
   });
 }

@@ -86,8 +86,15 @@
   border-radius: 20px 20px 50% 50%;
 }
 .gyani-avatar {
-  position: relative; width: 76px; height: 76px; margin: 0 auto 0.75rem;
+  position: relative; width: 100px; height: 100px; margin: 0 auto 0.75rem;
   z-index: 1;
+}
+.gyani-lottie-container {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  overflow: visible;
+  animation: gyaniFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 6px 20px rgba(91,94,244,0.25));
 }
 .gyani-face {
   width: 76px; height: 76px; border-radius: 50%;
@@ -102,15 +109,14 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
 }
-.gyani-mood {
-  position: absolute; bottom: -2px; right: -2px;
-  font-size: 1.1rem; background: white; border-radius: 50%;
-  width: 30px; height: 30px; display: flex;
-  align-items: center; justify-content: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  border: 2.5px solid #f0f2ff;
-  z-index: 2;
+.gyani-mood-bar {
+  display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+  margin-top: 0.5rem;
+  font-size: 0.72rem; font-weight: 700; color: #64748b;
 }
+.mood-label { color: #94a3b8; }
+.mood-emoji { font-size: 1rem; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.mood-text { color: #5b5ef4; font-weight: 800; }
 .gyani-name {
   font-size: 1.15rem; font-weight: 900; color: #1e1b4b;
   margin-bottom: 0.1rem; position: relative;
@@ -362,11 +368,17 @@
 }
 .ch-left { display: flex; align-items: center; gap: 0.75rem; }
 .ch-avatar {
-  width: 42px; height: 42px; border-radius: 14px;
+  width: 46px; height: 46px; border-radius: 50%;
   background: linear-gradient(135deg, #5b5ef4, #7c3aed);
   display: flex; align-items: center; justify-content: center;
   font-size: 1.3rem;
-  box-shadow: 0 4px 12px rgba(91,94,244,0.2);
+  box-shadow: 0 4px 16px rgba(91,94,244,0.25);
+  overflow: visible;
+  position: relative;
+}
+.ch-avatar-lottie {
+  width: 46px; height: 46px;
+  filter: drop-shadow(0 2px 8px rgba(91,94,244,0.2));
 }
 .ch-left h3 { font-size: 1rem; font-weight: 900; color: #1e1b4b; }
 .ch-left p { font-size: 0.75rem; color: #7c7c9a; font-weight: 600; }
