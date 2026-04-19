@@ -151,10 +151,12 @@ function buildPDFHtml(lang, cls, idx) {
     }
   } else {
     sections = `
-      <div style="text-align:center;padding:50px 20px;color:#64748b">
-        <div style="font-size:3.5rem;margin-bottom:16px">${isYoung ? '🚧' : '📝'}</div>
-        <div style="font-size:1.15rem;font-weight:700;margin-bottom:10px">Detailed Notes Coming Soon!</div>
-        <div style="font-size:0.95rem;line-height:1.6">We're preparing simple, easy-to-understand notes with full chapter explanation, memory tricks, vocabulary, and solved exercises for this chapter.<br>Meanwhile, you can use the Worksheet feature to practice!</div>
+      <div style="text-align:center;padding:50px 20px;color:#1e293b">
+        <div style="font-size:3.5rem;margin-bottom:16px">🔒</div>
+        <div style="font-size:1.25rem;font-weight:800;margin-bottom:12px;color:#7c3aed">Unlock Detailed Chapter Notes</div>
+        <div style="font-size:0.95rem;line-height:1.7;color:#475569;margin-bottom:20px">Get full chapter explanations, memory tricks, vocabulary lists, and solved exercises with our <strong>Pro Plan</strong>.</div>
+        <a href="/pricing" style="display:inline-block;background:linear-gradient(135deg,#7c3aed,#a855f7);color:white;padding:12px 32px;border-radius:30px;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 4px 14px rgba(124,58,237,0.3)">Upgrade to Pro</a>
+        <div style="font-size:0.82rem;color:#94a3b8;margin-top:14px">Starting at just ₹99/month</div>
       </div>`;
   }
 
