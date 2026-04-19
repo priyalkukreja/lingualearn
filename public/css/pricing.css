@@ -235,9 +235,9 @@
 .pr-faq-section {
   background:
     radial-gradient(ellipse 50% 40% at 50% 80%, rgba(91,94,244,0.03) 0%, transparent 70%),
-    var(--bg);
+    #fafafa;
 }
-.pr-faq-section h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+.pr-faq-section h2 { font-size: 1.8rem; margin-bottom: 1.5rem; color: #1e293b; }
 .faq-list {
   max-width: 680px; margin: 0 auto;
   display: flex; flex-direction: column; gap: 0.75rem;
@@ -267,12 +267,12 @@
 .faq-q {
   display: flex; align-items: center; justify-content: space-between;
   padding: 1.1rem 1.25rem; cursor: pointer;
-  font-weight: 800; font-size: 0.95rem;
+  font-weight: 800; font-size: 0.95rem; color: #1e293b;
 }
 .faq-arrow { transition: transform 0.3s; color: var(--primary); font-size: 0.75rem; }
 .faq-a {
   display: none; padding: 0 1.25rem 1rem;
-  font-size: 0.88rem; color: var(--muted); line-height: 1.7;
+  font-size: 0.88rem; color: #475569; line-height: 1.7;
 }
 .faq-a.open { display: block; animation: fadeSlideIn 0.25s ease; }
 @keyframes fadeSlideIn {
