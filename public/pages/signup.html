@@ -262,6 +262,14 @@
   </div>
 
   <script>
+    function togglePwd(fieldId, btn) {
+      const f = document.getElementById(fieldId);
+      const show = f.type === 'password';
+      f.type = show ? 'text' : 'password';
+      btn.textContent = show ? '🙈' : '👁️';
+    }
+  </script>
+  <script>
     let selectedTextbookId = '';
     let extractedChapters = null;
 

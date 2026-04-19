@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadDashboardWeakness();
   loadDashboardChallenges();
   loadChapterProgress();
+  if (window.DailyDrill) DailyDrill.render('dailyDrillArea');
 });
 
 function showDailyReward(student) {
