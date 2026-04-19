@@ -312,6 +312,9 @@
     </div>
 
     <div class="dash-sidebar">
+      <!-- Streak Progress Widget -->
+      <div class="dash-section game-section" id="streakWidgetContainer"></div>
+
       <!-- Leaderboard Peek -->
       <div class="dash-section game-section leaderboard-section">
         <div class="ds-header-row">
@@ -378,6 +381,18 @@
     </div>
   </section>
 
+  <!-- Level Up Celebration -->
+  <div class="levelup-overlay" id="levelUpOverlay">
+    <div class="levelup-box">
+      <div class="levelup-sparkles">🎉</div>
+      <h2 class="levelup-title">LEVEL UP!</h2>
+      <div class="levelup-emoji" id="levelUpEmoji">🎓</div>
+      <div class="levelup-name" id="levelUpName">Scholar</div>
+      <div class="levelup-sub" id="levelUpSub">Level 5 unlocked!</div>
+      <button class="levelup-btn" onclick="closeLevelUp()">Awesome! 🚀</button>
+    </div>
+  </div>
+
   <!-- Motivational Footer -->
   <div class="motivation-bar">
     <div class="motivation-text" id="motivationText">"The expert in anything was once a beginner." — Keep going! 💪</div>
@@ -390,6 +405,7 @@
   </script>
   <script src="/js/api.js"></script>
   <script src="/js/weakness-engine.js"></script>
+  <script src="/js/streak-rewards.js"></script>
   <script src="/js/stats-bar.js"></script>
   <script src="/js/push-notifications.js"></script>
   <script src="/js/dashboard-app.js"></script>

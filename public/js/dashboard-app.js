@@ -84,7 +84,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       `<span class="streak-flame" style="animation-delay:${i * 0.1}s">🔥</span>`
     ).join('');
 
+    checkLevelUp(student);
     showDailyReward(student);
+
+    if (typeof StreakRewards !== 'undefined') {
+      StreakRewards.renderStreakWidget('streakWidgetContainer');
+    }
   }
 
   const quoteEl = document.getElementById('motivationText');
@@ -125,10 +130,49 @@ function showDailyReward(student) {
   document.getElementById('drPrize').querySelector('.dr-prize-text').textContent = `+${todayReward} XP`;
 }
 
-window.claimDailyReward = function() {
+function checkLevelUp(student) {
+  const xp = student.total_xp || 0;
+  const currentLevel = getLevel(xp);
+  const lastLevel = parseInt(localStorage.getItem('ll_last_level') || '1');
+
+  if (currentLevel.levelNum > lastLevel) {
+    localStorage.setItem('ll_last_level', currentLevel.levelNum);
+    setTimeout(() => {
+      document.getElementById('levelUpEmoji').textContent = currentLevel.emoji;
+      document.getElementById('levelUpName').textContent = currentLevel.name;
+      document.getElementById('levelUpSub').textContent = `Level ${currentLevel.levelNum} unlocked!`;
+      document.getElementById('levelUpOverlay').classList.add('show');
+    }, 1500);
+  } else {
+    localStorage.setItem('ll_last_level', currentLevel.levelNum);
+  }
+}
+
+window.closeLevelUp = function() {
+  document.getElementById('levelUpOverlay').classList.remove('show');
+};
+
+window.claimDailyReward = async function() {
   localStorage.setItem('ll_daily_claimed', new Date().toDateString());
   document.getElementById('dailyRewardOverlay').classList.remove('show');
-  showXPFloat('+15 XP');
+
+  const student = getStudent();
+  const streak = student?.current_streak || 0;
+  const rewards = [15, 20, 25, 30, 35, 50, 100];
+  const reward = rewards[Math.min((streak % 7) || 0, 6)];
+
+  showXPFloat(`+${reward} XP`);
+
+  const data = await apiPost('/api/auth/claim-daily', { xp: reward });
+  if (data?.student) {
+    localStorage.setItem('ll_student', JSON.stringify(data.student));
+    document.getElementById('navXP').textContent = data.student.total_xp + ' XP';
+    document.getElementById('totalXP').textContent = data.student.total_xp;
+    const lvl = getLevel(data.student.total_xp);
+    document.getElementById('xpLevel').textContent = `${lvl.emoji} ${lvl.name}`;
+    document.getElementById('xpToNext').textContent = lvl.xpToNext > 0 ? `${lvl.xpToNext} XP to next level` : 'Max level!';
+    checkLevelUp(data.student);
+  }
 };
 
 function showXPFloat(text) {

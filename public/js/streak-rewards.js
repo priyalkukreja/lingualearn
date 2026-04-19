@@ -85,6 +85,18 @@ const StreakRewards = (() => {
     save(data);
   }
 
+  async function useFreeze() {
+    const data = getData();
+    if (data.freezes <= 0) return { success: false, message: 'No freezes left' };
+    data.freezes--;
+    data.lastDate = new Date().toISOString().split('T')[0];
+    save(data);
+    if (typeof apiPost === 'function') {
+      await apiPost('/api/auth/use-freeze', {});
+    }
+    return { success: true, freezesLeft: data.freezes };
+  }
+
   function showStreakBadge(milestone) {
     const popup = document.createElement('div');
     popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);z-index:2000;opacity:0;transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none';
@@ -141,7 +153,7 @@ const StreakRewards = (() => {
     `;
   }
 
-  return { checkIn, getStatus, addFreeze, renderStreakWidget, MILESTONES };
+  return { checkIn, getStatus, addFreeze, useFreeze, renderStreakWidget, MILESTONES };
 })();
 
 if (typeof isLoggedIn === 'function' && isLoggedIn()) {

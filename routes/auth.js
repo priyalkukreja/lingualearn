@@ -73,9 +73,11 @@ router.post('/login', async (req, res) => {
       streak = diff === 1 ? streak + 1 : 1;
     }
 
+    const longestStreak = Math.max(streak, student?.longest_streak || 0);
     await supabase.from('students').update({
       last_active_date: today,
-      current_streak: streak
+      current_streak: streak,
+      longest_streak: longestStreak
     }).eq('id', data.user.id);
 
     res.json({
@@ -94,6 +96,48 @@ router.post('/logout', authMiddleware, async (req, res) => {
 
 router.get('/me', authMiddleware, async (req, res) => {
   res.json({ student: req.student });
+});
+
+router.post('/claim-daily', authMiddleware, async (req, res) => {
+  try {
+    const { xp } = req.body;
+    const reward = Math.min(Math.max(parseInt(xp) || 15, 15), 100);
+
+    const today = new Date().toISOString().slice(0, 10);
+    const lastClaim = req.student.last_daily_claim;
+    if (lastClaim === today) {
+      return res.json({ student: req.student, message: 'Already claimed today' });
+    }
+
+    const newXP = (req.student.total_xp || 0) + reward;
+    const { data: updated } = await supabase.from('students').update({
+      total_xp: newXP,
+      last_daily_claim: today
+    }).eq('id', req.user.id).select().single();
+
+    res.json({ student: updated, xpAwarded: reward });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/use-freeze', authMiddleware, async (req, res) => {
+  try {
+    const freezes = req.student.streak_freezes || 0;
+    if (freezes <= 0) {
+      return res.status(400).json({ error: 'No streak freezes available' });
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const { data: updated } = await supabase.from('students').update({
+      streak_freezes: freezes - 1,
+      last_active_date: today
+    }).eq('id', req.user.id).select().single();
+
+    res.json({ student: updated, freezesLeft: updated.streak_freezes });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;
